@@ -1,4 +1,4 @@
-package org.seleniumbrain.lab.cucumber.spring;
+package org.seleniumbrain.lab.cucumber.spring.setup;
 
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.ComponentScan;

@@ -1,4 +1,4 @@
 package org.seleniumbrain.lab.config;
 
-public class TestConfig {
+public class TestConfigReader {
 }

@@ -1,0 +1,84 @@
+labName: local
+test:
+  app:
+    environment: dev
+  output:
+    folder:
+    downloadFolder:
+wait:
+  timeout:
+    pageLoad: 25 #in seconds
+    implicit: 5 #in seconds
+    fluentMax: 10 #in seconds
+    fluentPolling: 250 #in milliseconds
+    retryCount: 10
+
+lab:
+  localLab:
+    browserName: firefox
+    chrome:
+      browserLogFilePath: test-output/browser-logs/local/chrome-driver-log.log
+      browserVersion: 117 #Acceptable values are - <version number>, stable, beta, dev, canary
+      acceptInsecureCerts: true #bolean
+      unhandledPromptBehavior: #Acceptable values are - dismiss, accept, dismiss and notify, accept and notify, ignore
+      binary:
+      arguments: #List values
+        - headless
+      extensions: #List values
+      excludeSwitches: #List values
+      prefs: #List values
+        - key: download.default_directory
+          value:
+
+        - key: download.prompt_for_download
+          value: false
+
+        - key: profile.default_content_settings.popups
+          value: 0
+
+    edge:
+      browserLogFilePath: test-output/browser-logs/local/edge-driver-log.log
+      browserVersion: stable #Acceptable values are - <version number>, stable, beta, dev, canary
+      acceptInsecureCerts: true #bolean
+      unhandledPromptBehavior: #Acceptable values are - dismiss, accept, dismiss and notify, accept and notify, ignore
+      binary:
+      arguments: #List values
+        - start-maximized
+      extensions: #List values
+      excludeSwitches: #List values
+      prefs: #List values
+        - key:
+          value:
+
+        - key:
+          value:
+
+    firefox:
+      browserLogFilePath: test-output/browser-logs/local/firefox-driver-log.log
+      browserVersion: 117 #Acceptable values are - <version number>, stable, beta, dev, canary
+      acceptInsecureCerts: true #bolean
+      unhandledPromptBehavior: #Acceptable values are - dismiss, accept, dismiss and notify, accept and notify, ignore
+      binary:
+      arguments: #List values
+      extensions: #List values
+      excludeSwitches: #List values
+      prefs: #List values
+        - key: dom.disable_beforeunload
+          value: true
+
+        - key:
+          value:
+
+  gridLab:
+    hub:
+      name:
+      url: https://localhost:4444
+    nodes:
+      -
+        name:
+        url:
+        maxBrowserInstance:
+        maxBrowserSessions:
+        browserName:
+        browserVersion:
+        platformName:
