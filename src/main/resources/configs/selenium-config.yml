@@ -3,7 +3,7 @@ test:
   app:
     environment: dev
   output:
-    folder:
+    outputFolder:
     downloadFolder:
 wait:
   timeout:
@@ -18,7 +18,7 @@ lab:
     browserName: firefox
     chrome:
       browserLogFilePath: test-output/browser-logs/local/chrome-driver-log.log
-      browserVersion: 117 #Acceptable values are - <version number>, stable, beta, dev, canary
+      browserVersion: stable #Acceptable values are - <version number>, stable, beta, dev, canary
       acceptInsecureCerts: true #bolean
       unhandledPromptBehavior: #Acceptable values are - dismiss, accept, dismiss and notify, accept and notify, ignore
       binary:
@@ -55,7 +55,7 @@ lab:
 
     firefox:
       browserLogFilePath: test-output/browser-logs/local/firefox-driver-log.log
-      browserVersion: 117 #Acceptable values are - <version number>, stable, beta, dev, canary
+      browserVersion: stable #Acceptable values are - <version number>, stable, beta, dev, canary
       acceptInsecureCerts: true #bolean
       unhandledPromptBehavior: #Acceptable values are - dismiss, accept, dismiss and notify, accept and notify, ignore
       binary:

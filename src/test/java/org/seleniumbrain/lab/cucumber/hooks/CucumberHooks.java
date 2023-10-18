@@ -1,24 +1,20 @@
 package org.seleniumbrain.lab.cucumber.hooks;
 
-import io.cucumber.core.backend.TestCaseState;
+import io.cucumber.java.After;
 import io.cucumber.java.AfterStep;
 import io.cucumber.java.Before;
 import io.cucumber.java.Scenario;
-import io.cucumber.plugin.event.PickleStepTestStep;
-import io.cucumber.plugin.event.TestCase;
 import lombok.SneakyThrows;
 import org.seleniumbrain.lab.config.SeleniumConfigReader;
 import org.seleniumbrain.lab.config.pojo.SeleniumConfigurations;
 import org.seleniumbrain.lab.selenium.driver.factory.DriverFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import java.lang.reflect.Field;
 import java.net.MalformedURLException;
-import java.util.List;
 
 public class CucumberHooks {
 
-    private int counter = 0;
+    private int stepIndex = 0;
 
     private static final SeleniumConfigurations seleniumConfig = SeleniumConfigReader.getConfigs();
 
@@ -27,35 +23,19 @@ public class CucumberHooks {
 
     @SneakyThrows
     @Before
-    public void createBrowserSession(Scenario scenario) throws MalformedURLException {
+    public void createBrowserSession(Scenario scenario) {
         driverFactory.initiateWebDriverSession();
         driverFactory.getDriver().get("https://www.google.com");
         Thread.sleep(3000);
     }
 
     @AfterStep
-    public void afterStepHook(Scenario scenario) throws MalformedURLException {
-        counter++;
-        driverFactory.getDriver().quit();
+    public void countStepIndex() {
+        stepIndex = stepIndex + 1;
     }
-
-    @SneakyThrows
-    private String getStepName(Scenario scenario) {
-        Field f = scenario.getClass().getDeclaredField("delegate");
-        f.setAccessible(true);
-        TestCaseState tcs = (TestCaseState) f.get(scenario);
-
-        Field f2 = tcs.getClass().getDeclaredField("testCase");
-        f2.setAccessible(true);
-        TestCase r = (TestCase) f2.get(tcs);
-
-        List<PickleStepTestStep> stepDefs = r.getTestSteps().stream()
-                .filter(x -> x instanceof PickleStepTestStep)
-                .map(x -> (PickleStepTestStep) x)
-                .toList();
-        PickleStepTestStep currentStepDef = stepDefs.get(counter);
-        return currentStepDef.getStep().getText();
-
+    @After
+    public void afterScenarioHook(Scenario scenario) throws MalformedURLException {
+        driverFactory.getDriver().quit();
     }
 }
 

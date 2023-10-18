@@ -25,7 +25,7 @@ public class SeleniumConfigurations {
 
     @Data
     public static class Output {
-        private String folder;
+        private String outputFolder;
         private String downloadFolder;
     }
 

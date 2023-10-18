@@ -5,13 +5,14 @@ import io.cucumber.testng.CucumberOptions;
 
 @CucumberOptions(
         plugin = {
-          "pretty",
-          "html:test-output/cucumber/cucumber-report.html",
-          "json:test-output/cucumber/cucumber-report.json",
-          "timeline:test-output/cucumber/cucumber-parallel-run-thread-report.html"
+                "pretty",
+                "html:test-output/cucumber/cucumber-report.html",
+                "json:test-output/cucumber/cucumber-report.json",
+                "timeline:test-output/cucumber/cucumber-parallel-run-thread-report.html"
         },
         features = {"src/test/resources/cucumber/feature-files"},
         glue = {
+                "org.seleniumbrain.lab.cucumber.hooks.CucumberBaseHooks",
                 "org.seleniumbrain.lab.cucumber.hooks",
                 "org.seleniumbrain.lab.cucumber.init",
                 "org.seleniumbrain.lab.cucumber.stepdefinitions",
@@ -22,3 +23,4 @@ import io.cucumber.testng.CucumberOptions;
 )
 public class CucumberRunnerTest extends AbstractTestNGCucumberTests {
 }
+
