@@ -8,6 +8,10 @@ import org.openqa.selenium.OutputType;
 import org.openqa.selenium.TakesScreenshot;
 import org.openqa.selenium.WebDriver;
 import org.seleniumbrain.lab.config.SeleniumConfigReader;
+import org.seleniumbrain.lab.cucumber.spring.ApplicationContextUtil;
+import org.seleniumbrain.lab.cucumber.spring.configure.CucumberStepLog;
+import org.seleniumbrain.lab.cucumber.spring.configure.ScenarioState;
+import org.seleniumbrain.lab.selenium.driver.WebDriverWaits;
 import org.seleniumbrain.lab.utility.PathBuilder;
 import org.seleniumbrain.lab.utility.RetryCommand;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,8 +33,18 @@ public class WebDriverUtils {
     @Autowired
     private DriverFactory driverFactory;
 
+    @Autowired
+    private ScenarioState scenarioState;
+
+    @Autowired
+    private WebDriverWaits wait;
+
     private WebDriver getDriver() {
         return driverFactory.getDriver();
+    }
+
+    public WebDriver getWebDriver() {
+        return ApplicationContextUtil.getBean(DriverFactory.class).getDriver();
     }
 
     public String getCurrentWindow() {
@@ -78,6 +92,24 @@ public class WebDriverUtils {
                         this.getDriver().quit();
                     return true;
                 });
+    }
+
+    public void attachScreenshot(String screenshotName) {
+        wait.pause(1500);
+        byte[] image = this.getScreenshotInBytes();
+        CucumberStepLog log = CucumberStepLog.builder()
+                .caption(screenshotName)
+                .img(image)
+                .build();
+        scenarioState.getStepLogs().add(log);
+    }
+
+    public void attachStepLogInfo(String logMsg) {
+        CucumberStepLog log = CucumberStepLog.builder()
+                .caption("Read Action Note: ")
+                .textLog(logMsg)
+                .build();
+        scenarioState.getStepLogs().add(log);
     }
 
     @SneakyThrows

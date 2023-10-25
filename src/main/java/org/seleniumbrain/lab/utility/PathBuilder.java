@@ -22,6 +22,10 @@ public class PathBuilder {
         return String.join(File.separator, System.getProperty("user.dir"), "output", getRunCountText(), "");
     }
 
+    private static String getDefaultApiLogOutputFolder() {
+        return String.join(File.separator, System.getProperty("user.dir"), "output", "api-log", getRunCountText(), "");
+    }
+
     public static String getDownloadFolder() {
         String downloadFolder = seleniumConfig.getTest().getOutput().getDownloadFolder();
         if(Objects.isNull(downloadFolder) || downloadFolder.isBlank()) return getDefaultDownloadFolder();
@@ -44,6 +48,18 @@ public class PathBuilder {
         String outputFolder = seleniumConfig.getTest().getOutput().getOutputFolder();
         if(Objects.isNull(outputFolder) || outputFolder.isBlank()) return getFolderPath(getDefaultOutputFolder(), dirs);
         else return getFolderPath(String.join(File.separator, outputFolder, getRunCountText()), dirs);
+    }
+
+    public static String getApiLogOutputFolder() {
+        String apiLogOutputFolder = seleniumConfig.getTest().getOutput().getApiLogPath();
+        if(Objects.isNull(apiLogOutputFolder) || apiLogOutputFolder.isBlank()) return getDefaultApiLogOutputFolder();
+        else return String.join(File.separator, apiLogOutputFolder, getRunCountText(), "");
+    }
+
+    public static String getApiLogOutputFolder(String... dirs) {
+        String apiLogOutputFolder = seleniumConfig.getTest().getOutput().getApiLogPath();
+        if(Objects.isNull(apiLogOutputFolder) || apiLogOutputFolder.isBlank()) return getFolderPath(getDefaultApiLogOutputFolder(), dirs);
+        else return getFolderPath(String.join(File.separator, apiLogOutputFolder, getRunCountText()), dirs);
     }
 
     private static String getFolderPath(String prefix, String... dirs) {

@@ -27,6 +27,7 @@ public class WebDriverWaits {
 
     @SneakyThrows
     public void pause(long seconds) {
+        System.out.println("Inside pause method...");
         Thread.sleep(seconds);
     }
 

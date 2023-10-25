@@ -5,9 +5,12 @@ import io.cucumber.java.AfterStep;
 import io.cucumber.java.Before;
 import io.cucumber.java.Scenario;
 import lombok.SneakyThrows;
+import org.openqa.selenium.WebDriver;
 import org.seleniumbrain.lab.config.SeleniumConfigReader;
 import org.seleniumbrain.lab.config.pojo.SeleniumConfigurations;
+import org.seleniumbrain.lab.cucumber.spring.ApplicationContextUtil;
 import org.seleniumbrain.lab.selenium.driver.factory.DriverFactory;
+import org.seleniumbrain.lab.selenium.driver.factory.WebDriverUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.net.MalformedURLException;
@@ -21,6 +24,9 @@ public class CucumberHooks {
     @Autowired
     private DriverFactory driverFactory;
 
+    @Autowired
+    private WebDriverUtils driverUtil;
+
     @SneakyThrows
     @Before
     public void createBrowserSession(Scenario scenario) {
@@ -33,8 +39,17 @@ public class CucumberHooks {
     public void countStepIndex() {
         stepIndex = stepIndex + 1;
     }
+
+    @AfterStep
+    public void findDriver(Scenario scenario) {
+        WebDriver driver = ApplicationContextUtil.getBean(DriverFactory.class).getDriver();
+        System.out.println(scenario.getName() + " : " + driver.toString());
+    }
+
     @After
     public void afterScenarioHook(Scenario scenario) throws MalformedURLException {
+        byte[] screenshot = driverUtil.getScreenshotInBytes();
+        scenario.attach(screenshot, "image/png", "step screenshot");
         driverFactory.getDriver().quit();
     }
 }
@@ -44,8 +59,8 @@ public class CucumberHooks {
 //        browserOptions.setBrowserVersion("117");
 //
 //        Map<String, Object> sauceOptions = new HashMap();
-//        sauceOptions.put("username", "oauth-rajoviyaa.s-b07bf");
-//        sauceOptions.put("accessKey", "3d34e79c-04b9-4b03-88f4-d813048065a1");
+//        sauceOptions.put("username", "");
+//        sauceOptions.put("accessKey", "");
 //        sauceOptions.put("build", "selenium-build-AH1I6");
 //        sauceOptions.put("name", "saucelab-training-test");
 //

@@ -27,6 +27,7 @@ public class SeleniumConfigurations {
     public static class Output {
         private String outputFolder;
         private String downloadFolder;
+        private String apiLogPath;
     }
 
     @Data

@@ -5,7 +5,9 @@ import lombok.Builder;
 import lombok.Data;
 import org.springframework.stereotype.Component;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @Data
@@ -13,12 +15,5 @@ import java.util.Map;
 @ScenarioScope
 public class ScenarioState {
     private Map<StateKey, Object> state = new HashMap<>();
-
-    @Data
-    @Builder
-    public static class CucumberStepLog {
-        private byte[] img;
-        private String imgCaption;
-        private String textLog;
-    }
+    private List<CucumberStepLog> stepLogs = new ArrayList<>();
 }

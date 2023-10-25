@@ -2,6 +2,7 @@ package org.seleniumbrain.lab.cucumber.init;
 
 import io.cucumber.testng.AbstractTestNGCucumberTests;
 import io.cucumber.testng.CucumberOptions;
+import org.testng.annotations.DataProvider;
 
 @CucumberOptions(
         plugin = {
@@ -22,5 +23,10 @@ import io.cucumber.testng.CucumberOptions;
         tags = "@Test-Feature"
 )
 public class CucumberRunnerTest extends AbstractTestNGCucumberTests {
+        @Override
+        @DataProvider(parallel = true)
+        public Object[][] scenarios() {
+                return super.scenarios();
+        }
 }
 

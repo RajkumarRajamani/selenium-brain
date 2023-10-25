@@ -5,6 +5,7 @@ test:
   output:
     outputFolder:
     downloadFolder:
+    apiLogPath:
 wait:
   timeout:
     pageLoad: 25 #in seconds

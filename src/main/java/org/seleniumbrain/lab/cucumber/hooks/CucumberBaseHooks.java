@@ -7,12 +7,15 @@ import io.cucumber.plugin.event.TestCase;
 import lombok.SneakyThrows;
 import org.seleniumbrain.lab.config.SeleniumConfigReader;
 import org.seleniumbrain.lab.config.pojo.SeleniumConfigurations;
+import org.seleniumbrain.lab.cucumber.spring.configure.CucumberStepLog;
+import org.seleniumbrain.lab.cucumber.spring.configure.ScenarioState;
 import org.seleniumbrain.lab.selenium.driver.factory.DriverFactory;
 import org.seleniumbrain.lab.selenium.driver.factory.WebDriverUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.lang.reflect.Field;
 import java.util.List;
+import java.util.Objects;
 
 public class CucumberBaseHooks {
 
@@ -26,16 +29,37 @@ public class CucumberBaseHooks {
     @Autowired
     private WebDriverUtils webDriverUtils;
 
+    @Autowired
+    private ScenarioState scenarioState;
+
     @AfterStep
-    public void takeScreenshotOnFailure(Scenario scenario) {
+    public void attachScreenshotsOfStep(Scenario scenario) {
+        String stepName = getStepName(scenario, stepIndex);
         try {
-            String stepName = getStepName(scenario, stepIndex);
-            if(!scenario.getStatus().equals(Status.PASSED)) {
-                byte[] screenshotBytes = webDriverUtils.getScreenshotInBytes();
-                scenario.attach(screenshotBytes, "image/png", "Failure Screenshot of Step : " + stepName);
+            List<CucumberStepLog> stepLogs = scenarioState.getStepLogs();
+            if(!stepLogs.isEmpty()) {
+                int action = 1;
+                for(CucumberStepLog log : stepLogs) {
+                    if(Objects.nonNull(log.getImg()) && log.getImg().length != 0) {
+                        scenario.attach(log.getImg(), "image/png", "Step " + (stepIndex + 1) + "- Action " + action + " : " + log.getCaption());
+                    }
+
+                    if(Objects.nonNull(log.getTextLog()) && !log.getTextLog().isBlank()) {
+                        scenario.attach(log.getTextLog(), "text/plain", "Step " + (stepIndex + 1) + "- Action " + action + " : " + log.getCaption());
+                    }
+
+                    action++;
+                }
             }
         } finally {
-            stepIndex += 1;
+            try {
+                if(!scenario.getStatus().equals(Status.PASSED)) {
+                    byte[] screenshotBytes = webDriverUtils.getScreenshotInBytes();
+                    scenario.attach(screenshotBytes, "image/png", "Failure Screenshot of Step : " + stepName);
+                }
+            } finally {
+                stepIndex += 1;
+            }
         }
     }
 
