@@ -9,7 +9,8 @@ import org.testng.annotations.DataProvider;
                 "pretty",
                 "html:test-output/cucumber/cucumber-report.html",
                 "json:test-output/cucumber/cucumber-report.json",
-                "timeline:test-output/cucumber/cucumber-parallel-run-thread-report.html"
+                "timeline:test-output/cucumber/cucumber-parallel-run-thread-report.html",
+                "org.seleniumbrain.lab.easyreport.core.EasyReportJsonFormatter:test-output/easy-cucumber-report/easy-cucumber-report.html"
         },
         features = {"src/test/resources/cucumber/feature-files"},
         glue = {

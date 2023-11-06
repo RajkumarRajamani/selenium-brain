@@ -1,9 +1,6 @@
 package org.seleniumbrain.lab.cucumber.hooks;
 
-import io.cucumber.java.After;
-import io.cucumber.java.AfterStep;
-import io.cucumber.java.Before;
-import io.cucumber.java.Scenario;
+import io.cucumber.java.*;
 import lombok.SneakyThrows;
 import org.openqa.selenium.WebDriver;
 import org.seleniumbrain.lab.config.SeleniumConfigReader;
@@ -14,6 +11,9 @@ import org.seleniumbrain.lab.selenium.driver.factory.WebDriverUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.net.MalformedURLException;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.Map;
 
 public class CucumberHooks {
 
@@ -31,19 +31,11 @@ public class CucumberHooks {
     @Before
     public void createBrowserSession(Scenario scenario) {
         driverFactory.initiateWebDriverSession();
-        driverFactory.getDriver().get("https://www.google.com");
-        Thread.sleep(3000);
     }
 
-    @AfterStep
+    @AfterStep(order = 100)
     public void countStepIndex() {
-        stepIndex = stepIndex + 1;
-    }
-
-    @AfterStep
-    public void findDriver(Scenario scenario) {
-        WebDriver driver = ApplicationContextUtil.getBean(DriverFactory.class).getDriver();
-        System.out.println(scenario.getName() + " : " + driver.toString());
+        stepIndex += 1;
     }
 
     @After
@@ -51,6 +43,10 @@ public class CucumberHooks {
         byte[] screenshot = driverUtil.getScreenshotInBytes();
         scenario.attach(screenshot, "image/png", "step screenshot");
         driverFactory.getDriver().quit();
+    }
+
+    @AfterAll
+    public static void afterAllMethod() {
     }
 }
 

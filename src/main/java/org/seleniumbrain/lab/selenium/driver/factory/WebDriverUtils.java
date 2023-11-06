@@ -25,6 +25,9 @@ import java.io.File;
 import java.util.Objects;
 import java.util.Set;
 
+/**
+ * It provides reusable methods using WebDriver instance.
+ */
 @Slf4j
 @Component
 @ScenarioScope
@@ -39,11 +42,11 @@ public class WebDriverUtils {
     @Autowired
     private WebDriverWaits wait;
 
-    private WebDriver getDriver() {
+    public WebDriver getDriver() {
         return driverFactory.getDriver();
     }
 
-    public WebDriver getWebDriver() {
+    public static WebDriver getWebDriver() {
         return ApplicationContextUtil.getBean(DriverFactory.class).getDriver();
     }
 
@@ -57,38 +60,46 @@ public class WebDriverUtils {
 
     public void refreshPage() {
         log.info("Refreshing the page");
-
+        new RetryCommand<Boolean>(SeleniumConfigReader.getFailureRetryCount())
+                .run(() -> {
+                   if(this.getDriver() != null) {
+                       this.getDriver().navigate().refresh();
+                       wait.untilPageLoadComplete();
+                   }
+                    return true;
+                });
     }
 
     public void maximizeWindow() {
-        if(Objects.nonNull(this.getDriver()))
+        if (Objects.nonNull(this.getDriver()))
             this.getDriver().manage().window().maximize();
     }
 
     public void minimizeWindow() {
-        if(Objects.nonNull(this.getDriver()))
+        if (Objects.nonNull(this.getDriver()))
             this.getDriver().manage().window().minimize();
     }
 
     public void clearCookies() {
-        if(this.getDriver() != null)
+        if (this.getDriver() != null)
             this.getDriver().manage().deleteAllCookies();
     }
 
     public void clearCookies(String namedCookie) {
-        if(this.getDriver() != null)
+        if (this.getDriver() != null)
             this.getDriver().manage().deleteCookieNamed(namedCookie);
     }
 
     public void closeCurrentWindow() {
-        if(Objects.nonNull(this.getDriver()))
+        if (Objects.nonNull(this.getDriver()))
             this.getDriver().close();
     }
+
     public void quiteWebDriver() {
         log.info("Attempting to quite all browser sessions");
         new RetryCommand<Boolean>(SeleniumConfigReader.getFailureRetryCount())
                 .forceRetryIgnoringExceptions(() -> {
-                    if(this.getDriver() != null)
+                    if (this.getDriver() != null)
                         this.getDriver().quit();
                     return true;
                 });

@@ -2,20 +2,10 @@ package org.seleniumbrain.lab.cucumber;
 
 import com.github.javafaker.Faker;
 import org.apache.commons.io.FilenameUtils;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.chrome.ChromeDriver;
-import org.openqa.selenium.chrome.ChromeOptions;
-import org.seleniumbrain.lab.config.SeleniumConfigReader;
-import org.seleniumbrain.lab.selenium.driver.Browsers;
-import org.seleniumbrain.lab.selenium.driver.WebDriverWaits;
-import org.seleniumbrain.lab.selenium.validator.ElementValidator;
-import org.seleniumbrain.lab.selenium.validator.TextBoxValidator;
 import org.seleniumbrain.lab.utility.PathBuilder;
-import org.springframework.util.StringUtils;
 
 import javax.activation.MimetypesFileTypeMap;
 import java.io.File;
-import java.nio.file.InvalidPathException;
 import java.nio.file.Paths;
 
 public class Test1 {
@@ -51,6 +41,8 @@ public class Test1 {
         Faker faker = new Faker();
         System.out.println(faker.address().latitude());
         System.out.println(faker.address().longitude());
+
+        System.out.println("INR 4555 INR".replaceFirst("INR ", ""));
 
     }
 }
