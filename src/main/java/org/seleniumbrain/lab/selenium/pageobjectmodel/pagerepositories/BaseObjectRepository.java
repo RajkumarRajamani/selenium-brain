@@ -1,47 +1,53 @@
 package org.seleniumbrain.lab.selenium.pageobjectmodel.pagerepositories;
 
 import io.cucumber.spring.ScenarioScope;
-import lombok.Data;
 import org.seleniumbrain.lab.easyreport.assertions.Assertions;
 import org.seleniumbrain.lab.selenium.driver.WebDriverWaits;
 import org.seleniumbrain.lab.selenium.driver.factory.WebDriverUtils;
+import org.seleniumbrain.lab.selenium.elements.AnchorDropdown;
 import org.seleniumbrain.lab.selenium.elements.Dropdown;
+import org.seleniumbrain.lab.selenium.elements.Scroll;
 import org.seleniumbrain.lab.selenium.elements.TextBox;
 import org.seleniumbrain.lab.selenium.validator.AutoPrefixedTextBoxValidator;
 import org.seleniumbrain.lab.selenium.validator.TextBoxValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-@Data
 @Component
 @ScenarioScope
 public class BaseObjectRepository {
 
     @Autowired
-    private WebDriverWaits waits;
+    public WebDriverWaits waits;
 
     @Autowired
-    private WebDriverUtils webDriverUtils;
+    public WebDriverUtils webDriverUtils;
 
     @Autowired
-    private TextBox textBox;
+    public TextBox textBox;
 
     @Autowired
-    private Dropdown dropdown;
+    public Dropdown dropdown;
 
     @Autowired
-    private TextBoxValidator textBoxValidator;
+    public AnchorDropdown anchorDropdown;
 
     @Autowired
-    private AutoPrefixedTextBoxValidator autoPrefixedTextBoxValidator;
+    public Scroll jsExecutor;
 
     @Autowired
-    private SwagLabLoginPageOR swagLabLoginPageOR;
+    public TextBoxValidator textBoxValidator;
 
     @Autowired
-    private SwagLabHomePageOR swagLabHomePageOR;
+    public AutoPrefixedTextBoxValidator autoPrefixedTextBoxValidator;
 
-    private Assertions assertions;
+    @Autowired
+    public SwagLabLoginPageOR swagLabLoginPageOR;
+
+    @Autowired
+    public SwagLabHomePageOR swagLabHomePageOR;
+
+    public Assertions assertions;
 
     public <T> T withAssertion(Assertions assertions, T repository) {
         this.assertions = assertions;

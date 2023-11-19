@@ -26,9 +26,9 @@ public class WebDriverWaits {
     private DriverFactory driverFactory;
 
     @SneakyThrows
-    public void pause(long seconds) {
-        System.out.println("Inside pause method...");
-        Thread.sleep(seconds);
+    public void pause(long milliseconds) {
+        log.info("pause for " + milliseconds + " milliseconds...");
+        Thread.sleep(milliseconds);
     }
 
     public void until(Function<WebDriver, Boolean> condition, long timeoutInSeconds) {

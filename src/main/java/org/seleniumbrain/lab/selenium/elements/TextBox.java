@@ -17,17 +17,7 @@ import java.util.Objects;
 @Slf4j
 @Component
 @ScenarioScope
-public class TextBox {
-
-    @Autowired
-    private WebDriverUtils driverUtils;
-
-    @Autowired
-    private WebDriverWaits waits;
-
-    public String getText(WebElement element) {
-        return isElementInput(element) ? element.getAttribute("value") : element.getText();
-    }
+public class TextBox extends BaseElement {
 
     public boolean setText(WebElement element, String value) {
         Objects.requireNonNull(element);
@@ -61,10 +51,6 @@ public class TextBox {
         return getText(element);
     }
 
-    public long getTextLength(WebElement element) {
-        return this.getText(element).length();
-    }
-
     private void clearWithKeys(WebElement element) {
         log.info("Unable to clear field using element.clear(). So trying SendKeys...");
         if (System.getProperty("os.name").equalsIgnoreCase("mac"))
@@ -93,10 +79,6 @@ public class TextBox {
     private void clearWithJs(WebElement element) {
         log.info("Unable to clear field using Action Class. So trying JavaScripExecutor...");
         ((JavascriptExecutor) driverUtils.getDriver()).executeScript("arguments[0].value = ''", element);
-    }
-
-    private boolean isElementInput(WebElement element) {
-        return Objects.requireNonNull(element).getTagName().equalsIgnoreCase("input");
     }
 
     public boolean isNotEmpty(WebElement element) {

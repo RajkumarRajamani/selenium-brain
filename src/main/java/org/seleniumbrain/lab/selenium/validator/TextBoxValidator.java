@@ -1,24 +1,31 @@
 package org.seleniumbrain.lab.selenium.validator;
 
 import io.cucumber.spring.ScenarioScope;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.extern.slf4j.Slf4j;
 import org.openqa.selenium.WebElement;
 import org.seleniumbrain.lab.easyreport.assertions.Assertions;
 import org.seleniumbrain.lab.selenium.driver.WebDriverWaits;
 import org.seleniumbrain.lab.selenium.driver.factory.WebDriverUtils;
+import org.seleniumbrain.lab.selenium.elements.BaseElement;
 import org.seleniumbrain.lab.selenium.elements.TextBox;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.text.DecimalFormat;
-import java.util.*;
+import java.util.Locale;
+import java.util.Objects;
+import java.util.function.Consumer;
 
-import static org.seleniumbrain.lab.selenium.validator.ValidatorResult.*;
-
+@EqualsAndHashCode(callSuper = true)
 @Slf4j
+@Data
 @Component
 @ScenarioScope
-public class TextBoxValidator {
+public class TextBoxValidator extends ElementValidator {
+
+    @Autowired
+    private CommonElementValidator commonElementValidator;
 
     @Autowired
     public WebDriverWaits wait;
@@ -29,103 +36,50 @@ public class TextBoxValidator {
     @Autowired
     public TextBox textBox;
 
-    protected List<Validator> validations = new LinkedList<>();
-
-    private Assertions assertions;
-
-    public TextBoxValidator withAssertion(Assertions assertions) {
-        this.assertions = assertions;
-        return this;
-    }
-
-    public TextBoxValidator pause(long seconds) {
-        wait.pause(seconds);
-        return this;
-    }
-
+    @Override
     public TextBoxValidator takeScreenshot(String caption) {
-        Validator validation = (element, elementName) -> {
-            webDriverUtils.attachScreenshot(caption);
-            return PASSED.name();
-        };
-        validations.add(validation);
+        commonElementValidator.takeScreenshot(caption);
         return this;
     }
 
-    /**
-     * It checks if the text box is displayed on web page.
-     *
-     * @return TextValidator this class object itself
-     */
+    @Override
+    public TextBoxValidator peek(BaseElement elementType, Consumer<BaseElement> consumer) {
+        commonElementValidator.peek(elementType, consumer);
+        return this;
+    }
+
+    @Override
+    public TextBoxValidator pause(long milliseconds) {
+        commonElementValidator.pause(milliseconds);
+        return this;
+    }
+
+    @Override
     public TextBoxValidator isDisplayed() {
-        Validator validation = (element, elementName) -> {
-            String error = elementName + " is not displayed";
-            try {
-                wait.untilVisibilityOf(element);
-                if (element.isDisplayed()) {
-                    log.info(elementName + " is displayed.");
-                    return PASSED.name();
-                } else {
-                    log.error(error);
-                    return error;
-                }
-            } catch (Exception e) {
-                log.error(error);
-                return error;
-            }
-        };
-        validations.add(validation);
+        commonElementValidator.isDisplayed();
         return this;
     }
 
-    /**
-     * It checks if the text box is enabled.
-     *
-     * @return TextValidator this class object itself
-     */
+    @Override
     public TextBoxValidator isEnabled() {
-        Validator validation = (element, elementName) -> {
-            String error = elementName + " is not enabled";
-            try {
-                if (element.isEnabled()) {
-                    log.info(elementName + " is enabled.");
-                    return PASSED.name();
-                } else {
-                    log.error(error);
-                    return error;
-                }
-            } catch (Exception e) {
-                log.error(error);
-                return error;
-            }
-        };
-        validations.add(validation);
+        commonElementValidator.isEnabled();
         return this;
     }
 
-    /**
-     * It checks if the text box is disabled.
-     *
-     * @return TextValidator this class object itself
-     */
+    @Override
     public TextBoxValidator isDisabled() {
-        Validator validation = (element, elementName) -> {
-            String error = elementName + " is not disabled";
-            try {
-                if (!element.isEnabled()) {
-                    log.info(elementName + " is disabled.");
-                    return PASSED.name();
-                } else {
-                    log.error(error);
-                    return error;
-                }
-            } catch (Exception e) {
-                log.error(error);
-                return error;
-            }
-        };
-        validations.add(validation);
+        commonElementValidator.isDisabled();
         return this;
+    }
+
+    @Override
+    public ValidatorOutput apply(WebElement element, String elementName) {
+        return commonElementValidator.apply(element, elementName);
+    }
+
+    @Override
+    public ValidatorOutput applyAndAssert(WebElement element, String elementName, Assertions assertions) {
+        return commonElementValidator.applyAndAssert(element, elementName, assertions);
     }
 
     private boolean isReadOnly(WebElement element) {
@@ -136,13 +90,12 @@ public class TextBoxValidator {
     /**
      * It checks if the text box is editable field.
      * Any editable text box will receive any value.
-     * So, we pass a value 1 and if it is entered successfully,
-     * it assumes the field is an editable one.
+     * So, we pass value 1 and if it is entered successfully,
+     * it assumes the field is editable.
      *
      * @return TextValidator this class object itself
      */
     public TextBoxValidator isEditable() {
-//        if (newText.replaceAll("[^\\d]", "").trim().equals(testText)) {
         Validator validation = (element, elementName) -> {
             String error = elementName + " is not editable";
             if (!isReadOnly(element)) {
@@ -151,7 +104,7 @@ public class TextBoxValidator {
                     String newText = textBox.setFakeAndGet(element, testText);
                     if (newText.equals(testText)) {
                         log.info(elementName + " is editable.");
-                        return PASSED.name();
+                        return ValidationResult.PASSED.name();
                     } else {
                         log.error(error);
                         return error;
@@ -165,12 +118,43 @@ public class TextBoxValidator {
                 return error;
             }
         };
-        validations.add(validation);
+        commonElementValidator.getValidations().add(validation);
         return this;
     }
 
     /**
-     * It checks if the text field allows to enter the text of given length.
+     * It checks if the text box contains the expected value.
+     *
+     * @return TextValidator this class object itself
+     */
+    public TextBoxValidator isMatching(String expectedValue) {
+        Validator validation = (element, elementName) -> {
+            String error = elementName + " does not contain the expected value.";
+            if (!isReadOnly(element)) {
+                try {
+                    String elementText = textBox.getText(element);
+                    if (elementText.equals(expectedValue)) {
+                        log.info(elementName + " contains the expected value.");
+                        return ValidationResult.PASSED.name();
+                    } else {
+                        log.error(error);
+                        return error;
+                    }
+                } catch (Exception e) {
+                    log.error(error);
+                    return error;
+                }
+            } else {
+                log.error(error);
+                return error;
+            }
+        };
+        commonElementValidator.getValidations().add(validation);
+        return this;
+    }
+
+    /**
+     * It checks if the text field allows entering the text of given length.
      *
      * @return TextValidator this class object itself
      */
@@ -183,7 +167,7 @@ public class TextBoxValidator {
                 long actualAllowedLength = textBox.getTextLength(element);
                 if (actualAllowedLength == expectedAllowedLength) {
                     log.info(elementName + " is allowed to enter text max up to " + expectedAllowedLength + " chars");
-                    return PASSED.name();
+                    return ValidationResult.PASSED.name();
                 } else {
                     log.error(error);
                     return error;
@@ -193,12 +177,12 @@ public class TextBoxValidator {
                 return error;
             }
         };
-        validations.add(validation);
+        commonElementValidator.getValidations().add(validation);
         return this;
     }
 
     /**
-     * It checks if the text field allows to enter the text of beyond given length but show validation error element.
+     * It checks if the text field allows entering the text of beyond given length but showing a validation error element.
      *
      * @return TextValidator this class object itself
      */
@@ -212,7 +196,7 @@ public class TextBoxValidator {
                 wait.untilVisibilityOf(uiErrorElement);
                 if (length > expectedAllowedLength && uiErrorElement.isDisplayed()) {
                     log.info(elementName + " shows validation error when input text length is greater than " + expectedAllowedLength + " chars");
-                    return PASSED.name();
+                    return ValidationResult.PASSED.name();
                 } else {
                     log.error(error);
                     return error;
@@ -222,7 +206,7 @@ public class TextBoxValidator {
                 return error;
             }
         };
-        validations.add(validation);
+        commonElementValidator.getValidations().add(validation);
         return this;
     }
 
@@ -240,7 +224,7 @@ public class TextBoxValidator {
                 wait.untilVisibilityOf(uiErrorElement);
                 if (elementText.equals(invalidInputText) && uiErrorElement.isDisplayed()) {
                     log.info(elementName + " shows validation error for invalid input text '" + invalidInputText + "'");
-                    return PASSED.name();
+                    return ValidationResult.PASSED.name();
                 } else {
                     log.error(error);
                     return error;
@@ -250,7 +234,7 @@ public class TextBoxValidator {
                 return error;
             }
         };
-        validations.add(validation);
+        commonElementValidator.getValidations().add(validation);
         return this;
     }
 
@@ -258,13 +242,12 @@ public class TextBoxValidator {
     /**
      * It checks if the text box is editable and accept only numeric value.
      * Any editable numeric text box will receive only number value.
-     * So, we pass a value 123xxx and if allows only numbers and discards 'xxx'
-     * it assumes the field is an editable numeric field.
+     * So, we pass a value 123xxx and if it allows only numbers and discards 'xxx'.
+     * It assumes the field is an editable numeric field.
      *
      * @return TextValidator this class object itself
      */
     public TextBoxValidator isEditableNumberField() {
-//        if (newText.replaceAll("[^\\dxxx]", "").trim().equals("123")) {
         Validator validation = (element, elementName) -> {
             String error = elementName + " is not editable number field";
             try {
@@ -272,7 +255,7 @@ public class TextBoxValidator {
                 String newText = textBox.setAndGetText(element, testText);
                 if (newText.equals("12")) {
                     log.info(elementName + " is editable number field.");
-                    return PASSED.name();
+                    return ValidationResult.PASSED.name();
                 } else {
                     log.error(error);
                     return error;
@@ -282,7 +265,7 @@ public class TextBoxValidator {
                 return error;
             }
         };
-        validations.add(validation);
+        commonElementValidator.getValidations().add(validation);
         return this;
     }
 
@@ -302,7 +285,7 @@ public class TextBoxValidator {
                 String expectedValue = Validator.getNumberWithThousandSeparator(numberInput, decimalPrecision, locale);
                 if (newText.equals(expectedValue)) {
                     log.info(elementName + " value is properly thousand separated");
-                    return PASSED.name();
+                    return ValidationResult.PASSED.name();
                 } else {
                     log.error(error);
                     return error;
@@ -312,48 +295,8 @@ public class TextBoxValidator {
                 return error;
             }
         };
-        validations.add(validation);
+        commonElementValidator.getValidations().add(validation);
         return this;
     }
 
-    public Set<String> apply(WebElement element, String elementName) {
-        try {
-            Set<String> errors = new LinkedHashSet<>();
-            for (Validator validation : validations) {
-                String result = validation.apply(element, elementName);
-                errors.add(result);
-
-                if (Objects.nonNull(assertions) && !result.equalsIgnoreCase("passed")) {
-                    assertions.assertFail(elementName, result);
-                }
-            }
-            return errors;
-        } finally {
-            validations.clear();
-        }
-    }
-
-    public static void main(String[] args) {
-        TextBoxValidator validator = new TextBoxValidator();
-        System.out.println(validator.isEditable().isEnabled().isDisabled().isEditable().isEnabled().apply(null, null));
-        System.out.println(Validator.getNumberWithThousandSeparator("23333333.55658", 3, Locale.US));
-
-        double val = 232323.53232;
-        DecimalFormat format = new DecimalFormat("0");
-        format.setMaximumFractionDigits(0);
-        System.out.println(format.format(val));
-
-        test();
-    }
-
-    public static void test() {
-        String plainText = "helloworld";
-        String key = "rajkumar#";
-        int repeat = 4;
-        int remainder = plainText.length() % key.length();
-
-        String result = new String(new char[repeat]).replaceAll(".", key).substring(0, repeat);
-        System.out.println(result);
-        System.out.println(result.length());
-    }
 }

@@ -7,9 +7,11 @@ import com.fasterxml.jackson.core.JsonPointer;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import io.cucumber.spring.ScenarioScope;
 import lombok.SneakyThrows;
 import org.apache.commons.lang3.StringUtils;
 import org.seleniumbrain.lab.utility.json.exception.JsonBuilderException;
+import org.springframework.stereotype.Component;
 
 import java.io.File;
 import java.nio.charset.StandardCharsets;
@@ -22,6 +24,8 @@ import java.util.function.Predicate;
  * @author rajkumarrajamani
  *
  */
+@Component
+@ScenarioScope
 public class JsonArrayBuilder implements JsonBuilder {
 
     private Map<String, Object> jsonPathValueMapToAppend = new LinkedHashMap<>();

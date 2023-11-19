@@ -14,11 +14,11 @@ import org.testng.annotations.DataProvider;
         },
         features = {"src/test/resources/cucumber/feature-files"},
         glue = {
+                "org.seleniumbrain.lab.cucumber.spring",
                 "org.seleniumbrain.lab.cucumber.hooks.CucumberBaseHooks",
                 "org.seleniumbrain.lab.cucumber.hooks",
                 "org.seleniumbrain.lab.cucumber.init",
-                "org.seleniumbrain.lab.cucumber.stepdefinitions",
-                "org.seleniumbrain.lab.cucumber.spring"
+                "org.seleniumbrain.lab.cucumber.stepdefinitions"
         },
         monochrome = true,
         tags = "@Test-Feature"

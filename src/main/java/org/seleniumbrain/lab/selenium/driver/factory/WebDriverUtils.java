@@ -4,9 +4,8 @@ import io.cucumber.spring.ScenarioScope;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.FileUtils;
-import org.openqa.selenium.OutputType;
-import org.openqa.selenium.TakesScreenshot;
-import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.Point;
+import org.openqa.selenium.*;
 import org.seleniumbrain.lab.config.SeleniumConfigReader;
 import org.seleniumbrain.lab.cucumber.spring.ApplicationContextUtil;
 import org.seleniumbrain.lab.cucumber.spring.configure.CucumberStepLog;
@@ -18,10 +17,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import javax.imageio.ImageIO;
+import java.awt.Rectangle;
 import java.awt.*;
 import java.awt.image.BufferedImage;
+import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.IOException;
 import java.util.Objects;
 import java.util.Set;
 
@@ -62,10 +64,10 @@ public class WebDriverUtils {
         log.info("Refreshing the page");
         new RetryCommand<Boolean>(SeleniumConfigReader.getFailureRetryCount())
                 .run(() -> {
-                   if(this.getDriver() != null) {
-                       this.getDriver().navigate().refresh();
-                       wait.untilPageLoadComplete();
-                   }
+                    if (this.getDriver() != null) {
+                        this.getDriver().navigate().refresh();
+                        wait.untilPageLoadComplete();
+                    }
                     return true;
                 });
     }
@@ -78,6 +80,21 @@ public class WebDriverUtils {
     public void minimizeWindow() {
         if (Objects.nonNull(this.getDriver()))
             this.getDriver().manage().window().minimize();
+    }
+
+    public void navigateBack() {
+        if(Objects.nonNull(this.getDriver()))
+            this.getDriver().navigate().back();
+    }
+
+    public void navigateForward() {
+        if(Objects.nonNull(this.getDriver()))
+            this.getDriver().navigate().forward();
+    }
+
+    public void fullScreen() {
+        if(Objects.nonNull(this.getDriver()))
+            this.getDriver().manage().window().fullscreen();
     }
 
     public void clearCookies() {
@@ -108,11 +125,12 @@ public class WebDriverUtils {
     public void attachScreenshot(String screenshotName) {
         wait.pause(1500);
         byte[] image = this.getScreenshotInBytes();
-        CucumberStepLog log = CucumberStepLog.builder()
+        CucumberStepLog stepLog = CucumberStepLog.builder()
                 .caption(screenshotName)
                 .img(image)
                 .build();
-        scenarioState.getStepLogs().add(log);
+        scenarioState.getStepLogs().add(stepLog);
+        log.info("Attaching screenshot with caption '" + screenshotName + "'");
     }
 
     public void attachStepLogInfo(String logMsg) {
@@ -157,5 +175,42 @@ public class WebDriverUtils {
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         ImageIO.write(img, "png", baos);
         return baos.toByteArray();
+    }
+
+    public void attachElementScreenshot(WebElement element, String screenshotName) {
+        wait.pause(1500);
+        byte[] image = this.getElementScreenshotInBytes(element);
+        CucumberStepLog log = CucumberStepLog.builder()
+                .caption(screenshotName)
+                .img(image)
+                .build();
+        scenarioState.getStepLogs().add(log);
+    }
+
+    private byte[] getElementScreenshotInBytes(WebElement element) {
+        try {
+            final byte[] screenshot = this.getScreenshotInBytes();
+            final BufferedImage img = ImageIO.read(new ByteArrayInputStream(screenshot));
+
+            System.out.println(element.getSize().getWidth());
+            System.out.println(element.getSize().getHeight());
+
+            System.out.println(element.getLocation().getX());
+            System.out.println(element.getLocation().getY());
+
+            // crop the image to focus on element
+            // get dimensions (crop points)
+            Point topLeft = element.getLocation();
+            Point bottomRight = new Point(topLeft.getX() + element.getSize().getWidth(),
+                    topLeft.getY() + element.getSize().getHeight());
+
+            BufferedImage imageCropedAroundElement = img.getSubimage(topLeft.getX() - 60,
+                    topLeft.getY() - 60,
+                    bottomRight.getX() + 60,
+                    bottomRight.getY() + 60);
+            return this.bufferedImageToByteArray(imageCropedAroundElement);
+        } catch (Exception e) {
+            return "Unable to take screenshot".getBytes();
+        }
     }
 }

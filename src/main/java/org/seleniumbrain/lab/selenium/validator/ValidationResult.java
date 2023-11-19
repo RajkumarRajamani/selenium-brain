@@ -1,6 +1,6 @@
 package org.seleniumbrain.lab.selenium.validator;
 
-public enum ValidatorResult {
+public enum ValidationResult {
     PASSED,
     NOT_EDITABLE,
     NOT_ENABLED;
