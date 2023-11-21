@@ -24,12 +24,12 @@ lab:
       unhandledPromptBehavior: #Acceptable values are - dismiss, accept, dismiss and notify, accept and notify, ignore
       binary:
       arguments: #List values
-        - headless
+#        - headless
       extensions: #List values
       excludeSwitches: #List values
       prefs: #List values
-        - key: download.default_directory
-          value:
+        - key: download-path
+          value: #Acceptable values are - default, dynamic or <any custom path value>
 
         - key: download.prompt_for_download
           value: false
@@ -51,22 +51,16 @@ lab:
         - key:
           value:
 
-        - key:
-          value:
-
     firefox:
       browserLogFilePath: test-output/browser-logs/local/firefox-driver-log.log
       browserVersion: stable #Acceptable values are - <version number>, stable, beta, dev, canary
       acceptInsecureCerts: true #bolean
-      unhandledPromptBehavior: #Acceptable values are - dismiss, accept, dismiss and notify, accept and notify, ignore
+      unhandledPromptBehavior: #Acceptable values are - [dismiss, accept, dismiss and notify, accept and notify, ignore]
       binary:
       arguments: #List values
       extensions: #List values
       excludeSwitches: #List values
       prefs: #List values
-        - key: dom.disable_beforeunload
-          value: true
-
         - key:
           value:
 

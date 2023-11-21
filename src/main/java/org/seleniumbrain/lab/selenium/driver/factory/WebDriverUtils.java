@@ -52,6 +52,20 @@ public class WebDriverUtils {
         return ApplicationContextUtil.getBean(DriverFactory.class).getDriver();
     }
 
+    public void launchUrl(String url) {
+        new RetryCommand<Boolean>(SeleniumConfigReader.getFailureRetryCount())
+                .run(() -> {
+                    this.getDriver().get(url);
+                    wait.untilPageLoadComplete(60);
+                    log.info("Launched url : " + url);
+                    return true;
+                });
+    }
+
+    public String getCurrentUrl() {
+        return this.getDriver().getCurrentUrl();
+    }
+
     public String getCurrentWindow() {
         return this.getDriver().getWindowHandle();
     }

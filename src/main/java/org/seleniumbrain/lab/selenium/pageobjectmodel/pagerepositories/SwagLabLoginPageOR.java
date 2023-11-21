@@ -4,6 +4,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
+import org.seleniumbrain.lab.selenium.pageobjectmodel.SharedStateKey;
 import org.seleniumbrain.lab.selenium.elements.TextBox;
 import org.seleniumbrain.lab.selenium.pageobjectmodel.spring.PageObjects;
 import org.seleniumbrain.lab.selenium.validator.ElementValidator;
@@ -27,6 +28,7 @@ public class SwagLabLoginPageOR extends BaseObjectRepository {
     public SwagLabLoginPageOR enterUserName(String userName) {
         textBox.setText(this.getUserName(), "INR ");
         textBox.setFakeAndGet(this.getUserName(), "fake user name");
+        scenarioState.getCacheText().put(SharedStateKey.NAME, "Enter User Name step");
         ElementValidator validator = textBoxValidator
                 .isDisplayed()
                 .isEnabled()

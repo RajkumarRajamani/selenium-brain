@@ -26,6 +26,14 @@ public class PathBuilder {
         return String.join(File.separator, System.getProperty("user.dir"), "output", "api-log", getRunCountText(), "");
     }
 
+    public static String getDefaultSystemDownloadFolder() {
+        return String.join(File.separator, System.getProperty("user.home"), "Downloads");
+    }
+
+    public static String getDefaultSystemDownloadFolder(String... nestedFolderNames) {
+        return String.join(File.separator, System.getProperty("user.home"), "Downloads", String.join(File.separator, nestedFolderNames));
+    }
+
     public static String getDownloadFolder() {
         String downloadFolder = seleniumConfig.getTest().getOutput().getDownloadFolder();
         if(Objects.isNull(downloadFolder) || downloadFolder.isBlank()) return getDefaultDownloadFolder();
@@ -62,10 +70,10 @@ public class PathBuilder {
         else return getFolderPath(String.join(File.separator, apiLogOutputFolder, getRunCountText()), dirs);
     }
 
-    private static String getFolderPath(String prefix, String... dirs) {
-        prefix = Objects.nonNull(prefix) ? StringUtils.removeEnd(prefix, File.separator) : "";
+    private static String getFolderPath(String prefixPath, String... dirs) {
+        prefixPath = Objects.nonNull(prefixPath) ? StringUtils.removeEnd(prefixPath, File.separator) : "";
         dirs = Objects.nonNull(dirs) && dirs.length > 0 ? dirs : new String[]{""};
-        return String.join(File.separator, prefix, String.join(File.separator, dirs), "");
+        return String.join(File.separator, prefixPath, String.join(File.separator, dirs), "");
     }
 
     private static String runCountText = "";

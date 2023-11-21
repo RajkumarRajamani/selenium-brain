@@ -5,18 +5,23 @@ import io.cucumber.java.*;
 import io.cucumber.plugin.event.PickleStepTestStep;
 import io.cucumber.plugin.event.TestCase;
 import lombok.SneakyThrows;
+import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.seleniumbrain.lab.config.SeleniumConfigReader;
 import org.seleniumbrain.lab.config.pojo.SeleniumConfigurations;
 import org.seleniumbrain.lab.cucumber.spring.configure.CucumberStepLog;
 import org.seleniumbrain.lab.cucumber.spring.configure.ScenarioState;
 import org.seleniumbrain.lab.selenium.driver.factory.DriverFactory;
 import org.seleniumbrain.lab.selenium.driver.factory.WebDriverUtils;
+import org.seleniumbrain.lab.selenium.pageobjectmodel.SharedStateKey;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import java.io.File;
 import java.lang.reflect.Field;
 import java.util.List;
 import java.util.Objects;
 
+@Slf4j
 public class CucumberBaseHooks {
 
     /**
@@ -36,6 +41,32 @@ public class CucumberBaseHooks {
 
     @Autowired
     private ScenarioState scenarioState;
+
+    /**
+     * @implNote Generates a prefix text based on the current feature file and a scenario being executed.
+     * We can sue this text as a prefix of a file name for any file that is generated during execution.
+     *
+     * @implSpec To generate proper prefix text, it is recommended to add every cucumber feature file with
+     * <code>@FID-featureId</code> and every cucumber scenario as <code>@SID-scenarioId</code>
+     *
+     * @param scenario current cucumber scenario being executed
+     */
+    @Before(order = 1)
+    public void generateFileNamePrefix(Scenario scenario) {
+        try {
+            log.info(StringUtils.repeat("=", 50) + "Starts Scenario(Line#" + scenario.getLine() + ") : " + scenario.getName());
+            String featureId = scenario.getSourceTagNames().stream().filter(tag -> tag.startsWith("@FID")).findFirst().orElse("FID").replace("@FID-", "").replace("FID", "");
+            String scenarioId = scenario.getSourceTagNames().stream().filter(tag -> tag.startsWith("@SID")).findFirst().orElse("SID").replace("@SID-", "").replace("SID", "");
+            scenarioState.getCacheText().put(
+                    SharedStateKey.SCENARIO_NAME_PREFIX,
+                    String.join(File.separator, featureId, featureId + "_" + scenarioId + "_Line-" + scenario.getLine() + "_")
+                    );
+            log.info("Any test evidences generated for this scenario can have its prefix name as '" + scenarioState.getCacheText().get(SharedStateKey.SCENARIO_NAME_PREFIX));
+        } catch (Exception e) {
+            log.error("Error while generating ScenarioNamePrefix." + e.getMessage());
+        }
+    }
+
 
     /**
      * It attaches the screenshots or text log for every cucumber step to provide evidence of test result.

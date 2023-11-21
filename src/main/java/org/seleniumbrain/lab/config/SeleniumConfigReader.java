@@ -17,30 +17,41 @@ import java.util.Objects;
 @Slf4j
 public class SeleniumConfigReader {
 
-    private static final String SELENIUM_CONFIG = String.join(File.separator, "", "configs", "selenium-config.yml");
+    private static final String SELENIUM_CONFIG = String.join("/",  "", "configs", "selenium-config.yml");
     private static final SeleniumConfigurations seleniumConfig;
 
     static {
         try {
             ObjectMapper mapper = new ObjectMapper(new YAMLFactory());
             mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-
-            seleniumConfig = mapper.readValue(SeleniumConfigReader.class.getResourceAsStream(FileUtils.getFilePathWithFileSeparator(SELENIUM_CONFIG)), SeleniumConfigurations.class);
+            seleniumConfig = mapper.readValue(
+                    SeleniumConfigReader.class.getResourceAsStream(SELENIUM_CONFIG),
+                    SeleniumConfigurations.class);
         } catch (IOException e) {
-            throw new ConfigurationReadException("Exception while reading Framework Configuration");
+            throw new ConfigurationReadException("Exception while reading Framework Configuration.", e);
         }
+    }
+
+    public static void main(String[] args) {
+        System.out.println(getPageLoadTimeoutInSeconds());
     }
 
     public static SeleniumConfigurations getConfigs() {
         return seleniumConfig;
     }
 
+    public static final String defaultTestEnvironment = "qa";
     public static final long defaultPageLoadTimeout = 20;
     public static final long defaultImplicitTimeout = 10;
     public static final long defaultFluentMaxTimeout = 10;
     public static final long defaultFluentPollingInterval = 250;
     public static final int defaultFailureRetryCount = 10;
     public static final String defaultTestLab = "local";
+
+    public static String getTestEnvironment() {
+        String environment = seleniumConfig.getTest().getApp().getEnvironment();
+        return Objects.nonNull(environment) && !environment.isBlank() ? environment : defaultTestEnvironment;
+    }
 
     public static long getPageLoadTimeoutInSeconds() {
         long pageLoadTimeoutInSeconds = seleniumConfig.getWait().getTimeout().getPageLoad();

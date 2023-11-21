@@ -1,6 +1,8 @@
 package org.seleniumbrain.lab.selenium.pageobjectmodel.pagerepositories;
 
 import io.cucumber.spring.ScenarioScope;
+import org.seleniumbrain.lab.config.SeleniumConfigReader;
+import org.seleniumbrain.lab.cucumber.spring.configure.ScenarioState;
 import org.seleniumbrain.lab.easyreport.assertions.Assertions;
 import org.seleniumbrain.lab.selenium.driver.WebDriverWaits;
 import org.seleniumbrain.lab.selenium.driver.factory.WebDriverUtils;
@@ -8,10 +10,15 @@ import org.seleniumbrain.lab.selenium.elements.AnchorDropdown;
 import org.seleniumbrain.lab.selenium.elements.Dropdown;
 import org.seleniumbrain.lab.selenium.elements.Scroll;
 import org.seleniumbrain.lab.selenium.elements.TextBox;
+import org.seleniumbrain.lab.selenium.pageobjectmodel.SharedStateKey;
 import org.seleniumbrain.lab.selenium.validator.AutoPrefixedTextBoxValidator;
 import org.seleniumbrain.lab.selenium.validator.TextBoxValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.Objects;
 
 @Component
 @ScenarioScope
@@ -22,6 +29,9 @@ public class BaseObjectRepository {
 
     @Autowired
     public WebDriverUtils webDriverUtils;
+
+    @Autowired
+    public ScenarioState scenarioState;
 
     @Autowired
     public TextBox textBox;
@@ -52,6 +62,19 @@ public class BaseObjectRepository {
     public <T> T withAssertion(Assertions assertions, T repository) {
         this.assertions = assertions;
         return repository;
+    }
+
+    private int seqNo = 0;
+    public String getFileNameForScenario(String fileNameKey) {
+        seqNo = seqNo + 1;
+        String prefix = scenarioState.getCacheText().get(SharedStateKey.SCENARIO_NAME_PREFIX);
+        String defaultPrefix = String.join(
+                "_",
+                SeleniumConfigReader.getTestEnvironment(),
+                String.format("%03d", seqNo),
+                fileNameKey
+        );
+        return Objects.nonNull(prefix) && !prefix.isBlank() ? String.join("_", prefix, fileNameKey) : defaultPrefix;
     }
 
 }

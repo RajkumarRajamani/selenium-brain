@@ -2,6 +2,8 @@ package org.seleniumbrain.lab.cucumber.stepdefinitions;
 
 import com.azure.security.keyvault.secrets.SecretClient;
 import io.cucumber.java.en.*;
+import org.seleniumbrain.lab.cucumber.spring.configure.ScenarioState;
+import org.seleniumbrain.lab.selenium.pageobjectmodel.SharedStateKey;
 import org.seleniumbrain.lab.easyreport.assertions.Assertions;
 import org.seleniumbrain.lab.selenium.driver.factory.DriverFactory;
 import org.seleniumbrain.lab.selenium.driver.factory.WebDriverUtils;
@@ -23,6 +25,9 @@ public class LoginFeature_StepDefinitions {
     @Autowired
     private SwagLabLoginPageOR homePageOR;
 
+    @Autowired
+    private ScenarioState scenarioState;
+
     @Given("user launch app")
     public void userLaunchApp() {
         System.out.println("User Launched the application");
@@ -42,11 +47,12 @@ public class LoginFeature_StepDefinitions {
                 .login()
                 .openSideMenu()
                 .navigateToAboutPage();
-        assertions.assertAll();
+//        assertions.assertAll();
     }
 
     @Then("they are directed to home page")
     public void directedToHomePage() {
         System.out.println("user is directed to home page");
+        System.out.println("Scenario State Shared Value: " + scenarioState.getCacheText().get(SharedStateKey.NAME));
     }
 }

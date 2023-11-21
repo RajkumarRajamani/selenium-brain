@@ -15,7 +15,10 @@ import org.openqa.selenium.edge.EdgeOptions;
 import org.openqa.selenium.firefox.*;
 import org.seleniumbrain.lab.config.SeleniumConfigReader;
 import org.seleniumbrain.lab.config.pojo.SeleniumConfigurations;
+import org.seleniumbrain.lab.exception.ApiException;
+import org.seleniumbrain.lab.exception.SeleniumBrainException;
 import org.seleniumbrain.lab.selenium.driver.Browsers;
+import org.seleniumbrain.lab.utility.PathBuilder;
 import org.springframework.stereotype.Component;
 
 import java.io.File;
@@ -24,6 +27,7 @@ import java.nio.file.Paths;
 import java.text.MessageFormat;
 import java.time.Duration;
 import java.util.*;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -36,64 +40,67 @@ public class LocalWebDriver implements DriverEngine {
 
     /**
      * Initiates a new browser session of a given browser to perform the test case execution
-     *
      */
-    @SneakyThrows
     @Override
     public void createSession() {
 
-        String browserName = localLabConfig.getBrowserName();
-        String browserLogFilePath = this.getLocalBrowserConfig().getBrowserLogFilePath();
+        try {
+            String browserName = localLabConfig.getBrowserName();
+            String browserLogFilePath = this.getLocalBrowserConfig().getBrowserLogFilePath();
 
-        if(Objects.isNull(driver)) {
-            SeleniumConfigurations.BrowserOptionsDetails browserOptionDetails = Objects.requireNonNull(this.getLocalBrowserConfig(), "Local Browser config can not be null");
-            Files.createDirectories(Paths.get(Objects.requireNonNull(FilenameUtils.getPath(browserLogFilePath))));
+            if (Objects.isNull(driver)) {
+                SeleniumConfigurations.BrowserOptionsDetails browserOptionDetails = Objects.requireNonNull(this.getLocalBrowserConfig(), "Local Browser config can not be null");
+                Files.createDirectories(Paths.get(Objects.requireNonNull(FilenameUtils.getPath(browserLogFilePath))));
 
-            switch (Browsers.valueOf(browserName.toUpperCase())) {
-                case CHROME -> {
-                    ChromeOptions chromeOptions = this.addChromeOptions(browserOptionDetails, new ChromeOptions());
-                    ChromeDriverService chromeDriverService = new ChromeDriverService.Builder()
-                            .withLogFile(new File(browserLogFilePath))
-                            .withReadableTimestamp(true)
-                            .withAppendLog(true)
-                            .withLogLevel(ChromiumDriverLogLevel.DEBUG)
-                            .withVerbose(true)
-                            .build();
+                switch (Browsers.valueOf(browserName.toUpperCase())) {
+                    case CHROME -> {
+                        ChromeOptions chromeOptions = this.addChromeOptions(browserOptionDetails, new ChromeOptions());
+                        ChromeDriverService chromeDriverService = new ChromeDriverService.Builder()
+                                .withLogFile(new File(browserLogFilePath))
+                                .withReadableTimestamp(true)
+                                .withAppendLog(true)
+                                .withLogLevel(ChromiumDriverLogLevel.DEBUG)
+                                .withVerbose(true)
+                                .build();
 
-                    log.info(MessageFormat.format("initiating chrome browser session for version ({0}) in local machine", chromeOptions.getBrowserVersion()));
-                    driver = new ChromeDriver(chromeDriverService, chromeOptions);
+                        log.info(MessageFormat.format("initiating chrome browser session for version ({0}) in local machine", chromeOptions.getBrowserVersion()));
+                        driver = new ChromeDriver(chromeDriverService, chromeOptions);
+                    }
+                    case EDGE -> {
+                        EdgeOptions edgeOptions = this.addEdgeOptions(browserOptionDetails, new EdgeOptions());
+                        EdgeDriverService edgeDriverService = new EdgeDriverService.Builder()
+                                .withLogFile(new File(browserLogFilePath))
+                                .withReadableTimestamp(true)
+                                .withAppendLog(true)
+                                .withLoglevel(ChromiumDriverLogLevel.ALL)
+                                .withVerbose(true)
+                                .build();
+
+                        log.info(MessageFormat.format("initiating edge browser session for version ({0}) in local machine", edgeOptions.getBrowserVersion()));
+                        driver = new EdgeDriver(edgeDriverService, edgeOptions);
+                    }
+                    case FIREFOX -> {
+                        FirefoxOptions firefoxOptions = this.addFirefoxOptions(browserOptionDetails, new FirefoxOptions());
+                        FirefoxDriverService edgeDriverService = new GeckoDriverService.Builder()
+                                .withLogFile(new File(browserLogFilePath))
+                                .withLogLevel(FirefoxDriverLogLevel.DEBUG)
+                                .withTruncatedLogs(false)
+                                .build();
+
+                        log.info(MessageFormat.format("initiating firefox browser session for version ({0}) in local machine", firefoxOptions.getBrowserVersion()));
+                        driver = new FirefoxDriver(edgeDriverService, firefoxOptions);
+                    }
                 }
-                case EDGE -> {
-                    EdgeOptions edgeOptions = this.addEdgeOptions(browserOptionDetails, new EdgeOptions());
-                    EdgeDriverService edgeDriverService = new EdgeDriverService.Builder()
-                            .withLogFile(new File(browserLogFilePath))
-                            .withReadableTimestamp(true)
-                            .withAppendLog(true)
-                            .withLoglevel(ChromiumDriverLogLevel.ALL)
-                            .withVerbose(true)
-                            .build();
 
-                    log.info(MessageFormat.format("initiating edge browser session for version ({0}) in local machine", edgeOptions.getBrowserVersion()));
-                    driver = new EdgeDriver(edgeDriverService, edgeOptions);
-                }
-                case FIREFOX -> {
-                    FirefoxOptions firefoxOptions = this.addFirefoxOptions(browserOptionDetails, new FirefoxOptions());
-                    FirefoxDriverService edgeDriverService = new GeckoDriverService.Builder()
-                            .withLogFile(new File(browserLogFilePath))
-                            .withLogLevel(FirefoxDriverLogLevel.DEBUG)
-                            .withTruncatedLogs(false)
-                            .build();
-
-                    log.info(MessageFormat.format("initiating firefox browser session for version ({0}) in local machine", firefoxOptions.getBrowserVersion()));
-                    driver = new FirefoxDriver(edgeDriverService, firefoxOptions);
-                }
+                driver.manage().deleteAllCookies();
+                driver.manage().timeouts().pageLoadTimeout(Duration.ofSeconds(SeleniumConfigReader.getPageLoadTimeoutInSeconds()));
+                driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(SeleniumConfigReader.getImplicitTimeoutInSeconds()));
+                driver.manage().window().maximize();
             }
-
-            driver.manage().deleteAllCookies();
-            driver.manage().timeouts().pageLoadTimeout(Duration.ofSeconds(SeleniumConfigReader.getPageLoadTimeoutInSeconds()));
-            driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(SeleniumConfigReader.getImplicitTimeoutInSeconds()));
-            driver.manage().window().maximize();
+        } catch (Exception e) {
+            e.printStackTrace();
         }
+
     }
 
     /**
@@ -114,7 +121,7 @@ public class LocalWebDriver implements DriverEngine {
 
         // set binary
         String binaryPath = this.getBinary(browserOptionDetails);
-        if(Objects.nonNull(binaryPath))
+        if (Objects.nonNull(binaryPath))
             options.setBinary(new File(binaryPath));
 
         // set arguments
@@ -127,16 +134,16 @@ public class LocalWebDriver implements DriverEngine {
 
         // set prefs
         List<SeleniumConfigurations.Preference> prefs = this.getPreferences(browserOptionDetails);
-        if(!prefs.isEmpty()) {
+        if (!prefs.isEmpty()) {
             Map<String, Object> prefSet = prefs.stream()
                     .filter(preference -> Objects.nonNull(preference.getKey()) && Objects.nonNull(preference.getValue()))
                     .collect(Collectors.toMap(SeleniumConfigurations.Preference::getKey, SeleniumConfigurations.Preference::getValue));
-            if(!prefSet.isEmpty()) options.setExperimentalOption("prefs", prefSet);
+            if (!prefSet.isEmpty()) options.setExperimentalOption("prefs", prefSet);
         }
 
         // set exclude switches
         List<String> switchesToExclude = this.getSwitchesToExclude(browserOptionDetails);
-        if(!switchesToExclude.isEmpty()) {
+        if (!switchesToExclude.isEmpty()) {
             options.setExperimentalOption("excludeSwitches", switchesToExclude);
         }
 
@@ -152,7 +159,7 @@ public class LocalWebDriver implements DriverEngine {
 
         // set binary
         String binaryPath = this.getBinary(browserOptionDetails);
-        if(Objects.nonNull(binaryPath))
+        if (Objects.nonNull(binaryPath))
             options.setBinary(new File(binaryPath));
 
         // set arguments
@@ -165,16 +172,16 @@ public class LocalWebDriver implements DriverEngine {
 
         // set prefs
         List<SeleniumConfigurations.Preference> prefs = this.getPreferences(browserOptionDetails);
-        if(!prefs.isEmpty()) {
+        if (!prefs.isEmpty()) {
             Map<String, Object> prefSet = prefs.stream()
                     .filter(preference -> Objects.nonNull(preference.getKey()) && Objects.nonNull(preference.getValue()))
                     .collect(Collectors.toMap(SeleniumConfigurations.Preference::getKey, SeleniumConfigurations.Preference::getValue));
-            if(!prefSet.isEmpty()) options.setExperimentalOption("prefs", prefSet);
+            if (!prefSet.isEmpty()) options.setExperimentalOption("prefs", prefSet);
         }
 
         // set exclude switches
         List<String> switchesToExclude = this.getSwitchesToExclude(browserOptionDetails);
-        if(!switchesToExclude.isEmpty()) {
+        if (!switchesToExclude.isEmpty()) {
             options.setExperimentalOption("excludeSwitches", switchesToExclude);
         }
 
@@ -190,7 +197,7 @@ public class LocalWebDriver implements DriverEngine {
 
         // set binary
         String binaryPath = this.getBinary(browserOptionDetails);
-        if(Objects.nonNull(binaryPath))
+        if (Objects.nonNull(binaryPath))
             options.setBinary(Paths.get(binaryPath));
 
         // set arguments
@@ -200,14 +207,14 @@ public class LocalWebDriver implements DriverEngine {
         // set extensions
         List<String> extensions = this.getExtensions(browserOptionDetails);
         FirefoxProfile profile = new FirefoxProfile();
-        if(!extensions.isEmpty()) {
+        if (!extensions.isEmpty()) {
             extensions.stream().filter(Objects::nonNull).forEach(ext -> profile.addExtension(new File(ext)));
             options.setProfile(profile);
         }
 
         // set prefs
         List<SeleniumConfigurations.Preference> prefs = this.getPreferences(browserOptionDetails);
-        if(!prefs.isEmpty()) {
+        if (!prefs.isEmpty()) {
             prefs.stream()
                     .filter(preference -> Objects.nonNull(preference.getKey()) && Objects.nonNull(preference.getValue()))
                     .forEach(pref -> {
@@ -261,7 +268,36 @@ public class LocalWebDriver implements DriverEngine {
             case FIREFOX -> browserOptionDetails = localLabConfig.getFirefox();
         }
 
+        // sets the download path for browser
+        // Assigning a path based on value provided in config yaml file.
+        if (!browserOptionDetails.getPrefs().isEmpty()) {
+            browserOptionDetails.getPrefs().stream()
+//                    .filter(pref -> Objects.nonNull(pref.getKey()) && pref.getKey().equalsIgnoreCase("download-path"))
+                    .filter(pref -> pref.getKey().equalsIgnoreCase("download-path"))
+                    .findFirst()
+                    .ifPresent(pref -> {
+                        Optional.ofNullable(pref.getValue()).ifPresent(
+                                // if present
+                                prefValue -> {
+                                    this.setBrowserDownloadPrefKey(pref, browserName);
+                                    if (prefValue.toString().equalsIgnoreCase("default"))
+                                        pref.setValue(PathBuilder.getDefaultSystemDownloadFolder(browserName));
+
+                                    if (prefValue.toString().equalsIgnoreCase("dynamic"))
+                                        pref.setValue(PathBuilder.getDownloadFolder(browserName));
+                                }
+                        );
+                    });
+        }
+
         return browserOptionDetails;
+    }
+
+    private void setBrowserDownloadPrefKey(SeleniumConfigurations.Preference pref, String browserName) {
+        switch (Browsers.valueOf(browserName.toUpperCase())) {
+            case CHROME, EDGE -> pref.setKey("download.default_directory");
+            case FIREFOX -> pref.setKey("browser.download.dir");
+        }
     }
 
 }
