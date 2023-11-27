@@ -53,4 +53,8 @@ public class Dropdown extends BaseElement {
         waits.untilElementToBeClickable(element).click();
         return new Select(element).getOptions();
     }
+
+    public String getText(WebElement element) {
+        return new Select(element).getFirstSelectedOption().getText();
+    }
 }

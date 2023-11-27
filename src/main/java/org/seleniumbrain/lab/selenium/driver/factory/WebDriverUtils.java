@@ -52,6 +52,10 @@ public class WebDriverUtils {
         return ApplicationContextUtil.getBean(DriverFactory.class).getDriver();
     }
 
+    public boolean isWebDriverNull() {
+        return Objects.isNull(this.getDriver());
+    }
+
     public void launchUrl(String url) {
         new RetryCommand<Boolean>(SeleniumConfigReader.getFailureRetryCount())
                 .run(() -> {
@@ -61,6 +65,18 @@ public class WebDriverUtils {
                     return true;
                 });
     }
+
+    public void launchUrlInNewWindow(String url) {
+        new RetryCommand<Boolean>(SeleniumConfigReader.getFailureRetryCount())
+                .run(() -> {
+                    this.getDriver().switchTo().newWindow(WindowType.WINDOW);
+                    this.getDriver().get(url);
+                    wait.untilPageLoadComplete(60);
+                    log.info("Launched url in new window: " + url);
+                    return true;
+                });
+    }
+
 
     public String getCurrentUrl() {
         return this.getDriver().getCurrentUrl();

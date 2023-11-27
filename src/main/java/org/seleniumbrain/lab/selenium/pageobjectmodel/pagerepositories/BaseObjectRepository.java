@@ -12,6 +12,7 @@ import org.seleniumbrain.lab.selenium.elements.Scroll;
 import org.seleniumbrain.lab.selenium.elements.TextBox;
 import org.seleniumbrain.lab.selenium.pageobjectmodel.SharedStateKey;
 import org.seleniumbrain.lab.selenium.validator.AutoPrefixedTextBoxValidator;
+import org.seleniumbrain.lab.selenium.validator.CommonElementValidator;
 import org.seleniumbrain.lab.selenium.validator.TextBoxValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -44,6 +45,9 @@ public class BaseObjectRepository {
 
     @Autowired
     public Scroll jsExecutor;
+
+    @Autowired
+    public CommonElementValidator commonElementValidator;
 
     @Autowired
     public TextBoxValidator textBoxValidator;

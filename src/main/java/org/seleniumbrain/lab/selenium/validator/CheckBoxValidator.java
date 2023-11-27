@@ -82,11 +82,39 @@ public class CheckBoxValidator extends ElementValidator {
         return commonElementValidator.applyAndAssert(element, elementName, assertions);
     }
 
+    public CheckBoxValidator isCheckBox() {
+        Validator validation = (element, elementName) -> {
+            String error = elementName + " is not a checkbox.";
+            try {
+                wait.untilVisibilityOf(element);
+                if(element.getAttribute("type").equalsIgnoreCase("checkbox")) {
+                    log.info(elementName + " is a checkbox.");
+                    return ValidationResult.PASSED.name();
+                } else {
+                    log.error(error);
+                    return error;
+                }
+            } catch (Exception e) {
+                log.error(error);
+                return error;
+            }
+        };
+        commonElementValidator.getValidations().add(validation);
+        return this;
+    }
+
     public CheckBoxValidator isChecked() {
         Validator validation = (element, elementName) -> {
             String error = elementName + " is not checked.";
             try {
-                return null;
+                wait.untilVisibilityOf(element);
+                if(element.isSelected()) {
+                    log.info(elementName + " is checked.");
+                    return ValidationResult.PASSED.name();
+                } else {
+                    log.error(error);
+                    return error;
+                }
             } catch (Exception e) {
                 log.error(error);
                 return error;

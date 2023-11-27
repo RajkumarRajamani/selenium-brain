@@ -2,6 +2,7 @@ package org.seleniumbrain.lab.utility;
 
 import org.apache.commons.lang3.StringUtils;
 import org.seleniumbrain.lab.config.SeleniumConfigReader;
+import org.seleniumbrain.lab.config.SystemConfig;
 import org.seleniumbrain.lab.config.pojo.SeleniumConfigurations;
 import org.seleniumbrain.lab.utility.json.core.JsonBuilder;
 
@@ -15,23 +16,23 @@ public class PathBuilder {
     private static final SeleniumConfigurations seleniumConfig = SeleniumConfigReader.getConfigs();
 
     private static String getDefaultDownloadFolder() {
-        return String.join(File.separator, System.getProperty("user.dir"), "output", getRunCountText(), "download", "");
+        return String.join(File.separator, SystemConfig.getProjectDir(), "output", getRunCountText(), "download", "");
     }
 
     private static String getDefaultOutputFolder() {
-        return String.join(File.separator, System.getProperty("user.dir"), "output", getRunCountText(), "");
+        return String.join(File.separator, SystemConfig.getProjectDir(), "output", getRunCountText(), "");
     }
 
     private static String getDefaultApiLogOutputFolder() {
-        return String.join(File.separator, System.getProperty("user.dir"), "output", "api-log", getRunCountText(), "");
+        return String.join(File.separator, SystemConfig.getProjectDir(), "output", "api-log", getRunCountText(), "");
     }
 
     public static String getDefaultSystemDownloadFolder() {
-        return String.join(File.separator, System.getProperty("user.home"), "Downloads");
+        return String.join(File.separator, SystemConfig.getUserHomeDir(), "Downloads");
     }
 
     public static String getDefaultSystemDownloadFolder(String... nestedFolderNames) {
-        return String.join(File.separator, System.getProperty("user.home"), "Downloads", String.join(File.separator, nestedFolderNames));
+        return String.join(File.separator, SystemConfig.getUserHomeDir(), "Downloads", String.join(File.separator, nestedFolderNames));
     }
 
     public static String getDownloadFolder() {
@@ -82,7 +83,7 @@ public class PathBuilder {
 
         if(Objects.isNull(runCountText) || runCountText.isBlank()) {
             String runCounterFile = "run-counter.json";
-            String path = String.join(File.separator, System.getProperty("user.dir"), "src", "main", "resources", runCounterFile);
+            String path = String.join(File.separator, SystemConfig.getProjectDir(), "src", "main", "resources", runCounterFile);
             File file = new File(path);
             JsonBuilder builder = JsonBuilder.getObjectBuilder();
             String timeStampSuffix = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd_HH-mm-ss"));

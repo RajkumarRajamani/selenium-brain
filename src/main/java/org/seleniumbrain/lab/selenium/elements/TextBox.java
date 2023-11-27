@@ -7,6 +7,7 @@ import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
+import org.seleniumbrain.lab.config.SystemConfig;
 import org.seleniumbrain.lab.selenium.driver.WebDriverWaits;
 import org.seleniumbrain.lab.selenium.driver.factory.WebDriverUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,11 +32,19 @@ public class TextBox extends BaseElement {
     }
 
     public boolean clearText(WebElement element) {
-        if (isNotEmpty(element)) element.clear(); else return true;
-        if (isNotEmpty(element)) this.clearWithKeys(element); else return true;
-        if (isNotEmpty(element)) this.clearWithActionClass(element); else return true;
-        if (isNotEmpty(element)) this.clearWithJs(element); else return true;
-        return getText(element).isBlank();
+        boolean isCleard = false;
+        try {
+            if (isNotEmpty(element)) element.clear();
+            if (isNotEmpty(element)) this.clearWithUnicode(element);
+            if (isNotEmpty(element)) this.clearWithKeys(element);
+            if (isNotEmpty(element)) this.clearWithActionClass(element);
+            if (isNotEmpty(element)) this.clearWithJs(element);
+            isCleard = getText(element).isBlank();
+        } finally {
+            if(isCleard) log.info("Element value is cleared and is blank.");
+            else log.info("Unable to clear the element value.");
+        }
+        return isCleard;
     }
 
     public String setFakeAndGet(WebElement element, String fakeText) {
@@ -51,25 +60,36 @@ public class TextBox extends BaseElement {
         return getText(element);
     }
 
+    private void clearWithUnicode(WebElement element) {
+        log.info("Unable to clear field using element.clear(). So trying delete[mac \\U+007F]/backspace[windows \\U+0008] unicode character...");
+        String osName = SystemConfig.getOsName();
+        while(isNotEmpty(element)) {
+            int beforeLength = getText(element).length();
+            switch (osName) {
+                case "mac" -> element.sendKeys("\u007F");
+                case "windows" -> element.sendKeys("\u0008");
+            }
+            int afterLength = getText(element).length();
+            if(afterLength >= beforeLength || afterLength == 0) break;
+        }
+    }
+
     private void clearWithKeys(WebElement element) {
         log.info("Unable to clear field using element.clear(). So trying SendKeys...");
-        if (System.getProperty("os.name").equalsIgnoreCase("mac"))
-            element.sendKeys(Keys.chord(Keys.COMMAND, "a", Keys.DELETE));
-        if (System.getProperty("os.name").equalsIgnoreCase("windows"))
-            element.sendKeys(Keys.chord(Keys.CONTROL, "a", Keys.DELETE));
+        switch (SystemConfig.getOsName()) {
+            case "mac" -> element.sendKeys(Keys.chord(Keys.COMMAND, "a", Keys.DELETE));
+            case "windows" -> element.sendKeys(Keys.chord(Keys.CONTROL, "a", Keys.BACK_SPACE));
+        }
     }
 
     private void clearWithActionClass(WebElement element) {
-        log.info("Unable to clear field using WebDriver's sendkeys method. So trying Action class...");
-        if (System.getProperty("os.name").equalsIgnoreCase("mac")) {
-            new Actions(driverUtils.getDriver())
+        log.info("Unable to clear field using WebDriver's sendKeys method. So trying Action class...");
+        switch (SystemConfig.getOsName()) {
+            case "mac" -> new Actions(driverUtils.getDriver())
                     .pause(200).keyDown(Keys.COMMAND).sendKeys("a").keyUp(Keys.CONTROL)
-                    .pause(200).sendKeys(Keys.BACK_SPACE)
+                    .pause(200).sendKeys(Keys.DELETE)
                     .perform();
-        }
-
-        if (System.getProperty("os.name").equalsIgnoreCase("windows")) {
-            new Actions(driverUtils.getDriver())
+            case "windows" -> new Actions(driverUtils.getDriver())
                     .pause(200).keyDown(Keys.CONTROL).sendKeys("a").keyUp(Keys.CONTROL)
                     .pause(200).sendKeys(Keys.BACK_SPACE)
                     .perform();

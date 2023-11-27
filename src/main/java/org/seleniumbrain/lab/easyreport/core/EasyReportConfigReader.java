@@ -1,5 +1,6 @@
 package org.seleniumbrain.lab.easyreport.core;
 
+import org.seleniumbrain.lab.config.SystemConfig;
 import org.seleniumbrain.lab.easyreport.exception.EasyReportException;
 import lombok.SneakyThrows;
 
@@ -14,8 +15,7 @@ import java.util.stream.Stream;
 public class EasyReportConfigReader {
 
     private static Properties properties;
-//    private static final String defaultReportDirectory = System.getProperty("user.dir") + System.getProperty("file.separator") + "easy-report" + System.getProperty("file.separator");
-    private static final String defaultReportDirectory = String.join(File.separator, System.getProperty("user.dir"), "output", "easy-report", "");
+    private static final String defaultReportDirectory = String.join(File.separator, SystemConfig.getProjectDir(), "output", "easy-report", "");
 
     public EasyReportConfigReader() {
         this.loadProperties();
@@ -25,7 +25,7 @@ public class EasyReportConfigReader {
     private void loadProperties() {
         if(Objects.isNull(properties)) {
             String fileNameToFind = "cucumber.properties";
-            String rootDirectoryPath = System.getProperty("user.dir") + System.getProperty("file.separator") + "src" + System.getProperty("file.separator");
+            String rootDirectoryPath = String.join(File.separator, SystemConfig.getProjectDir(), "src", "");
             File rootDirectory = new File(rootDirectoryPath);
             File cucumberPropertyFile = null;
 

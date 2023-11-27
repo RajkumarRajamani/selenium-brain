@@ -272,8 +272,8 @@ public class LocalWebDriver implements DriverEngine {
         // Assigning a path based on value provided in config yaml file.
         if (!browserOptionDetails.getPrefs().isEmpty()) {
             browserOptionDetails.getPrefs().stream()
-//                    .filter(pref -> Objects.nonNull(pref.getKey()) && pref.getKey().equalsIgnoreCase("download-path"))
-                    .filter(pref -> pref.getKey().equalsIgnoreCase("download-path"))
+                    .filter(pref -> Objects.nonNull(pref.getKey()) && pref.getKey().equalsIgnoreCase("download-path"))
+//                    .filter(pref -> pref.getKey().equalsIgnoreCase("download-path"))
                     .findFirst()
                     .ifPresent(pref -> {
                         Optional.ofNullable(pref.getValue()).ifPresent(

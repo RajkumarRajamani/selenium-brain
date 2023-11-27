@@ -29,6 +29,7 @@ public class SwagLabLoginPageOR extends BaseObjectRepository {
         textBox.setText(this.getUserName(), "INR ");
         textBox.setFakeAndGet(this.getUserName(), "fake user name");
         scenarioState.getCacheText().put(SharedStateKey.NAME, "Enter User Name step");
+
         ElementValidator validator = textBoxValidator
                 .isDisplayed()
                 .isEnabled()
