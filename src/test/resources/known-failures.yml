@@ -1,0 +1,8 @@
+knownFailures:
+  - label: UserName Field
+    trackingId: XLCTCD-1234
+    description: new known failure
+
+  - label: Password Field
+    trackingId: XLCTCD-56789
+    description: deferred to release 5

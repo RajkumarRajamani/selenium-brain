@@ -39,7 +39,7 @@ public class LoginFeature_StepDefinitions {
     public void userLogin() {
         System.out.println("user login with valid credentials");
         Assertions assertions = new Assertions();
-        assertions.addKnownFailureLabels("UserName Field", "ID1000");
+//        assertions.addKnownFailureLabels("UserName Field", "ID1000");
         homePageOR
                 .withAssertion(assertions, homePageOR)
                 .enterUserName("standard_user")
@@ -47,7 +47,7 @@ public class LoginFeature_StepDefinitions {
                 .login()
                 .openSideMenu()
                 .navigateToAboutPage();
-//        assertions.assertAll();
+        assertions.assertAll();
     }
 
     @Then("they are directed to home page")
