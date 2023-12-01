@@ -130,21 +130,16 @@ public class TextBoxValidator extends ElementValidator {
     public TextBoxValidator isMatching(String expectedValue) {
         Validator validation = (element, elementName) -> {
             String error = elementName + " does not contain the expected value.";
-            if (!isReadOnly(element)) {
-                try {
-                    String elementText = textBox.getText(element);
-                    if (elementText.equals(expectedValue)) {
-                        log.info(elementName + " contains the expected value.");
-                        return ValidationResult.PASSED.name();
-                    } else {
-                        log.error(error);
-                        return error;
-                    }
-                } catch (Exception e) {
+            try {
+                String elementText = textBox.getText(element);
+                if (elementText.equals(expectedValue)) {
+                    log.info(elementName + " contains the expected value.");
+                    return ValidationResult.PASSED.name();
+                } else {
                     log.error(error);
                     return error;
                 }
-            } else {
+            } catch (Exception e) {
                 log.error(error);
                 return error;
             }
