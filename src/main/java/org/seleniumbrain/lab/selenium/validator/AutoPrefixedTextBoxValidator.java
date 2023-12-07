@@ -3,6 +3,9 @@ package org.seleniumbrain.lab.selenium.validator;
 import io.cucumber.spring.ScenarioScope;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
+import org.openqa.selenium.ElementNotInteractableException;
+import org.openqa.selenium.NoSuchElementException;
+import org.openqa.selenium.TimeoutException;
 import org.openqa.selenium.WebElement;
 import org.seleniumbrain.lab.easyreport.assertions.Assertions;
 import org.seleniumbrain.lab.selenium.driver.WebDriverWaits;
@@ -12,6 +15,7 @@ import org.seleniumbrain.lab.selenium.elements.TextBox;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.text.MessageFormat;
 import java.util.Locale;
 import java.util.Objects;
 import java.util.function.Consumer;
@@ -73,6 +77,12 @@ public class AutoPrefixedTextBoxValidator extends ElementValidator {
     }
 
     @Override
+    public AutoPrefixedTextBoxValidator isNotDisplayed() {
+        commonElementValidator.isNotDisplayed();
+        return this;
+    }
+
+    @Override
     public AutoPrefixedTextBoxValidator isEnabled() {
         commonElementValidator.isEnabled();
         return this;
@@ -110,24 +120,48 @@ public class AutoPrefixedTextBoxValidator extends ElementValidator {
     public AutoPrefixedTextBoxValidator isEditable() {
         Validator validation = (element, elementName) -> {
             String error = elementName + " is not editable";
-            if (!isReadOnly(element)) {
-                try {
-                    String testText = "123";
-                    String newText = textBox.setFakeAndGet(element, testText);
-                    if (newText.equals(String.join("", defaultTextBoxPrefix, testText))) {
-                        log.info(elementName + " is editable.");
-                        return ValidationResult.PASSED.name();
-                    } else {
-                        log.error(error);
-                        return error;
-                    }
-                } catch (Exception e) {
+            try {
+                String testText = "1";
+                String newText = textBox.setFakeAndGet(element, testText);
+                if (newText.equals(String.join("", defaultTextBoxPrefix, testText))) {
+                    log.info(elementName + " is editable.");
+                    return ValidationResult.PASSED.name();
+                } else {
                     log.error(error);
                     return error;
                 }
-            } else {
+            } catch (Exception e) {
                 log.error(error);
                 return error;
+            }
+        };
+        commonElementValidator.getValidations().add(validation);
+        return this;
+    }
+
+    /**
+     * It checks if the text-box/text-label is not editable field.
+     * Any non-editable field will throw {@link org.openqa.selenium.ElementNotInteractableException} while using sendKeys() method.
+     * This will result if a field is editable or not.
+     *
+     * @return AutoPrefixedTextBoxValidator this class object itself
+     */
+    public AutoPrefixedTextBoxValidator isNotEditable() {
+        Validator validation = (element, elementName) -> {
+            String error = elementName + " is editable";
+            try {
+                String testText = "1";
+                element.sendKeys(testText);
+                if (textBox.getText(element).equals(String.join("", defaultTextBoxPrefix, testText))) {
+                    log.info(error);
+                    return error;
+                } else {
+                    log.error(elementName + " is not editable");
+                    return ValidationResult.PASSED.name();
+                }
+            } catch (Exception e) {
+                log.error(elementName + " is not editable");
+                return ValidationResult.PASSED.name();
             }
         };
         commonElementValidator.getValidations().add(validation);
@@ -141,24 +175,20 @@ public class AutoPrefixedTextBoxValidator extends ElementValidator {
      */
     public AutoPrefixedTextBoxValidator isMatchingWithoutPrefix(String expectedValue) {
         Validator validation = (element, elementName) -> {
-            String error = elementName + " does not contain the expected value.";
-            if (!isReadOnly(element)) {
-                try {
-                    String elementText = textBox.getText(element).replaceFirst(defaultTextBoxPrefix, StringUtils.EMPTY);
-                    if (elementText.equals(expectedValue)) {
-                        log.info(elementName + " contains the expected value.");
-                        return ValidationResult.PASSED.name();
-                    } else {
-                        log.error(error);
-                        return error;
-                    }
-                } catch (Exception e) {
-                    log.error(error);
-                    return error;
+            String error = "{0} does not contain the expected suffix value ({1}). Instead it contains ({2}).";
+            String elementText = null;
+            try {
+                elementText = textBox.getText(element).replaceFirst(defaultTextBoxPrefix, StringUtils.EMPTY);
+                if (elementText.equals(expectedValue)) {
+                    log.info(MessageFormat.format("{0} contains the expected suffix value ({1})", elementName, expectedValue));
+                    return ValidationResult.PASSED.name();
+                } else {
+                    log.error(MessageFormat.format(error, elementName, expectedValue, elementText));
+                    return MessageFormat.format(error, elementName, expectedValue, elementText);
                 }
-            } else {
-                log.error(error);
-                return error;
+            } catch (Exception e) {
+                log.error(MessageFormat.format(error, elementName, expectedValue, elementText));
+                return MessageFormat.format(error, elementName, expectedValue, elementText);
             }
         };
         commonElementValidator.getValidations().add(validation);
@@ -172,24 +202,21 @@ public class AutoPrefixedTextBoxValidator extends ElementValidator {
      */
     public AutoPrefixedTextBoxValidator isMatchingWithPrefix(String expectedValue) {
         Validator validation = (element, elementName) -> {
-            String error = elementName + " does not contain the expected value.";
-            if (!isReadOnly(element)) {
-                try {
-                    String elementText = textBox.getText(element);
-                    if (elementText.equals(String.join("", defaultTextBoxPrefix, expectedValue))) {
-                        log.info(elementName + " contains the expected value.");
-                        return ValidationResult.PASSED.name();
-                    } else {
-                        log.error(error);
-                        return error;
-                    }
-                } catch (Exception e) {
-                    log.error(error);
-                    return error;
+            String error = "{0} does not contain the expected value ({1}). Instead it contains ({2}).";
+            String elementText = null;
+            String prefixedExpectedValue = String.join("", defaultTextBoxPrefix, expectedValue);
+            try {
+                elementText = textBox.getText(element);
+                if (elementText.equals(prefixedExpectedValue)) {
+                    log.info(MessageFormat.format("{0} contains the expected value ({1})", elementName, prefixedExpectedValue));
+                    return ValidationResult.PASSED.name();
+                } else {
+                    log.error(MessageFormat.format(error, elementName, prefixedExpectedValue, elementText));
+                    return MessageFormat.format(error, elementName, prefixedExpectedValue, elementText);
                 }
-            } else {
-                log.error(error);
-                return error;
+            } catch (Exception e) {
+                log.error(MessageFormat.format(error, elementName, prefixedExpectedValue, elementText));
+                return MessageFormat.format(error, elementName, prefixedExpectedValue, elementText);
             }
         };
         commonElementValidator.getValidations().add(validation);
@@ -203,7 +230,7 @@ public class AutoPrefixedTextBoxValidator extends ElementValidator {
      */
     public AutoPrefixedTextBoxValidator isTextLengthIncludingPrefixAllowedTill(int expectedAllowedLength) {
         Validator validation = (element, elementName) -> {
-            String error = elementName + " is allowed to enter text beyond allowed length of " + expectedAllowedLength + " chars.";
+            String error = elementName + " is allowed to enter text beyond allowed length of " + expectedAllowedLength + " chars including prefix.";
             try {
                 String testText = new String(new char[expectedAllowedLength]).replaceAll(".", "test-text").substring(0, expectedAllowedLength + 1);
                 long elementLengthIncludingPrefix = textBox.setAndGetText(element, testText).length();
@@ -230,7 +257,7 @@ public class AutoPrefixedTextBoxValidator extends ElementValidator {
      */
     public AutoPrefixedTextBoxValidator isTextLengthExcludingPrefixAllowedTill(int expectedAllowedLength) {
         Validator validation = (element, elementName) -> {
-            String error = elementName + " is allowed to enter text beyond allowed length of " + expectedAllowedLength + " chars.";
+            String error = elementName + " is allowed to enter text beyond allowed length of " + expectedAllowedLength + " chars excluding prefix.";
             try {
                 String testText = new String(new char[expectedAllowedLength]).replaceAll(".", "test-text").substring(0, expectedAllowedLength + 1);
                 long elementTextLengthExcludingPrefix = textBox.setAndGetText(element, testText).replaceFirst(defaultTextBoxPrefix, StringUtils.EMPTY).length();
@@ -257,13 +284,14 @@ public class AutoPrefixedTextBoxValidator extends ElementValidator {
      */
     public AutoPrefixedTextBoxValidator isTextLengthIncludingPrefixBeyondLimitShowsError(int expectedAllowedLength, WebElement uiErrorElement) {
         Validator validation = (element, elementName) -> {
-            String error = elementName + " is not allowed to enter text of " + expectedAllowedLength + " chars.";
+            String error = elementName + " is not allowed to enter text of " + expectedAllowedLength + " chars including prefix.";
             try {
                 String testText = new String(new char[expectedAllowedLength]).replaceAll(".", "test-text").substring(0, expectedAllowedLength + 1);
-                long elementLengthIncludingPrefix = textBox.setAndGetText(element, testText).replaceFirst(defaultTextBoxPrefix, StringUtils.EMPTY).length();
+                textBox.setText(element, testText);
+                long elementLengthIncludingPrefix = textBox.getText(element).length();
                 wait.untilVisibilityOf(uiErrorElement);
                 if (elementLengthIncludingPrefix > expectedAllowedLength && uiErrorElement.isDisplayed()) {
-                    log.info(elementName + " shows validation error when input text length is greater than " + expectedAllowedLength + " chars");
+                    log.info(elementName + " shows validation error when input text length is greater than " + expectedAllowedLength + " chars including prefix.");
                     return ValidationResult.PASSED.name();
                 } else {
                     log.error(error);
@@ -285,13 +313,14 @@ public class AutoPrefixedTextBoxValidator extends ElementValidator {
      */
     public AutoPrefixedTextBoxValidator isTextLengthExcludingPrefixBeyondLimitShowsError(int expectedAllowedLength, WebElement uiErrorElement) {
         Validator validation = (element, elementName) -> {
-            String error = elementName + " is not allowed to enter text of " + expectedAllowedLength + " chars.";
+            String error = elementName + " is not allowed to enter text of " + expectedAllowedLength + " chars excluding prefix.";
             try {
                 String testText = new String(new char[expectedAllowedLength]).replaceAll(".", "test-text").substring(0, expectedAllowedLength + 1);
-                long elementLengthIncludingPrefix = textBox.setAndGetText(element, testText).length();
+                textBox.setText(element, testText);
+                long elementLengthExcludingPrefix = textBox.getText(element).replaceFirst(defaultTextBoxPrefix, StringUtils.EMPTY).length();
                 wait.untilVisibilityOf(uiErrorElement);
-                if (elementLengthIncludingPrefix > expectedAllowedLength && uiErrorElement.isDisplayed()) {
-                    log.info(elementName + " shows validation error when input text length is greater than " + expectedAllowedLength + " chars");
+                if (elementLengthExcludingPrefix > expectedAllowedLength && uiErrorElement.isDisplayed()) {
+                    log.info(elementName + " shows validation error when input text length is greater than " + expectedAllowedLength + " chars excluding prefix.");
                     return ValidationResult.PASSED.name();
                 } else {
                     log.error(error);
@@ -319,7 +348,7 @@ public class AutoPrefixedTextBoxValidator extends ElementValidator {
                 textBox.setText(element, invalidInputText);
                 String elementText = textBox.getText(element);
                 wait.untilVisibilityOf(uiErrorElement);
-                if (elementText.equals(invalidInputText) && uiErrorElement.isDisplayed()) {
+                if (elementText.equals(String.join("", defaultTextBoxPrefix, invalidInputText)) && uiErrorElement.isDisplayed()) {
                     log.info(elementName + " shows validation error for invalid input text '" + invalidInputText + "'");
                     return ValidationResult.PASSED.name();
                 } else {
@@ -352,9 +381,9 @@ public class AutoPrefixedTextBoxValidator extends ElementValidator {
         Validator validation = (element, elementName) -> {
             String error = elementName + " is not editable number field";
             try {
-                String testText = "12xxx";
+                String testText = "1xxx";
                 String newText = textBox.setAndGetText(element, testText).replaceFirst(defaultTextBoxPrefix, StringUtils.EMPTY);
-                if (newText.equals("12")) {
+                if (newText.equals("1")) {
                     log.info(elementName + " is editable number field.");
                     return ValidationResult.PASSED.name();
                 } else {

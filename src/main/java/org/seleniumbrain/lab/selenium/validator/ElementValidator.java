@@ -41,6 +41,13 @@ public abstract class ElementValidator {
     public abstract ElementValidator isDisplayed();
 
     /**
+     * <p>Checks if an element is not displayed on current page</p>
+     *
+     * @return ElementValidator this class object itself
+     */
+    public abstract ElementValidator isNotDisplayed();
+
+    /**
      * <p>Checks if an element is enabled on current page</p>
      *
      * @return ElementValidator this class object itself

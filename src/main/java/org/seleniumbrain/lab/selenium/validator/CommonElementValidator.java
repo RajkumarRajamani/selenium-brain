@@ -88,6 +88,28 @@ public class CommonElementValidator extends ElementValidator {
     }
 
     @Override
+    public CommonElementValidator isNotDisplayed() {
+        Validator validation = (element, elementName) -> {
+            String error = elementName + " is displayed";
+            try {
+                wait.untilVisibilityOf(element);
+                if (!element.isDisplayed()) {
+                    log.info(elementName + " is not displayed.");
+                    return ValidationResult.PASSED.name();
+                } else {
+                    log.error(error);
+                    return error;
+                }
+            } catch (Exception e) {
+                log.error(error);
+                return error;
+            }
+        };
+        validations.add(validation);
+        return this;
+    }
+
+    @Override
     public CommonElementValidator isEnabled() {
         Validator validation = (element, elementName) -> {
             String error = elementName + " is not enabled";

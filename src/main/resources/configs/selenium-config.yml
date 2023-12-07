@@ -29,7 +29,7 @@ lab:
       excludeSwitches: #List values
       prefs: #List values
         - key: download-path
-          value: #Acceptable values are - default, dynamic or <any custom path value>
+          value: #Acceptable values: default, dynamic or <any custom path value>
 
         - key: download.prompt_for_download
           value: false
@@ -41,7 +41,7 @@ lab:
       browserLogFilePath: test-output/browser-logs/local/edge-driver-log.log
       browserVersion: stable #Acceptable values are - <version number>, stable, beta, dev, canary
       acceptInsecureCerts: true #bolean
-      unhandledPromptBehavior: #Acceptable values are - dismiss, accept, dismiss and notify, accept and notify, ignore
+      unhandledPromptBehavior: #Acceptable values: dismiss, accept, dismiss and notify, accept and notify, ignore
       binary:
       arguments: #List values
         - start-maximized

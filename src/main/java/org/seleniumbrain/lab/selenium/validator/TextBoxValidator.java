@@ -4,6 +4,7 @@ import io.cucumber.spring.ScenarioScope;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.openqa.selenium.WebElement;
 import org.seleniumbrain.lab.easyreport.assertions.Assertions;
 import org.seleniumbrain.lab.selenium.driver.WebDriverWaits;
@@ -13,6 +14,7 @@ import org.seleniumbrain.lab.selenium.elements.TextBox;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.text.MessageFormat;
 import java.util.Locale;
 import java.util.Objects;
 import java.util.function.Consumer;
@@ -61,6 +63,12 @@ public class TextBoxValidator extends ElementValidator {
     }
 
     @Override
+    public TextBoxValidator isNotDisplayed() {
+        commonElementValidator.isNotDisplayed();
+        return this;
+    }
+
+    @Override
     public TextBoxValidator isEnabled() {
         commonElementValidator.isEnabled();
         return this;
@@ -98,24 +106,47 @@ public class TextBoxValidator extends ElementValidator {
     public TextBoxValidator isEditable() {
         Validator validation = (element, elementName) -> {
             String error = elementName + " is not editable";
-            if (!isReadOnly(element)) {
-                try {
-                    String testText = "1";
-                    String newText = textBox.setFakeAndGet(element, testText);
-                    if (newText.equals(testText)) {
-                        log.info(elementName + " is editable.");
-                        return ValidationResult.PASSED.name();
-                    } else {
-                        log.error(error);
-                        return error;
-                    }
-                } catch (Exception e) {
+            try {
+                String testText = "1";
+                String newText = textBox.setFakeAndGet(element, testText);
+                if (newText.equals(testText)) {
+                    log.info(elementName + " is editable.");
+                    return ValidationResult.PASSED.name();
+                } else {
                     log.error(error);
                     return error;
                 }
-            } else {
+            } catch (Exception e) {
                 log.error(error);
                 return error;
+            }
+        };
+        commonElementValidator.getValidations().add(validation);
+        return this;
+    }
+
+    /**
+     * It checks if the text-box/text-label is not editable field.
+     * Any non-editable field will throw {@link org.openqa.selenium.ElementNotInteractableException} while using sendKeys() method.
+     * This will result if a field is editable or not.
+     *
+     * @return AutoPrefixedTextBoxValidator this class object itself
+     */
+    public TextBoxValidator isNotEditable() {
+        Validator validation = (element, elementName) -> {
+            String error = elementName + " is not editable";
+            try {
+                element.sendKeys("1");
+                if (textBox.getText(element).equals("1")) {
+                    log.info(error);
+                    return error;
+                } else {
+                    log.error(elementName + " is not editable");
+                    return ValidationResult.PASSED.name();
+                }
+            } catch (Exception e) {
+                log.error(elementName + " is not editable");
+                return ValidationResult.PASSED.name();
             }
         };
         commonElementValidator.getValidations().add(validation);
@@ -129,19 +160,20 @@ public class TextBoxValidator extends ElementValidator {
      */
     public TextBoxValidator isMatching(String expectedValue) {
         Validator validation = (element, elementName) -> {
-            String error = elementName + " does not contain the expected value.";
+            String error = "{0} does not contain the expected value ({1}). Instead it contains ({2}).";
+            String elementText = null;
             try {
-                String elementText = textBox.getText(element);
+                elementText = textBox.getText(element);
                 if (elementText.equals(expectedValue)) {
-                    log.info(elementName + " contains the expected value.");
+                    log.info(MessageFormat.format("{0} contains the expected value ({1})", elementName, expectedValue));
                     return ValidationResult.PASSED.name();
                 } else {
-                    log.error(error);
-                    return error;
+                    log.error(MessageFormat.format(error, elementName, expectedValue, elementText));
+                    return MessageFormat.format(error, elementName, expectedValue, elementText);
                 }
             } catch (Exception e) {
-                log.error(error);
-                return error;
+                log.error(MessageFormat.format(error, elementName, expectedValue, elementText));
+                return MessageFormat.format(error, elementName, expectedValue, elementText);
             }
         };
         commonElementValidator.getValidations().add(validation);
@@ -161,7 +193,7 @@ public class TextBoxValidator extends ElementValidator {
                 textBox.setText(element, testText);
                 long actualAllowedLength = textBox.getTextLength(element);
                 if (actualAllowedLength == expectedAllowedLength) {
-                    log.info(elementName + " is allowed to enter text max up to " + expectedAllowedLength + " chars");
+                    log.info(elementName + " is allowed to enter text max up to " + expectedAllowedLength + " chars.");
                     return ValidationResult.PASSED.name();
                 } else {
                     log.error(error);
@@ -190,7 +222,7 @@ public class TextBoxValidator extends ElementValidator {
                 long length = textBox.getTextLength(element);
                 wait.untilVisibilityOf(uiErrorElement);
                 if (length > expectedAllowedLength && uiErrorElement.isDisplayed()) {
-                    log.info(elementName + " shows validation error when input text length is greater than " + expectedAllowedLength + " chars");
+                    log.info(elementName + " shows validation error when input text length is greater than " + expectedAllowedLength + " chars.");
                     return ValidationResult.PASSED.name();
                 } else {
                     log.error(error);
@@ -246,9 +278,9 @@ public class TextBoxValidator extends ElementValidator {
         Validator validation = (element, elementName) -> {
             String error = elementName + " is not editable number field";
             try {
-                String testText = "12xxx";
+                String testText = "1xxx";
                 String newText = textBox.setAndGetText(element, testText);
-                if (newText.equals("12")) {
+                if (newText.equals("1")) {
                     log.info(elementName + " is editable number field.");
                     return ValidationResult.PASSED.name();
                 } else {

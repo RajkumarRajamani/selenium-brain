@@ -276,17 +276,19 @@ public class LocalWebDriver implements DriverEngine {
 //                    .filter(pref -> pref.getKey().equalsIgnoreCase("download-path"))
                     .findFirst()
                     .ifPresent(pref -> {
-                        Optional.ofNullable(pref.getValue()).ifPresent(
-                                // if present
-                                prefValue -> {
-                                    this.setBrowserDownloadPrefKey(pref, browserName);
-                                    if (prefValue.toString().equalsIgnoreCase("default"))
-                                        pref.setValue(PathBuilder.getDefaultSystemDownloadFolder(browserName));
-
-                                    if (prefValue.toString().equalsIgnoreCase("dynamic"))
-                                        pref.setValue(PathBuilder.getDownloadFolder(browserName));
-                                }
-                        );
+                        this.setBrowserDownloadPrefKey(pref, browserName);
+                        pref.setValue(PathBuilder.getDownloadFolder());
+//                        Optional.ofNullable(pref.getValue()).ifPresent(
+//                                // if present
+//                                prefValue -> {
+//                                    this.setBrowserDownloadPrefKey(pref, browserName);
+//                                    if (prefValue.toString().equalsIgnoreCase("default"))
+//                                        pref.setValue(PathBuilder.getDefaultSystemDownloadFolder(browserName));
+//
+//                                    if (prefValue.toString().equalsIgnoreCase("dynamic"))
+//                                        pref.setValue(PathBuilder.getDownloadFolder(browserName));
+//                                }
+//                        );
                     });
         }
 

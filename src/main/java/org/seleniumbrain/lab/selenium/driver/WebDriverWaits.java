@@ -13,6 +13,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.time.Duration;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.function.Function;
 import java.util.regex.Pattern;
@@ -24,6 +26,16 @@ public class WebDriverWaits {
 
     @Autowired
     private DriverFactory driverFactory;
+
+//    private List<Class<?>> ignorableExceptions = new ArrayList<>(){
+//        {
+//            add(NoSuchElementException.class);
+//            add(TimeoutException.class);
+//            add(StaleElementReferenceException.class);
+//        }
+//    };
+
+    private List<Class<?>> ignorableExceptions = List.of(NoSuchElementException.class, TimeoutException.class, StaleElementReferenceException.class);
 
     @SneakyThrows
     public void pause(long milliseconds) {
@@ -81,7 +93,8 @@ public class WebDriverWaits {
                 driverFactory.getDriver(),
                 Duration.ofSeconds(maxTimeout),
                 Duration.ofMillis(SeleniumConfigReader.getFluentPollingTimeoutInSeconds()))
-        .until(ExpectedConditions.elementToBeClickable(by));
+                .ignoreAll(List.of(NoSuchElementException.class, TimeoutException.class, StaleElementReferenceException.class))
+                .until(ExpectedConditions.elementToBeClickable(by));
     }
 
     public WebElement untilElementToBeClickable(By by) {
@@ -89,6 +102,7 @@ public class WebDriverWaits {
                 driverFactory.getDriver(),
                 Duration.ofSeconds(SeleniumConfigReader.getFluentMaxTimeoutInSeconds()),
                 Duration.ofMillis(SeleniumConfigReader.getFluentPollingTimeoutInSeconds()))
+                .ignoreAll(List.of(NoSuchElementException.class, TimeoutException.class, StaleElementReferenceException.class))
                 .until(ExpectedConditions.elementToBeClickable(by));
     }
 
@@ -97,6 +111,7 @@ public class WebDriverWaits {
                 driverFactory.getDriver(),
                 Duration.ofSeconds(maxTimeout),
                 Duration.ofMillis(SeleniumConfigReader.getFluentPollingTimeoutInSeconds()))
+                .ignoreAll(List.of(NoSuchElementException.class, TimeoutException.class, StaleElementReferenceException.class))
                 .until(ExpectedConditions.elementToBeClickable(element));
     }
 
@@ -105,6 +120,7 @@ public class WebDriverWaits {
                 driverFactory.getDriver(),
                 Duration.ofSeconds(SeleniumConfigReader.getFluentMaxTimeoutInSeconds()),
                 Duration.ofMillis(SeleniumConfigReader.getFluentPollingTimeoutInSeconds()))
+                .ignoreAll(List.of(NoSuchElementException.class, TimeoutException.class, StaleElementReferenceException.class))
                 .until(ExpectedConditions.elementToBeClickable(element));
     }
 
@@ -115,6 +131,7 @@ public class WebDriverWaits {
                 driverFactory.getDriver(),
                 Duration.ofSeconds(maxTimeout),
                 Duration.ofMillis(SeleniumConfigReader.getFluentPollingTimeoutInSeconds()))
+                .ignoreAll(List.of(NoSuchElementException.class, TimeoutException.class, StaleElementReferenceException.class))
                 .until(ExpectedConditions.elementToBeSelected(by));
     }
 
@@ -123,6 +140,7 @@ public class WebDriverWaits {
                 driverFactory.getDriver(),
                 Duration.ofSeconds(SeleniumConfigReader.getFluentMaxTimeoutInSeconds()),
                 Duration.ofMillis(SeleniumConfigReader.getFluentPollingTimeoutInSeconds()))
+                .ignoreAll(List.of(NoSuchElementException.class, TimeoutException.class, StaleElementReferenceException.class))
                 .until(ExpectedConditions.elementToBeSelected(by));
     }
 
@@ -131,6 +149,7 @@ public class WebDriverWaits {
                 driverFactory.getDriver(),
                 Duration.ofSeconds(maxTimeout),
                 Duration.ofMillis(SeleniumConfigReader.getFluentPollingTimeoutInSeconds()))
+                .ignoreAll(List.of(NoSuchElementException.class, TimeoutException.class, StaleElementReferenceException.class))
                 .until(ExpectedConditions.elementToBeSelected(element));
     }
 
@@ -139,6 +158,7 @@ public class WebDriverWaits {
                 driverFactory.getDriver(),
                 Duration.ofSeconds(SeleniumConfigReader.getFluentMaxTimeoutInSeconds()),
                 Duration.ofMillis(SeleniumConfigReader.getFluentPollingTimeoutInSeconds()))
+                .ignoreAll(List.of(NoSuchElementException.class, TimeoutException.class, StaleElementReferenceException.class))
                 .until(ExpectedConditions.elementToBeSelected(element));
     }
 
@@ -148,6 +168,7 @@ public class WebDriverWaits {
                 driverFactory.getDriver(),
                 Duration.ofSeconds(maxTimeout),
                 Duration.ofMillis(SeleniumConfigReader.getFluentPollingTimeoutInSeconds()))
+                .ignoreAll(List.of(NoSuchElementException.class, TimeoutException.class, StaleElementReferenceException.class))
                 .until(ExpectedConditions.elementSelectionStateToBe(by, selected));
     }
 
@@ -156,6 +177,7 @@ public class WebDriverWaits {
                 driverFactory.getDriver(),
                 Duration.ofSeconds(SeleniumConfigReader.getFluentMaxTimeoutInSeconds()),
                 Duration.ofMillis(SeleniumConfigReader.getFluentPollingTimeoutInSeconds()))
+                .ignoreAll(List.of(NoSuchElementException.class, TimeoutException.class, StaleElementReferenceException.class))
                 .until(ExpectedConditions.elementSelectionStateToBe(by, selected));
     }
 
@@ -164,6 +186,7 @@ public class WebDriverWaits {
                 driverFactory.getDriver(),
                 Duration.ofSeconds(maxTimeout),
                 Duration.ofMillis(SeleniumConfigReader.getFluentPollingTimeoutInSeconds()))
+                .ignoreAll(List.of(NoSuchElementException.class, TimeoutException.class, StaleElementReferenceException.class))
                 .until(ExpectedConditions.elementSelectionStateToBe(element, selected));
     }
 
@@ -172,6 +195,7 @@ public class WebDriverWaits {
                 driverFactory.getDriver(),
                 Duration.ofSeconds(SeleniumConfigReader.getFluentMaxTimeoutInSeconds()),
                 Duration.ofMillis(SeleniumConfigReader.getFluentPollingTimeoutInSeconds()))
+                .ignoreAll(List.of(NoSuchElementException.class, TimeoutException.class, StaleElementReferenceException.class))
                 .until(ExpectedConditions.elementSelectionStateToBe(element, selected));
     }
 
@@ -181,6 +205,7 @@ public class WebDriverWaits {
                 driverFactory.getDriver(),
                 Duration.ofSeconds(maxTimeout),
                 Duration.ofMillis(SeleniumConfigReader.getFluentPollingTimeoutInSeconds()))
+                .ignoreAll(List.of(NoSuchElementException.class, TimeoutException.class, StaleElementReferenceException.class))
                 .until(ExpectedConditions.numberOfElementsToBe(by, count));
     }
 
@@ -189,6 +214,7 @@ public class WebDriverWaits {
                 driverFactory.getDriver(),
                 Duration.ofSeconds(SeleniumConfigReader.getFluentMaxTimeoutInSeconds()),
                 Duration.ofMillis(SeleniumConfigReader.getFluentPollingTimeoutInSeconds()))
+                .ignoreAll(List.of(NoSuchElementException.class, TimeoutException.class, StaleElementReferenceException.class))
                 .until(ExpectedConditions.numberOfElementsToBe(by, count));
     }
 
@@ -198,6 +224,7 @@ public class WebDriverWaits {
                 driverFactory.getDriver(),
                 Duration.ofSeconds(SeleniumConfigReader.getFluentMaxTimeoutInSeconds()),
                 Duration.ofMillis(SeleniumConfigReader.getFluentPollingTimeoutInSeconds()))
+                .ignoreAll(List.of(NoSuchElementException.class, TimeoutException.class, StaleElementReferenceException.class))
                 .until(ExpectedConditions.numberOfElementsToBeLessThan(by, count));
     }
 
@@ -206,6 +233,7 @@ public class WebDriverWaits {
                 driverFactory.getDriver(),
                 Duration.ofSeconds(SeleniumConfigReader.getFluentMaxTimeoutInSeconds()),
                 Duration.ofMillis(SeleniumConfigReader.getFluentPollingTimeoutInSeconds()))
+                .ignoreAll(List.of(NoSuchElementException.class, TimeoutException.class, StaleElementReferenceException.class))
                 .until(ExpectedConditions.numberOfElementsToBeMoreThan(by, count));
     }
 
@@ -215,6 +243,7 @@ public class WebDriverWaits {
                 driverFactory.getDriver(),
                 Duration.ofSeconds(SeleniumConfigReader.getFluentMaxTimeoutInSeconds()),
                 Duration.ofMillis(SeleniumConfigReader.getFluentPollingTimeoutInSeconds()))
+                .ignoreAll(List.of(NoSuchElementException.class, TimeoutException.class, StaleElementReferenceException.class))
                 .until(ExpectedConditions.textToBePresentInElement(element, text));
     }
 
@@ -223,6 +252,7 @@ public class WebDriverWaits {
                 driverFactory.getDriver(),
                 Duration.ofSeconds(SeleniumConfigReader.getFluentMaxTimeoutInSeconds()),
                 Duration.ofMillis(SeleniumConfigReader.getFluentPollingTimeoutInSeconds()))
+                .ignoreAll(List.of(NoSuchElementException.class, TimeoutException.class, StaleElementReferenceException.class))
                 .until(ExpectedConditions.textToBePresentInElementValue(by, text));
     }
 
@@ -231,6 +261,7 @@ public class WebDriverWaits {
                 driverFactory.getDriver(),
                 Duration.ofSeconds(SeleniumConfigReader.getFluentMaxTimeoutInSeconds()),
                 Duration.ofMillis(SeleniumConfigReader.getFluentPollingTimeoutInSeconds()))
+                .ignoreAll(List.of(NoSuchElementException.class, TimeoutException.class, StaleElementReferenceException.class))
                 .until(ExpectedConditions.textToBePresentInElementValue(element, text));
     }
 
@@ -239,6 +270,7 @@ public class WebDriverWaits {
                 driverFactory.getDriver(),
                 Duration.ofSeconds(SeleniumConfigReader.getFluentMaxTimeoutInSeconds()),
                 Duration.ofMillis(SeleniumConfigReader.getFluentPollingTimeoutInSeconds()))
+                .ignoreAll(List.of(NoSuchElementException.class, TimeoutException.class, StaleElementReferenceException.class))
                 .until(ExpectedConditions.textToBePresentInElementLocated(by, text));
     }
 
@@ -247,6 +279,7 @@ public class WebDriverWaits {
                 driverFactory.getDriver(),
                 Duration.ofSeconds(SeleniumConfigReader.getFluentMaxTimeoutInSeconds()),
                 Duration.ofMillis(SeleniumConfigReader.getFluentPollingTimeoutInSeconds()))
+                .ignoreAll(List.of(NoSuchElementException.class, TimeoutException.class, StaleElementReferenceException.class))
                 .until(ExpectedConditions.textToBe(by, text));
     }
 
@@ -255,6 +288,7 @@ public class WebDriverWaits {
                 driverFactory.getDriver(),
                 Duration.ofSeconds(SeleniumConfigReader.getFluentMaxTimeoutInSeconds()),
                 Duration.ofMillis(SeleniumConfigReader.getFluentPollingTimeoutInSeconds()))
+                .ignoreAll(List.of(NoSuchElementException.class, TimeoutException.class, StaleElementReferenceException.class))
                 .until(ExpectedConditions.textMatches(by, pattern));
     }
 
@@ -263,6 +297,7 @@ public class WebDriverWaits {
                 driverFactory.getDriver(),
                 Duration.ofSeconds(SeleniumConfigReader.getFluentMaxTimeoutInSeconds()),
                 Duration.ofMillis(SeleniumConfigReader.getFluentPollingTimeoutInSeconds()))
+                .ignoreAll(List.of(NoSuchElementException.class, TimeoutException.class, StaleElementReferenceException.class))
                 .until(ExpectedConditions.alertIsPresent());
     }
 
@@ -271,6 +306,7 @@ public class WebDriverWaits {
                 driverFactory.getDriver(),
                 Duration.ofSeconds(SeleniumConfigReader.getFluentMaxTimeoutInSeconds()),
                 Duration.ofMillis(SeleniumConfigReader.getFluentPollingTimeoutInSeconds()))
+                .ignoreAll(List.of(NoSuchElementException.class, TimeoutException.class, StaleElementReferenceException.class))
                 .until(ExpectedConditions.visibilityOf(element));
     }
 
@@ -279,6 +315,7 @@ public class WebDriverWaits {
                 driverFactory.getDriver(),
                 Duration.ofSeconds(SeleniumConfigReader.getFluentMaxTimeoutInSeconds()),
                 Duration.ofMillis(SeleniumConfigReader.getFluentPollingTimeoutInSeconds()))
+                .ignoreAll(List.of(NoSuchElementException.class, TimeoutException.class, StaleElementReferenceException.class))
                 .until(ExpectedConditions.visibilityOfElementLocated(by));
     }
 
@@ -287,6 +324,7 @@ public class WebDriverWaits {
                 driverFactory.getDriver(),
                 Duration.ofSeconds(SeleniumConfigReader.getFluentMaxTimeoutInSeconds()),
                 Duration.ofMillis(SeleniumConfigReader.getFluentPollingTimeoutInSeconds()))
+                .ignoreAll(List.of(NoSuchElementException.class, TimeoutException.class, StaleElementReferenceException.class))
                 .until(ExpectedConditions.visibilityOfAllElementsLocatedBy(by));
     }
 
@@ -295,6 +333,7 @@ public class WebDriverWaits {
                 driverFactory.getDriver(),
                 Duration.ofSeconds(SeleniumConfigReader.getFluentMaxTimeoutInSeconds()),
                 Duration.ofMillis(SeleniumConfigReader.getFluentPollingTimeoutInSeconds()))
+                .ignoreAll(List.of(NoSuchElementException.class, TimeoutException.class, StaleElementReferenceException.class))
                 .until(ExpectedConditions.visibilityOfAllElements(elements));
     }
 
@@ -303,6 +342,7 @@ public class WebDriverWaits {
                 driverFactory.getDriver(),
                 Duration.ofSeconds(SeleniumConfigReader.getFluentMaxTimeoutInSeconds()),
                 Duration.ofMillis(SeleniumConfigReader.getFluentPollingTimeoutInSeconds()))
+                .ignoreAll(List.of(NoSuchElementException.class, TimeoutException.class, StaleElementReferenceException.class))
                 .until(ExpectedConditions.visibilityOfAllElements(elements));
     }
 
@@ -311,6 +351,7 @@ public class WebDriverWaits {
                 driverFactory.getDriver(),
                 Duration.ofSeconds(SeleniumConfigReader.getFluentMaxTimeoutInSeconds()),
                 Duration.ofMillis(SeleniumConfigReader.getFluentPollingTimeoutInSeconds()))
+                .ignoreAll(List.of(NoSuchElementException.class, TimeoutException.class, StaleElementReferenceException.class))
                 .until(ExpectedConditions.visibilityOfNestedElementsLocatedBy(parent, child));
     }
 
@@ -319,6 +360,7 @@ public class WebDriverWaits {
                 driverFactory.getDriver(),
                 Duration.ofSeconds(SeleniumConfigReader.getFluentMaxTimeoutInSeconds()),
                 Duration.ofMillis(SeleniumConfigReader.getFluentPollingTimeoutInSeconds()))
+                .ignoreAll(List.of(NoSuchElementException.class, TimeoutException.class, StaleElementReferenceException.class))
                 .until(ExpectedConditions.visibilityOfNestedElementsLocatedBy(parent, child));
     }
 
@@ -327,6 +369,7 @@ public class WebDriverWaits {
                 driverFactory.getDriver(),
                 Duration.ofSeconds(SeleniumConfigReader.getFluentMaxTimeoutInSeconds()),
                 Duration.ofMillis(SeleniumConfigReader.getFluentPollingTimeoutInSeconds()))
+                .ignoreAll(List.of(NoSuchElementException.class, TimeoutException.class, StaleElementReferenceException.class))
                 .until(ExpectedConditions.invisibilityOf(element));
     }
 
@@ -335,6 +378,7 @@ public class WebDriverWaits {
                 driverFactory.getDriver(),
                 Duration.ofSeconds(SeleniumConfigReader.getFluentMaxTimeoutInSeconds()),
                 Duration.ofMillis(SeleniumConfigReader.getFluentPollingTimeoutInSeconds()))
+                .ignoreAll(List.of(NoSuchElementException.class, TimeoutException.class, StaleElementReferenceException.class))
                 .until(ExpectedConditions.invisibilityOfElementLocated(by));
     }
 
@@ -343,6 +387,7 @@ public class WebDriverWaits {
                 driverFactory.getDriver(),
                 Duration.ofSeconds(SeleniumConfigReader.getFluentMaxTimeoutInSeconds()),
                 Duration.ofMillis(SeleniumConfigReader.getFluentPollingTimeoutInSeconds()))
+                .ignoreAll(List.of(NoSuchElementException.class, TimeoutException.class, StaleElementReferenceException.class))
                 .until(ExpectedConditions.invisibilityOfAllElements(elements));
     }
 
@@ -351,6 +396,7 @@ public class WebDriverWaits {
                 driverFactory.getDriver(),
                 Duration.ofSeconds(SeleniumConfigReader.getFluentMaxTimeoutInSeconds()),
                 Duration.ofMillis(SeleniumConfigReader.getFluentPollingTimeoutInSeconds()))
+                .ignoreAll(List.of(NoSuchElementException.class, TimeoutException.class, StaleElementReferenceException.class))
                 .until(ExpectedConditions.invisibilityOfAllElements(element));
     }
 
@@ -359,6 +405,7 @@ public class WebDriverWaits {
                 driverFactory.getDriver(),
                 Duration.ofSeconds(SeleniumConfigReader.getFluentMaxTimeoutInSeconds()),
                 Duration.ofMillis(SeleniumConfigReader.getFluentPollingTimeoutInSeconds()))
+                .ignoreAll(List.of(NoSuchElementException.class, TimeoutException.class, StaleElementReferenceException.class))
                 .until(ExpectedConditions.invisibilityOfElementWithText(by, text));
     }
 
@@ -367,6 +414,7 @@ public class WebDriverWaits {
                 driverFactory.getDriver(),
                 Duration.ofSeconds(SeleniumConfigReader.getFluentMaxTimeoutInSeconds()),
                 Duration.ofMillis(SeleniumConfigReader.getFluentPollingTimeoutInSeconds()))
+                .ignoreAll(List.of(NoSuchElementException.class, TimeoutException.class, StaleElementReferenceException.class))
                 .until(ExpectedConditions.domAttributeToBe(element, attribute, value));
     }
 
@@ -375,6 +423,7 @@ public class WebDriverWaits {
                 driverFactory.getDriver(),
                 Duration.ofSeconds(SeleniumConfigReader.getFluentMaxTimeoutInSeconds()),
                 Duration.ofMillis(SeleniumConfigReader.getFluentPollingTimeoutInSeconds()))
+                .ignoreAll(List.of(NoSuchElementException.class, TimeoutException.class, StaleElementReferenceException.class))
                 .until(ExpectedConditions.domPropertyToBe(element, attribute, value));
     }
 
@@ -383,6 +432,7 @@ public class WebDriverWaits {
                 driverFactory.getDriver(),
                 Duration.ofSeconds(SeleniumConfigReader.getFluentMaxTimeoutInSeconds()),
                 Duration.ofMillis(SeleniumConfigReader.getFluentPollingTimeoutInSeconds()))
+                .ignoreAll(List.of(NoSuchElementException.class, TimeoutException.class, StaleElementReferenceException.class))
                 .until(ExpectedConditions.attributeToBe(element, attribute, value));
     }
 
@@ -391,6 +441,7 @@ public class WebDriverWaits {
                 driverFactory.getDriver(),
                 Duration.ofSeconds(SeleniumConfigReader.getFluentMaxTimeoutInSeconds()),
                 Duration.ofMillis(SeleniumConfigReader.getFluentPollingTimeoutInSeconds()))
+                .ignoreAll(List.of(NoSuchElementException.class, TimeoutException.class, StaleElementReferenceException.class))
                 .until(ExpectedConditions.attributeToBe(by, attribute, value));
     }
 
@@ -399,6 +450,7 @@ public class WebDriverWaits {
                 driverFactory.getDriver(),
                 Duration.ofSeconds(SeleniumConfigReader.getFluentMaxTimeoutInSeconds()),
                 Duration.ofMillis(SeleniumConfigReader.getFluentPollingTimeoutInSeconds()))
+                .ignoreAll(List.of(NoSuchElementException.class, TimeoutException.class, StaleElementReferenceException.class))
                 .until(ExpectedConditions.attributeContains(element, attribute, value));
     }
 
@@ -407,6 +459,7 @@ public class WebDriverWaits {
                 driverFactory.getDriver(),
                 Duration.ofSeconds(SeleniumConfigReader.getFluentMaxTimeoutInSeconds()),
                 Duration.ofMillis(SeleniumConfigReader.getFluentPollingTimeoutInSeconds()))
+                .ignoreAll(List.of(NoSuchElementException.class, TimeoutException.class, StaleElementReferenceException.class))
                 .until(ExpectedConditions.attributeContains(by, attribute, value));
     }
 
@@ -415,6 +468,7 @@ public class WebDriverWaits {
                 driverFactory.getDriver(),
                 Duration.ofSeconds(SeleniumConfigReader.getFluentMaxTimeoutInSeconds()),
                 Duration.ofMillis(SeleniumConfigReader.getFluentPollingTimeoutInSeconds()))
+                .ignoreAll(List.of(NoSuchElementException.class, TimeoutException.class, StaleElementReferenceException.class))
                 .until(ExpectedConditions.attributeToBeNotEmpty(element, attribute));
     }
 
@@ -423,6 +477,7 @@ public class WebDriverWaits {
                 driverFactory.getDriver(),
                 Duration.ofSeconds(SeleniumConfigReader.getFluentMaxTimeoutInSeconds()),
                 Duration.ofMillis(SeleniumConfigReader.getFluentPollingTimeoutInSeconds()))
+                .ignoreAll(List.of(NoSuchElementException.class, TimeoutException.class, StaleElementReferenceException.class))
                 .until(ExpectedConditions.titleContains((value)));
     }
 
@@ -431,6 +486,7 @@ public class WebDriverWaits {
                 driverFactory.getDriver(),
                 Duration.ofSeconds(SeleniumConfigReader.getFluentMaxTimeoutInSeconds()),
                 Duration.ofMillis(SeleniumConfigReader.getFluentPollingTimeoutInSeconds()))
+                .ignoreAll(List.of(NoSuchElementException.class, TimeoutException.class, StaleElementReferenceException.class))
                 .until(ExpectedConditions.titleIs(value));
     }
 
@@ -439,6 +495,7 @@ public class WebDriverWaits {
                 driverFactory.getDriver(),
                 Duration.ofSeconds(SeleniumConfigReader.getFluentMaxTimeoutInSeconds()),
                 Duration.ofMillis(SeleniumConfigReader.getFluentPollingTimeoutInSeconds()))
+                .ignoreAll(List.of(NoSuchElementException.class, TimeoutException.class, StaleElementReferenceException.class))
                 .until(ExpectedConditions.urlContains(value));
     }
 
@@ -447,6 +504,7 @@ public class WebDriverWaits {
                 driverFactory.getDriver(),
                 Duration.ofSeconds(SeleniumConfigReader.getFluentMaxTimeoutInSeconds()),
                 Duration.ofMillis(SeleniumConfigReader.getFluentPollingTimeoutInSeconds()))
+                .ignoreAll(List.of(NoSuchElementException.class, TimeoutException.class, StaleElementReferenceException.class))
                 .until(ExpectedConditions.urlMatches(value));
     }
 
@@ -455,6 +513,7 @@ public class WebDriverWaits {
                 driverFactory.getDriver(),
                 Duration.ofSeconds(SeleniumConfigReader.getFluentMaxTimeoutInSeconds()),
                 Duration.ofMillis(SeleniumConfigReader.getFluentPollingTimeoutInSeconds()))
+                .ignoreAll(List.of(NoSuchElementException.class, TimeoutException.class, StaleElementReferenceException.class))
                 .until(ExpectedConditions.urlToBe(value));
     }
 
@@ -463,6 +522,7 @@ public class WebDriverWaits {
                 driverFactory.getDriver(),
                 Duration.ofSeconds(SeleniumConfigReader.getFluentMaxTimeoutInSeconds()),
                 Duration.ofMillis(SeleniumConfigReader.getFluentPollingTimeoutInSeconds()))
+                .ignoreAll(List.of(NoSuchElementException.class, TimeoutException.class, StaleElementReferenceException.class))
                 .until(ExpectedConditions.frameToBeAvailableAndSwitchToIt(frameName));
     }
 
@@ -479,6 +539,7 @@ public class WebDriverWaits {
                 driverFactory.getDriver(),
                 Duration.ofSeconds(SeleniumConfigReader.getFluentMaxTimeoutInSeconds()),
                 Duration.ofMillis(SeleniumConfigReader.getFluentPollingTimeoutInSeconds()))
+                .ignoreAll(List.of(NoSuchElementException.class, TimeoutException.class, StaleElementReferenceException.class))
                 .until(ExpectedConditions.frameToBeAvailableAndSwitchToIt(by));
     }
 
@@ -487,6 +548,7 @@ public class WebDriverWaits {
                 driverFactory.getDriver(),
                 Duration.ofSeconds(SeleniumConfigReader.getFluentMaxTimeoutInSeconds()),
                 Duration.ofMillis(SeleniumConfigReader.getFluentPollingTimeoutInSeconds()))
+                .ignoreAll(List.of(NoSuchElementException.class, TimeoutException.class, StaleElementReferenceException.class))
                 .until(ExpectedConditions.frameToBeAvailableAndSwitchToIt(frameIndex));
     }
 }

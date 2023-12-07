@@ -59,6 +59,12 @@ public class CollapsibleValidator extends ElementValidator {
     }
 
     @Override
+    public CollapsibleValidator isNotDisplayed() {
+        commonElementValidator.isNotDisplayed();
+        return this;
+    }
+
+    @Override
     public CollapsibleValidator isEnabled() {
         commonElementValidator.isEnabled();
         return this;

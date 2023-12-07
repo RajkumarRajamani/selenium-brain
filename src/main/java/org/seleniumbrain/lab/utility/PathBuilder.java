@@ -15,8 +15,8 @@ public class PathBuilder {
 
     private static final SeleniumConfigurations seleniumConfig = SeleniumConfigReader.getConfigs();
 
-    private static String getDefaultDownloadFolder() {
-        return String.join(File.separator, SystemConfig.getProjectDir(), "output", getRunCountText(), "download", "");
+    private static String getDefaultSystemDownloadFolder() {
+        return String.join(File.separator, SystemConfig.getUserHomeDir(), "download", "automation", getRunCountText(), "");
     }
 
     private static String getDefaultOutputFolder() {
@@ -27,23 +27,19 @@ public class PathBuilder {
         return String.join(File.separator, SystemConfig.getProjectDir(), "output", "api-log", getRunCountText(), "");
     }
 
-    public static String getDefaultSystemDownloadFolder() {
-        return String.join(File.separator, SystemConfig.getUserHomeDir(), "Downloads");
-    }
-
     public static String getDefaultSystemDownloadFolder(String... nestedFolderNames) {
         return String.join(File.separator, SystemConfig.getUserHomeDir(), "Downloads", String.join(File.separator, nestedFolderNames));
     }
 
     public static String getDownloadFolder() {
         String downloadFolder = seleniumConfig.getTest().getOutput().getDownloadFolder();
-        if(Objects.isNull(downloadFolder) || downloadFolder.isBlank()) return getDefaultDownloadFolder();
+        if(Objects.isNull(downloadFolder) || downloadFolder.isBlank()) return getDefaultSystemDownloadFolder();
         else return String.join(File.separator, downloadFolder, getRunCountText(), "");
     }
 
     public static String getDownloadFolder(String... dirs) {
         String downloadFolder = seleniumConfig.getTest().getOutput().getDownloadFolder();
-        if(Objects.isNull(downloadFolder) || downloadFolder.isBlank()) return getFolderPath(getDefaultDownloadFolder(), dirs);
+        if(Objects.isNull(downloadFolder) || downloadFolder.isBlank()) return getFolderPath(getDefaultSystemDownloadFolder(), dirs);
         else return getFolderPath(String.join(File.separator, downloadFolder, getRunCountText()), dirs);
     }
 

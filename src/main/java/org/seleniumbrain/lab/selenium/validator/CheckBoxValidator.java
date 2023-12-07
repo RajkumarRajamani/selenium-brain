@@ -61,6 +61,12 @@ public class CheckBoxValidator extends ElementValidator {
     }
 
     @Override
+    public CheckBoxValidator isNotDisplayed() {
+        commonElementValidator.isNotDisplayed();
+        return this;
+    }
+
+    @Override
     public CheckBoxValidator isEnabled() {
         commonElementValidator.isEnabled();
         return this;

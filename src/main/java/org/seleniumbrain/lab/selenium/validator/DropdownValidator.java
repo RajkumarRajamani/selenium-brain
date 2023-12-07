@@ -61,6 +61,12 @@ public class DropdownValidator extends ElementValidator {
     }
 
     @Override
+    public DropdownValidator isNotDisplayed() {
+        commonElementValidator.isNotDisplayed();
+        return this;
+    }
+
+    @Override
     public DropdownValidator isEnabled() {
         commonElementValidator.isEnabled();
         return this;
