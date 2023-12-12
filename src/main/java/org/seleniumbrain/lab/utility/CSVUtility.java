@@ -15,13 +15,29 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.stream.Stream;
 
+/**
+ * <a href="https://opencsv.sourceforge.net/">refer OpenCsv documentation</a>
+ */
 public class CSVUtility {
 
     public static List<?> readCsv(String fileName, Class<?> type) throws FileNotFoundException {
         return new CsvToBeanBuilder<>(new FileReader(fileName))
                 .withType(type)
+                .withQuoteChar('"')
+                .withSeparator(',')
+                .withIgnoreEmptyLine(true)
+                .withOrderedResults(true)
                 .build().parse();
     }
+
+    public static List<?> readCsv(char delimiter, String fileName, Class<?> type) throws FileNotFoundException {
+        return new CsvToBeanBuilder<>(new FileReader(fileName))
+                .withType(type)
+                .withSeparator(delimiter)
+                .build().parse();
+    }
+
+
 
     public static void main(String[] args) throws Exception {
 
@@ -39,6 +55,10 @@ public class CSVUtility {
         }
 
         CSVUtility.readCsvToRecords(fileName).forEach(System.out::println);
+
+        System.out.println();
+        System.out.println();
+        CSVUtility.readCsv(fileName, Model.class).forEach(System.out::println);
     }
 
     public static List<String[]> readCsv(String fileName) throws Exception {
