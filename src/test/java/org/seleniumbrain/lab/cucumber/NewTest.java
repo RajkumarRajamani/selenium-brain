@@ -4,6 +4,8 @@ import lombok.Data;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.StringEscapeUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.seleniumbrain.lab.utility.FileUtils;
+import org.seleniumbrain.lab.utility.PathBuilder;
 import org.seleniumbrain.lab.utility.json.core.JsonBuilder;
 
 import java.io.IOException;
@@ -14,6 +16,12 @@ public class NewTest {
 
     private static String src = "src/test/resources/test/dir1/file1.txt";
     public static void main(String[] args) throws IOException {
+
+        System.out.println(Files.exists(Paths.get(src)));
+        System.out.println(FileUtils.getCount("src/test/resources/test/dir1"));
+        System.out.println(PathBuilder.getDownloadArchiveFolder());
+
+        System.out.println(FilenameUtils.concat(FilenameUtils.getPath(src), FilenameUtils.getBaseName(src)));
         String filePath = "a/b/cname";
         String name = FilenameUtils.removeExtension(FilenameUtils.getName(filePath));
         System.out.println(name

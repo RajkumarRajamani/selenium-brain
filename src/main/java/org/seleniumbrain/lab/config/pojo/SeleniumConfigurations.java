@@ -46,7 +46,7 @@ public class SeleniumConfigurations {
 
     @Data
     public static class BrowserOptionsDetails {
-        private String browserLogFilePath;
+        private String browserLogFileName;
 
         private String browserVersion;
         private boolean acceptInsecureCerts;

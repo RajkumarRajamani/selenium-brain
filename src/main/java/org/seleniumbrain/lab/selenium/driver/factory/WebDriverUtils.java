@@ -56,6 +56,10 @@ public class WebDriverUtils {
         return Objects.isNull(this.getDriver());
     }
 
+    public void createNewSession() {
+        driverFactory.initiateWebDriverSession();
+    }
+
     public void launchUrl(String url) {
         new RetryCommand<Boolean>(SeleniumConfigReader.getFailureRetryCount())
                 .run(() -> {

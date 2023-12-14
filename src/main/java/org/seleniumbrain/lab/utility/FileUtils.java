@@ -1,12 +1,15 @@
 package org.seleniumbrain.lab.utility;
 
+import io.cucumber.spring.ScenarioScope;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Component;
 
 import java.io.File;
 import java.io.IOException;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
@@ -14,12 +17,21 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 @Slf4j
+@Component
+@ScenarioScope
 public class FileUtils {
 
     public static String getFilePathWithFileSeparator(String path) {
         return path
                 .replace("/", File.separator)
                 .replace("\\", "/");
+    }
+
+    public static long getCount(String path) throws IOException {
+        try(Stream<Path> walk = Files.walk(Paths.get(path))) {
+            return walk.filter(Files::isDirectory)
+                    .count();
+        }
     }
 
     public static List<Path> listFiles(Path path) throws IOException {

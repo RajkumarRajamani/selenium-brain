@@ -8,6 +8,9 @@ import org.seleniumbrain.lab.selenium.pageobjectmodel.SharedStateKey;
 import org.seleniumbrain.lab.selenium.elements.TextBox;
 import org.seleniumbrain.lab.selenium.pageobjectmodel.spring.PageObjects;
 import org.seleniumbrain.lab.selenium.validator.ElementValidator;
+import org.seleniumbrain.lab.utility.FileUtils;
+import org.seleniumbrain.lab.utility.json.core.JsonBuilder;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.Locale;
 
@@ -24,6 +27,9 @@ public class SwagLabLoginPageOR extends BaseObjectRepository {
 
     @FindBy(id = "login-button")
     private WebElement login;
+
+    @Autowired
+    private FileUtils fileUtils;
 
     public SwagLabLoginPageOR enterUserName(String userName) {
         textBox.setText(this.getUserName(), "INR ");
@@ -47,6 +53,11 @@ public class SwagLabLoginPageOR extends BaseObjectRepository {
 
         validator.applyAndAssert(this.getUserName(), "UserName Field", assertions);
         textBox.setText(this.getUserName(), userName);
+
+        String json = JsonBuilder.getObjectBuilder().withEmptyNode()
+                .append("key", "value")
+                .build().toPrettyString();
+        fileUtils.writeFileAsJson(getFileNameForScenario("demo-file"), json);
         return this;
     }
 

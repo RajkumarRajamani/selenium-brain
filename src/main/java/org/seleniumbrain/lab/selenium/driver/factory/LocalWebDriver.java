@@ -1,7 +1,6 @@
 package org.seleniumbrain.lab.selenium.driver.factory;
 
 import io.cucumber.spring.ScenarioScope;
-import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.FilenameUtils;
 import org.openqa.selenium.WebDriver;
@@ -15,8 +14,6 @@ import org.openqa.selenium.edge.EdgeOptions;
 import org.openqa.selenium.firefox.*;
 import org.seleniumbrain.lab.config.SeleniumConfigReader;
 import org.seleniumbrain.lab.config.pojo.SeleniumConfigurations;
-import org.seleniumbrain.lab.exception.ApiException;
-import org.seleniumbrain.lab.exception.SeleniumBrainException;
 import org.seleniumbrain.lab.selenium.driver.Browsers;
 import org.seleniumbrain.lab.utility.PathBuilder;
 import org.springframework.stereotype.Component;
@@ -27,7 +24,6 @@ import java.nio.file.Paths;
 import java.text.MessageFormat;
 import java.time.Duration;
 import java.util.*;
-import java.util.function.Function;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -46,11 +42,12 @@ public class LocalWebDriver implements DriverEngine {
 
         try {
             String browserName = localLabConfig.getBrowserName();
-            String browserLogFilePath = this.getLocalBrowserConfig().getBrowserLogFilePath();
+//            String browserLogFilePath = this.getLocalBrowserConfig().getBrowserLogFileName();
+            String browserLogFilePath = PathBuilder.getOutputFolder("browser-logs", "local") + this.getLocalBrowserConfig().getBrowserLogFileName();
 
             if (Objects.isNull(driver)) {
                 SeleniumConfigurations.BrowserOptionsDetails browserOptionDetails = Objects.requireNonNull(this.getLocalBrowserConfig(), "Local Browser config can not be null");
-                Files.createDirectories(Paths.get(Objects.requireNonNull(FilenameUtils.getPath(browserLogFilePath))));
+//                Files.createDirectories(Paths.get(Objects.requireNonNull(FilenameUtils.getPath(browserLogFilePath))));
 
                 switch (Browsers.valueOf(browserName.toUpperCase())) {
                     case CHROME -> {

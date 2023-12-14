@@ -108,7 +108,7 @@ public interface JsonBuilder {
     }
 
     @SneakyThrows
-    static <T> List<T> transformJsonToPojoLst(String json, Class<T> type) {
+    static <T> List<T> transformJsonToPojoList(String json, Class<T> type) {
         MAPPER.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
         return MAPPER.readValue(json, TypeFactory.defaultInstance().constructCollectionType(List.class, type));
     }

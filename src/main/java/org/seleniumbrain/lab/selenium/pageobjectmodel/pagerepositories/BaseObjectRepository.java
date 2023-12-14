@@ -14,6 +14,7 @@ import org.seleniumbrain.lab.selenium.pageobjectmodel.SharedStateKey;
 import org.seleniumbrain.lab.selenium.validator.AutoPrefixedTextBoxValidator;
 import org.seleniumbrain.lab.selenium.validator.CommonElementValidator;
 import org.seleniumbrain.lab.selenium.validator.TextBoxValidator;
+import org.seleniumbrain.lab.utility.PathBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -78,7 +79,7 @@ public class BaseObjectRepository {
                 String.format("%03d", seqNo),
                 fileNameKey
         );
-        return Objects.nonNull(prefix) && !prefix.isBlank() ? String.join("_", prefix, fileNameKey) : defaultPrefix;
+        return Objects.nonNull(prefix) && !prefix.isBlank() ? String.join("_", PathBuilder.getOutputFolder(), prefix + fileNameKey) : defaultPrefix;
     }
 
 }

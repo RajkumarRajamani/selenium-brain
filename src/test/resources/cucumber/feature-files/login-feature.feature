@@ -1,5 +1,7 @@
-@Test-Feature
+@FID-Demo @Test-Feature
 Feature: Login into web app
+
+  @SID-SC01
   Scenario: Validate user login1
     Given user launch app
     When they login with valid credentials
