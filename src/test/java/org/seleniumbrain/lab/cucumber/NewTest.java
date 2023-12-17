@@ -4,6 +4,7 @@ import lombok.Data;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.StringEscapeUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.validator.GenericValidator;
 import org.seleniumbrain.lab.utility.FileUtils;
 import org.seleniumbrain.lab.utility.PathBuilder;
 import org.seleniumbrain.lab.utility.json.core.JsonBuilder;
@@ -11,6 +12,7 @@ import org.seleniumbrain.lab.utility.json.core.JsonBuilder;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.Locale;
 
 public class NewTest {
 
@@ -24,8 +26,8 @@ public class NewTest {
         System.out.println(FilenameUtils.concat(FilenameUtils.getPath(src), FilenameUtils.getBaseName(src)));
         String filePath = "a/b/cname";
         String name = FilenameUtils.removeExtension(FilenameUtils.getName(filePath));
-        System.out.println(name
-        );
+        System.out.println(name);
+        System.out.println("is date: " + GenericValidator.isDate("2018-W27-3", "YYYY-'W'ww-u", false));
 
 //        Files.move(Paths.get(src), Paths.get("src/test/resources/test/dir2/file1.txt"));
         System.out.println(System.getProperty("user.home"));

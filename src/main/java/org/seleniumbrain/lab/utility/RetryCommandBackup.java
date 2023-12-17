@@ -5,11 +5,11 @@ import lombok.extern.slf4j.Slf4j;
 import java.util.function.Supplier;
 
 @Slf4j
-public class RetryCommand<T> {
+public class RetryCommandBackup<T> {
 
     private final int maxRetries;
 
-    public RetryCommand(int maxRetries)
+    public RetryCommandBackup(int maxRetries)
     {
         this.maxRetries = maxRetries;
     }
@@ -26,34 +26,34 @@ public class RetryCommand<T> {
     }
 
     public T forceRetryIgnoringExceptions(Supplier<T> function) {
-        int retryCounter = 1;
+        int retryCounter = 0;
         while(retryCounter < maxRetries) {
             try {
-                log.info("Retry count " + retryCounter);
+                log.info("Running " + retryCounter + " Retry...");
                 function.get();
-            } finally {
-                retryCounter++;
-            }
+            } catch(Exception e) {}
+            retryCounter++;
         }
         try {
             return function.get();
         } catch (Exception e) {
-            log.error("Failed after max retry limit " + maxRetries);
-            throw new RuntimeException("Command failed on all of " + maxRetries + " retries");
+            log.error("FAILED - Command failed, will be retried " + maxRetries + " times.");
+            return retry(function);
         }
     }
 
     private T retry(Supplier<T> function) throws RuntimeException {
 
-        int retryCounter = 1;
+        int retryCounter = 0;
         while (retryCounter < maxRetries) {
             try {
-                log.info("Retry count " + retryCounter);
+                log.info("Running " + retryCounter + " Retry...");
                 return function.get();
             } catch (Exception ex) {
                 retryCounter++;
+                log.error("FAILED - Command failed on retry " + retryCounter + " of " + maxRetries, ex);
                 if (retryCounter >= maxRetries) {
-                    log.error("Failed after max retry limit " + maxRetries);
+                    log.error("Max retries exceeded.");
                     break;
                 }
             }
