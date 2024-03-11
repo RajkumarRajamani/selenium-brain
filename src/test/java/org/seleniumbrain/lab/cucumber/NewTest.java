@@ -1,58 +1,59 @@
 package org.seleniumbrain.lab.cucumber;
 
-import lombok.Data;
-import org.apache.commons.io.FilenameUtils;
-import org.apache.commons.lang3.StringEscapeUtils;
+import com.github.javafaker.Faker;
+import lombok.SneakyThrows;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.validator.GenericValidator;
-import org.seleniumbrain.lab.utility.FileUtils;
-import org.seleniumbrain.lab.utility.PathBuilder;
-import org.seleniumbrain.lab.utility.json.core.JsonBuilder;
+import org.apache.commons.text.CaseUtils;
+import org.seleniumbrain.lab.core.selenium.validator.Validator;
 
+import java.io.File;
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-import java.util.Locale;
+import java.math.BigDecimal;
+import java.text.*;
+import java.time.LocalDateTime;
+import java.util.*;
 
+@Slf4j
 public class NewTest {
 
-    private static String src = "src/test/resources/test/dir1/file1.txt";
-    public static void main(String[] args) throws IOException {
+    @SneakyThrows
+    public static void main(String[] args) throws IOException, ParseException {
 
-        System.out.println(Files.exists(Paths.get(src)));
-        System.out.println(FileUtils.getCount("src/test/resources/test/dir1"));
-        System.out.println(PathBuilder.getDownloadArchiveFolder());
+        System.out.println(LocalDateTime.now().plusDays(0));
+        System.out.println(CaseUtils.toCamelCase("true", true));
 
-        System.out.println(FilenameUtils.concat(FilenameUtils.getPath(src), FilenameUtils.getBaseName(src)));
-        String filePath = "a/b/cname";
-        String name = FilenameUtils.removeExtension(FilenameUtils.getName(filePath));
-        System.out.println(name);
-        System.out.println("is date: " + GenericValidator.isDate("2018-W27-3", "YYYY-'W'ww-u", false));
+        System.out.println(new File("/Users/rajkumarrajamani/Documents/01-Project/intellij-idea/ws-a/selenium-brain/src/main/resources/monitor.csv").length());
+        System.out.println(new File("/Users/rajkumarrajamani/Documents/01-Project/intellij-idea/ws-a/selenium-brain/src/main/resources/monitorss.csv").length());
 
-//        Files.move(Paths.get(src), Paths.get("src/test/resources/test/dir2/file1.txt"));
-        System.out.println(System.getProperty("user.home"));
+        String text = "please unlock \"subtext\" after a month.";
+        String subString = StringUtils.substring(text, StringUtils.indexOf(text, "\"") + 1, StringUtils.lastIndexOf(text, "\""));
+        System.out.println("SubString = " + subString);
 
-        System.out.println(StringEscapeUtils.unescapeJava("this is unicode text \u00C1 \u00C9 \u00D3"));
-        System.out.println(StringEscapeUtils.unescapeCsv("this is unicode text"));
-        System.out.println(StringEscapeUtils.unescapeCsv("this is unicode text \u00C1 \u00C9 \u00D3"));
+        System.out.println(Validator.getNumberWithThousandSeparator("500000.555", 0, Locale.UK));
 
-        String json = JsonBuilder.getObjectBuilder()
-                .withEmptyNode()
-                .append("name", "rajkumar")
-                .append("age", "30")
-                .append("dob", "1993").build()
-                .toPrettyString();
+//        String file = "/Users/rajkumarrajamani/Documents/01-Project/intellij-idea/ws-a/selenium-brain/src/main/resources/monitor.csv";
+//        List<Prototype> prototype = (List<Prototype>) CSVUtility.readCsv(file, Prototype.class);
+//        System.out.println(JsonBuilder.transformPojoToJsonNode(prototype).toPrettyString());
 
-        Details details = JsonBuilder.transformJsonToPojoObject(json, Details.class);
-        System.out.println(details);
+        Faker faker = new Faker();
+        Double value = faker.number().randomDouble(2, 40000000, 5000000);
+        System.out.println(MessageFormat.format("{0}", value).replaceAll(",", ""));
 
+        System.out.println(faker.number().numberBetween(4, 9));
+
+        System.out.println(getRandomNumberUsingNextInt(300000, 900000));
+        System.out.println(new Random().nextDouble(400000000, 900000000));
+
+        Double val = faker.number().randomDouble(2, new BigDecimal("90000000000.00").longValue(), new BigDecimal("100000000000.00").longValue());
+//        val = faker.number().randomDouble(2, 1, 30);
+        System.out.println(MessageFormat.format("{0}", val).replaceAll(",", ""));
 
     }
 
-    @Data
-    public static class Details {
-        private String name;
-        private String age;
-        private String dob;
+    public static int getRandomNumberUsingNextInt(int min, int max) {
+        Random random = new Random();
+        return random.nextInt(max - min) + min;
     }
+
 }

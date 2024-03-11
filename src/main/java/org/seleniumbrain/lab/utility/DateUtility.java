@@ -5,7 +5,6 @@ import org.apache.commons.lang3.time.DateUtils;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.Locale;
 import java.util.Objects;
 
 public class DateUtility {
@@ -31,6 +30,7 @@ public class DateUtility {
                 "yyyy-MM-dd'T'HH:mm:ss z",
                 "yyyy-MM-dd'T'HH:mm:ssz",
                 "yyyy-MM-dd'T'HH:mm:ss",
+                "yyyy-MM-dd HH:mm:ss",
                 "yyyy-MM-dd'T'HHmmss.SSSz",
                 "yyyy-MM-dd",
                 "yyyyMMdd",
@@ -56,7 +56,7 @@ public class DateUtility {
     public static String parseDate(String inputDate, String requiredFormat) {
         if(Objects.isNull(inputDate)) return null;
         try {
-            Date outputDate = DateUtils.parseDate(inputDate, possibleDateFormats);
+            Date outputDate = DateUtils.parseDate(inputDate, requiredFormat);
             String parsedDate = formatDate(outputDate, requiredFormat);
             System.out.println("inputDate ==> " + inputDate + ", outputDate ==> " + parsedDate);
             return parsedDate;

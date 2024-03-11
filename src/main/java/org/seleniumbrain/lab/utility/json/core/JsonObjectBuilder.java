@@ -1,6 +1,3 @@
-/**
- *
- */
 package org.seleniumbrain.lab.utility.json.core;
 
 import com.fasterxml.jackson.core.JsonPointer;
@@ -14,7 +11,6 @@ import org.seleniumbrain.lab.utility.json.exception.JsonBuilderException;
 import org.springframework.stereotype.Component;
 
 import java.io.File;
-import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.*;
@@ -219,7 +215,7 @@ public class JsonObjectBuilder implements JsonBuilder {
         if (parentNode.isArray()) {
             ArrayNode arrayNode = (ArrayNode) parentNode;
             int index = Integer.parseInt(fieldName);
-            // Expand array in case index is greater than array size
+            // Expand an array in case index is greater than array size
             for (int i = arrayNode.size(); i <= index; i++) {
                 arrayNode.addObject();
             }

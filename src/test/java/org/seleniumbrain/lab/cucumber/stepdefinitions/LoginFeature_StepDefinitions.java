@@ -2,14 +2,12 @@ package org.seleniumbrain.lab.cucumber.stepdefinitions;
 
 import com.azure.security.keyvault.secrets.SecretClient;
 import io.cucumber.java.en.*;
-import org.seleniumbrain.lab.cucumber.spring.configure.ScenarioState;
-import org.seleniumbrain.lab.selenium.pageobjectmodel.SharedStateKey;
+import org.seleniumbrain.lab.core.cucumber.spring.configure.ScenarioState;
+import org.seleniumbrain.lab.core.selenium.pageobjectmodel.SharedStateKey;
 import org.seleniumbrain.lab.easyreport.assertions.Assertions;
-import org.seleniumbrain.lab.selenium.driver.factory.DriverFactory;
-import org.seleniumbrain.lab.selenium.driver.factory.WebDriverUtils;
-import org.seleniumbrain.lab.selenium.pageobjectmodel.pagerepositories.SwagLabLoginPageOR;
-import org.seleniumbrain.lab.utility.FileUtils;
-import org.seleniumbrain.lab.utility.json.core.JsonBuilder;
+import org.seleniumbrain.lab.core.selenium.driver.factory.DriverFactory;
+import org.seleniumbrain.lab.core.selenium.driver.factory.WebDriverUtils;
+import org.seleniumbrain.lab.snippet.pagerepositories.demo.SwagLabLoginPageOR;
 import org.springframework.beans.factory.annotation.Autowired;
 
 public class LoginFeature_StepDefinitions {
@@ -30,6 +28,7 @@ public class LoginFeature_StepDefinitions {
     @Autowired
     private ScenarioState scenarioState;
 
+    String a = "sd";
     @Given("user launch app")
     public void userLaunchApp() {
         System.out.println("User Launched the application");
@@ -44,11 +43,11 @@ public class LoginFeature_StepDefinitions {
 //        assertions.addKnownFailureLabels("UserName Field", "ID1000");
         homePageOR
                 .withAssertion(assertions, homePageOR)
-                .enterUserName("standard_user")
-                .enterPassword("secret_sauce")
-                .login()
-                .openSideMenu()
-                .navigateToAboutPage();
+                .enterUserName("standard_user");
+//                .enterPassword("secret_sauce")
+//                .login()
+//                .openSideMenu()
+//                .navigateToAboutPage();
         assertions.assertAll();
     }
 

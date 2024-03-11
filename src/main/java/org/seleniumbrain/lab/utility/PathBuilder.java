@@ -3,9 +3,9 @@ package org.seleniumbrain.lab.utility;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
-import org.seleniumbrain.lab.config.SeleniumConfigReader;
-import org.seleniumbrain.lab.config.SystemConfig;
-import org.seleniumbrain.lab.config.pojo.SeleniumConfigurations;
+import org.seleniumbrain.lab.core.config.SeleniumConfigReader;
+import org.seleniumbrain.lab.core.config.SystemConfig;
+import org.seleniumbrain.lab.core.config.pojo.SeleniumConfigurations;
 import org.seleniumbrain.lab.utility.json.core.JsonBuilder;
 
 import java.io.File;

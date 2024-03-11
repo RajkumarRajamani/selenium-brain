@@ -2,6 +2,7 @@ package org.seleniumbrain.lab.utility;
 
 import io.cucumber.spring.ScenarioScope;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
 
 import java.io.File;
@@ -10,8 +11,10 @@ import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.text.MessageFormat;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -68,6 +71,44 @@ public class FileUtils {
         }
         return result;
 
+    }
+
+    public static String findAndGetPathIfPresentOrDefaultToInputName(List<String> locationsToSearch, String fileName)
+            throws IOException {
+
+        List<String> results = new ArrayList<>();
+        for (String location : locationsToSearch) {
+            Path pathToSearch = Paths.get(location);
+            String path = StringUtils.EMPTY;
+            try(Stream<Path> walk = Files.walk(pathToSearch)) {
+                List<Path> matchingPaths = walk
+                        .filter(Files::isReadable)      // read permission
+                        .filter(Files::isRegularFile)   // is a file
+                        .filter(p -> p.getFileName().toString().equalsIgnoreCase(fileName))
+                        .toList();
+
+                if(matchingPaths.isEmpty()) path = "";
+                else if (matchingPaths.size() > 1) {
+                    throw new RuntimeException(MessageFormat.format("Too many occurrences of file with name ({0}) at path ({2}) as below \n[\n{1}\n].",
+                            fileName,
+                            String.join("\n", matchingPaths.stream().map(Path::toString).toList()),
+                            location
+                            )
+                    );
+                } else {
+                    path = matchingPaths.get(0).toAbsolutePath().toString();
+                }
+
+                if (!path.isBlank()) results.add(path);
+                else log.info("No file found at " + location);
+            }
+        }
+
+        if(results.isEmpty()) return fileName; // if not found, returning given input file name itself
+        else if (results.size() > 1) throw new RuntimeException(MessageFormat.format("Too many occurrences of file with name ({0}) at given paths as below \n[\n{1}\n]",
+                fileName,
+                String.join("\n", results)));
+        else return results.get(0);
     }
 
     public static List<Path> findByFileName(Path path, String fileName)

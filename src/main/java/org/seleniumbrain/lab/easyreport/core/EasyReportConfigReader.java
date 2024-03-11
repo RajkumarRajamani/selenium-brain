@@ -1,6 +1,6 @@
 package org.seleniumbrain.lab.easyreport.core;
 
-import org.seleniumbrain.lab.config.SystemConfig;
+import org.seleniumbrain.lab.core.config.SystemConfig;
 import org.seleniumbrain.lab.easyreport.exception.EasyReportException;
 import lombok.SneakyThrows;
 

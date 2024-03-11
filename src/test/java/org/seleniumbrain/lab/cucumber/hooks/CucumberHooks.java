@@ -2,18 +2,13 @@ package org.seleniumbrain.lab.cucumber.hooks;
 
 import io.cucumber.java.*;
 import lombok.SneakyThrows;
-import org.openqa.selenium.WebDriver;
-import org.seleniumbrain.lab.config.SeleniumConfigReader;
-import org.seleniumbrain.lab.config.pojo.SeleniumConfigurations;
-import org.seleniumbrain.lab.cucumber.spring.ApplicationContextUtil;
-import org.seleniumbrain.lab.selenium.driver.factory.DriverFactory;
-import org.seleniumbrain.lab.selenium.driver.factory.WebDriverUtils;
+import org.seleniumbrain.lab.core.config.SeleniumConfigReader;
+import org.seleniumbrain.lab.core.config.pojo.SeleniumConfigurations;
+import org.seleniumbrain.lab.core.selenium.driver.factory.DriverFactory;
+import org.seleniumbrain.lab.core.selenium.driver.factory.WebDriverUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.net.MalformedURLException;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.Map;
 
 public class CucumberHooks {
 

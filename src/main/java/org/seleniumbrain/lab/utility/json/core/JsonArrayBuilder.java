@@ -14,7 +14,6 @@ import org.seleniumbrain.lab.utility.json.exception.JsonBuilderException;
 import org.springframework.stereotype.Component;
 
 import java.io.File;
-import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.*;

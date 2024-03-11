@@ -14,8 +14,8 @@ import org.testng.annotations.DataProvider;
         },
         features = {"src/test/resources/cucumber/feature-files"},
         glue = {
-                "org.seleniumbrain.lab.cucumber.spring",
-                "org.seleniumbrain.lab.cucumber.hooks.CucumberBaseHooks",
+                "org.seleniumbrain.lab.core.cucumber.spring",
+                "org.seleniumbrain.lab.core.cucumber.hooks",
                 "org.seleniumbrain.lab.cucumber.hooks",
                 "org.seleniumbrain.lab.cucumber.init",
                 "org.seleniumbrain.lab.cucumber.stepdefinitions"
@@ -24,10 +24,10 @@ import org.testng.annotations.DataProvider;
         tags = "@Test-Feature"
 )
 public class CucumberRunnerTest extends AbstractTestNGCucumberTests {
-        @Override
-        @DataProvider(parallel = true)
-        public Object[][] scenarios() {
-                return super.scenarios();
-        }
+//        @Override
+//        @DataProvider(parallel = true)
+//        public Object[][] scenarios() {
+//                return super.scenarios();
+//        }
 }
 
