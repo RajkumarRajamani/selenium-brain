@@ -32,9 +32,6 @@ User Acceptance Level documentation of business requirements.
 - #### Project Setup
 - #### Test Initializer
 - #### Cucumber-Spring
-  - Setup
-  - Configure
-    - 
 - #### Configuration Readers
   - Framework Specific [SeleniumConfig]
   - Application Specific [Application Under Test - AUT Configs]
