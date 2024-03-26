@@ -23,7 +23,8 @@ User Acceptance Level documentation of business requirements.
 | <img src="https://user-images.githubusercontent.com/25181517/192108891-d86b6220-e232-423a-bf5f-90903e6887c3.png" alt="VS Code" width="40" />       |  **Recommended IDE II - VS Code**  | `Community Edition` |
 | <img src="https://user-images.githubusercontent.com/25181517/192108892-6e9b5cdf-4e35-4a70-ad9a-801a93a07c1c.png" alt="Eclipse" width="40" />       | **Recommended IDE III - Eclipse**  | `Community Edition` |
 
-> Note: Use only above versions of dependencies
+> [!NOTE]
+> Note: Use only the above versions of dependencies
 
 ### Table of Contents
 
