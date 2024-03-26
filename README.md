@@ -54,15 +54,15 @@ User Acceptance Level documentation of business requirements.
 
 ### 1. Project Setup
 
-Project can be easily setup with few commands.
+Project can be easily setup by following below simple steps,
 
 1. Go to github repository <>
 2. Copy the project url
-3. use thebelow git commands to create a project from GitHub Remote repository
+3. use the below git commands in its sequential order to clone the project from GitHub Remote repository
     ```
-    git clone <remore repository url
-    git fetch
-    git merge
+    1. git clone <remore repository url
+    2. git fetch
+    3. git merge
     ```
 4. Launch your favorite IDE [IntelliJ Idea is recommended]
 5. Open above clonned project into your IDE
