@@ -60,9 +60,9 @@ Project can be easily setup by following below simple steps,
 2. Copy the project url
 3. use the below git commands in its sequential order to clone the project from GitHub Remote repository
     ```
-    1. git clone <remore repository url
-    2. git fetch
-    3. git merge
+    => git clone <remore repository url
+    => git fetch
+    => git merge
     ```
 4. Launch your favorite IDE [IntelliJ Idea is recommended]
 5. Open above clonned project into your IDE
