@@ -25,31 +25,31 @@ User Acceptance Level documentation of business requirements.
 
 > [!NOTE]
 > Note: Use only the above versions of dependencies
-------------
+---
 
 ## Table of Contents
 
-- #### Project Setup
-- #### Test Initializer
-- #### Cucumber-Spring
-- #### Configuration Readers
-  - Framework Specific [SeleniumConfig]
-  - Application Specific [Application Under Test - AUT Configs]
-- #### Selenium WebDriver Factory
-- #### Page Object Repository Setup
-    - Base Object Repository
-    - Usage
-- #### Utilities
-    - CSV handler
-    - Date handler
-    - JSON handler
-    - File Utils
-    - Retry Mechanism
-    - Numeric Text Comparator
-- #### Reports [Easy Cucumber Report]
-- #### Test Script Definitions
-- #### Quick Start
+1. #### Project Setup
+2. #### Initializer
+3. #### Cucumber-Spring
+4. #### Configuration Readers
+   1. Framework Specific [SeleniumConfig]
+   2. Application Specific [Application Under Test - AUT Configs]
+5. #### Selenium WebDriver Factory
+6. #### Page Object Repository Setup
+   1. Base Object Repository 
+   2. Usage
+7. #### Utilities
+   1. CSV handler
+   2. Date handler
+   3. JSON handler
+   4. File Utils
+   5. Retry Mechanism
+   6. Numeric Text Comparator
+8. #### Reports [Easy Cucumber Report]
+9. #### Test Script Definitions
+10. s#### Quick Start
 
-------------
+---
 
 ### Project Setup
