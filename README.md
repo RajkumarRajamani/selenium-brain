@@ -33,23 +33,44 @@ User Acceptance Level documentation of business requirements.
 2. #### Initializer
 3. #### Cucumber-Spring
 4. #### Configuration Readers
-   1. Framework Specific [SeleniumConfig]
-   2. Application Specific [Application Under Test - AUT Configs]
+    1. Framework Specific [SeleniumConfig]
+    2. Application Specific [Application Under Test - AUT Configs]
 5. #### Selenium WebDriver Factory
 6. #### Page Object Repository Setup
-   1. Base Object Repository 
-   2. Usage
+    1. Base Object Repository
+    2. Usage
 7. #### Utilities
-   1. CSV handler
-   2. Date handler
-   3. JSON handler
-   4. File Utils
-   5. Retry Mechanism
-   6. Numeric Text Comparator
+    1. CSV handler
+    2. Date handler
+    3. JSON handler
+    4. File Utils
+    5. Retry Mechanism
+    6. Numeric Text Comparator
 8. #### Reports [Easy Cucumber Report]
 9. #### Test Script Definitions
-10. s#### Quick Start
+10. #### Quick Start
 
 ---
 
-### Project Setup
+### 1. Project Setup
+
+Project can be easily setup with few commands.
+
+1. Go to github repository <>
+2. Copy the project url
+3. use thebelow git commands to create a project from GitHub Remote repository
+    ```
+    git clone <remore repository url
+    git fetch
+    git merge
+    ```
+4. Launch your favorite IDE [IntelliJ Idea is recommended]
+5. Open above clonned project into your IDE
+6. wait until all maven dependencies are downloaded and setup is complete
+7. once project is imported, ensure that all required plugins are installed on your IDE
+   1. Gherkin Plugin
+   2. Json Viewer
+   3. lombok
+
+> [!IMPORTANT]
+> Ensure that you have installed an IDE [IntelliJ/VS Code/Eclipse] on your system before following above steps
