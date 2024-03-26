@@ -56,18 +56,20 @@ User Acceptance Level documentation of business requirements.
 
 Project can be easily setup by following below simple steps,
 
-1. Go to github repository <>
+1. Go to GitHub repository <>
 2. Copy the project url
-3. use the below git commands in its sequential order to clone the project from GitHub Remote repository
+3. Open `cmd` window [on Windows] or `terminal` window [on Mac]
+4. Navigate to any desired folder where you want to maintain the project
+5. Use the below git commands in its sequential order to clone the project from GitHub Remote repository
     ```
     => git clone <remore repository url
     => git fetch
     => git merge
     ```
-4. Launch your favorite IDE [IntelliJ Idea is recommended]
-5. Open above clonned project into your IDE
-6. wait until all maven dependencies are downloaded and setup is complete
-7. once project is imported, ensure that all required plugins are installed on your IDE
+6. Launch your favorite IDE [IntelliJ Idea is recommended]
+7. Open the project cloned above into your IDE
+8. Wait until all maven dependencies are downloaded and the setup is complete
+9. Once the project is imported, ensure that all required plugins are installed on your IDE
    1. Gherkin Plugin
    2. Json Viewer
    3. lombok
