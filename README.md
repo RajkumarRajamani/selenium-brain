@@ -234,3 +234,19 @@ test:
   app:
     environment: dev
 ```
+
+Framework, when started, will start looking for file under `src/main/resources/configs/aut-configs` package with the extension 'yml' and read it and map it to
+`org.seleniumbrain.lab.core.config.pojo.AUTConfiguration`
+
+**Usage**
+
+You can access application specific configurations details present in `<environment-name>.yml` file, from anywhere in the project, by directly using
+`AUTConfigReader.java` class
+``` java
+AUTConfigReader.get();
+```
+
+---
+
+### 5. Selenium WebDriver Factory
+
