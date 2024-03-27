@@ -189,7 +189,7 @@ By following the above two steps, while initiating cucumber execution from runne
 configurations
 and run it like a spring project execution enabling all Spring Features internally.
 
-#### c. Configuration Readers
+### 4. Configuration Readers
 
 We are maintaining two types of configurations
 
