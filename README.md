@@ -69,10 +69,24 @@ Project can be easily setup by following below simple steps,
 6. Launch your favorite IDE [IntelliJ Idea is recommended]
 7. Open the project cloned above into your IDE
 8. Wait until all maven dependencies are downloaded and the setup is complete
-9. Once the project is imported, ensure that all required plugins are installed on your IDE
+9. Once the project is imported, ensure that all below required plugins are installed on your IDE
    1. Gherkin Plugin
    2. Json Viewer
    3. lombok
 
 > [!IMPORTANT]
-> Ensure that you have installed an IDE [IntelliJ/VS Code/Eclipse] on your system before following above steps
+> Ensure that you have installed JDK and your favorite IDE [IntelliJ/VS Code/Eclipse] on your system before following above steps
+
+### 2. Initializer
+
+You could ignite the execution with the below few simple steps. As the framework follows Cucumber
+style creation of test scripts, basically we need to initiate the execution in a conventional way of 
+how we usually run any other cucumber project.
+
+1. Go to `src/test/java` and expand `org.seleniumbrain.lab.cucumber.init`
+2. Open the cucumber runner file `CucumberRunnerTest.java`
+3. Right-Click on the file or editor and choose `Run "CucumberRunnerTest.java"` option
+
+> [!TIP]
+> You can customize the runner file by gluing exact location details for feature files, step definitions package
+> and tag information
