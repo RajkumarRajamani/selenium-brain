@@ -70,18 +70,19 @@ Project can be easily setup by following below simple steps,
 7. Open the project cloned above into your IDE
 8. Wait until all maven dependencies are downloaded and the setup is complete
 9. Once the project is imported, ensure that all below required plugins are installed on your IDE
-   1. Gherkin Plugin
-   2. Json Viewer
-   3. lombok
+    1. Gherkin Plugin
+    2. Json Viewer
+    3. lombok
 
 > [!IMPORTANT]
-> Ensure that you have installed JDK and your favorite IDE [IntelliJ/VS Code/Eclipse] on your system before following above steps
+> Ensure that you have installed JDK and your favorite IDE [IntelliJ/VS Code/Eclipse] on your system before following
+> above steps
 ---
 
 ### 2. Initializer
 
 You could ignite the execution with the below few simple steps. As the framework follows Cucumber
-style creation of test scripts, basically we need to initiate the execution in a conventional way of 
+style creation of test scripts, basically we need to initiate the execution in a conventional way of
 how we usually run any other cucumber project.
 
 1. Go to `src/test/java` and expand `org.seleniumbrain.lab.cucumber.init`
@@ -95,153 +96,172 @@ how we usually run any other cucumber project.
 
 ### 3. Cucumber-Spring
 
-   #### a. About Spring
+#### a. About Spring
 
-   Spring is a vast subject to discus about it here. However, we have to mention here how much we extract from Spring
-   into this cucumber project and how it is beneficial to our automation project.
-   
-   Spring has a core feature called Inversion of Control [IoC] or Dependency Injection.
-   
-   Spring contains an application context where it stores all the objects created bounded with its scope.
-   In our automation code, wherever we need an instance from spring's application context, we can
-   simply call the object by using `@Autowired` annotation.
-   
-   #### Steps to make a class as Spring Bean and make CucumberContext aware of it
-   1. Create a class in any package under `src/main/java`
-   2. Annotate with spring stereotype `@Component` annotation.
-      This tells spring that a bean object needs to be created and stored in CucumberContext for future usage.
-   3. Annotate with cucumber scope `@ScenarioScope` annotation.
-      This defines the scope or life of bean.
-   4. The above steps will be more than enough to let Spring create an instance/bean of
-      the respective class in its application context memory
+Spring is a vast subject to discus about it here. However, we have to mention here how much we extract from Spring
+into this cucumber project and how it is beneficial to our automation project.
 
-   > [!NOTE]
-   > 
-   > - [X] Spring provides multiple bean scopes such as `@Singleton`, `@Prototype` and few other types
-   > related to http request [those are not intended for testers].
-   > 
-   >
-   > - [X] However, cucumber-spring integration also provides us a special bean scope called `@ScenarioScope`.
-   > 
-   > 
-   > - [X] `@ScenarioScope` keeps the life span of the bean until the current cucumber scenario is alive.
-   > i.e., the scenario scoped bean is created and stored into Cucumber-Spring Application context [CucumberContext]
-   > at the beginning of every cucumber scenario and destroyed at the end of scenario execution.
-   > 
-   > 
-   > - [X] For every scenario, `@ScenarioScope` beans will be created and destroyed. This gives
-   > an advantage for testers to keep the state of Gherkin steps stored and pass the data to next steps
-   > without being using any static instances and making code complex.
-   > 
-   > 
-   > - [X] It helps us to avoid using `new` keyword everytime we need to create an instance of a certain 
-   > reusable bean.
+Spring has a core feature called Inversion of Control [IoC] or Dependency Injection.
+
+Spring contains an application context where it stores all the objects created bounded with its scope.
+In our automation code, wherever we need an instance from spring's application context, we can
+simply call the object by using `@Autowired` annotation.
+
+#### Steps to make a class as Spring Bean and make CucumberContext aware of it
+
+1. Create a class in any package under `src/main/java`
+2. Annotate with spring stereotype `@Component` annotation.
+   This tells spring that a bean object needs to be created and stored in CucumberContext for future usage.
+3. Annotate with cucumber scope `@ScenarioScope` annotation.
+   This defines the scope or life of bean.
+4. The above steps will be more than enough to let Spring create an instance/bean of
+   the respective class in its application context memory
+
+> [!NOTE]
+>
+> - [X] Spring provides multiple bean scopes such as `@Singleton`, `@Prototype` and few other types
+    > related to http request [those are not intended for testers].
+>
+>
+> - [X] However, cucumber-spring integration also provides us a special bean scope called `@ScenarioScope`.
+>
+>
+> - [X] `@ScenarioScope` keeps the life span of the bean until the current cucumber scenario is alive.
+    > i.e., the scenario scoped bean is created and stored into Cucumber-Spring Application context [CucumberContext]
+    > at the beginning of every cucumber scenario and destroyed at the end of scenario execution.
+>
+>
+> - [X] For every scenario, `@ScenarioScope` beans will be created and destroyed. This gives
+    > an advantage for testers to keep the state of Gherkin steps stored and pass the data to next steps
+    > without being using any static instances and making code complex.
+>
+>
+> - [X] It helps us to avoid using `new` keyword everytime we need to create an instance of a certain
+    > reusable bean.
    ---   
 
+#### b. Spring Integration with Cucumber Project
 
-   #### b. Spring Integration with Cucumber Project
+We can include spring features with our plain cucumber project by following below few simple steps.
+
+1. Create a class with any name of your desire in any package under `src/main/java` and annotate it with Spring's
+   annotations `@SpringBootApplication` and `@ComponentScan`.
+   ```java
+   import org.springframework.boot.autoconfigure.SpringBootApplication;
+   import org.springframework.context.annotation.ComponentScan;
    
-   We can include spring features with our plain cucumber project by following below few simple steps.
+   @SpringBootApplication
+   @ComponentScan("org.seleniumbrain")
+   public class SeleniumBrainCucumberTestExecutionEngine {
+   }
+   ```
 
-   1. Create a class with any name of your desire in any package under `src/main/java` and annotate it with Spring's annotations `@SpringBootApplication` and `@ComponentScan`. 
-      ```java
-      import org.springframework.boot.autoconfigure.SpringBootApplication;
-      import org.springframework.context.annotation.ComponentScan;
-      
-      @SpringBootApplication
-      @ComponentScan("org.seleniumbrain")
-      public class SeleniumBrainCucumberTestExecutionEngine {
-      }
-      ```
-      
-      > [!NOTE]
-      > - [X] `@SpringBootApplication` - Tells cucumber to run the project as spring application.
-      > 
-      > - [X] `@ComponentScan` - Tells cucumber to allow spring to scan through all mentioned packages for
-        `@Component` bean classes to create bean and store it into CucumberContext
+   > [!NOTE]
+   > - [X] `@SpringBootApplication` - Tells cucumber to run the project as spring application.
+   >
+   > - [X] `@ComponentScan` - Tells cucumber to allow spring to scan through all mentioned packages for
+       `@Component` bean classes to create bean and store it into CucumberContext
+
+2. Create another class with any name of your desire in any package
+   under `src/main/java` [usually under same package as followed in above step]
+   and annotate it with Spring's annotations `` and ``
+
+   ```java
+   import io.cucumber.spring.CucumberContextConfiguration;
+   import org.springframework.boot.test.context.SpringBootTest;
    
-   2. Create another class with any name of your desire in any package under `src/main/java` [usually under same package as followed in above step]
-      and annotate it with Spring's annotations `` and ``
+   @CucumberContextConfiguration
+   @SpringBootTest(classes = {SeleniumBrainCucumberSpringConfiguration.class, SeleniumBrainCucumberTestExecutionEngine.class})
+   public class SeleniumBrainCucumberSpringConfiguration {
+   }
+   ```
 
-      ```java
-      import io.cucumber.spring.CucumberContextConfiguration;
-      import org.springframework.boot.test.context.SpringBootTest;
-      
-      @CucumberContextConfiguration
-      @SpringBootTest(classes = {SeleniumBrainCucumberSpringConfiguration.class, SeleniumBrainCucumberTestExecutionEngine.class})
-      public class SeleniumBrainCucumberSpringConfiguration {
-      }
-      ```
+   > [!NOTE]
+   > - [X] `@CucumberContextConfiguration` - Tells cucumber to create a cucumber context [container]
+       to store all beans that are created by Spring
+   >
+   >
+   > - [X] `@SpringBootTest` - Tells cucumber to look for beans. In our project, we have mentioned
+       `SeleniumBrainCucumberSpringConfiguration.class` and `SeleniumBrainCucumberTestExecutionEngine.class` to scan
+       through for beans.
 
-      > [!NOTE]
-      > - [X] `@CucumberContextConfiguration` - Tells cucumber to create a cucumber context [container] 
-         to store all beans that are created by Spring
-      > 
-      >
-      > - [X] `@SpringBootTest` - Tells cucumber to look for beans. In our project, we have mentioned 
-         `SeleniumBrainCucumberSpringConfiguration.class` and `SeleniumBrainCucumberTestExecutionEngine.class` to scan through for beans.
-   
-   By following the above two steps, while initiating cucumber execution from runner file, will first read the above configurations
-   and run it like a spring project execution enabling all Spring Features internally.
+By following the above two steps, while initiating cucumber execution from runner file, will first read the above
+configurations
+and run it like a spring project execution enabling all Spring Features internally.
 
-   #### c. Configuration Readers
+#### c. Configuration Readers
 
-   We are maintaining two types of configurations
-   
-   - SeleniumConfiguration
-   - AUT Configurations
+We are maintaining two types of configurations
 
-   #### 1. Selenium Configurations
-   
-   It contains configurations related to the framework and selenium tool and is maintained at `src/main/resources/configs/selenium-config.yml`
-   
-   Below are the types of configurations being maintained in the yml file.
-   
-   1. Test Lab [LocalLab/Grid/SauceLab/Perfecto/Docker]
+- SeleniumConfiguration
+- AUT Configurations
 
-      > [!IMPORTANT]
-      > Currently only **LocalLab** is supported. Other Lab options are under Development.
+#### 1. Selenium Configurations
 
-   2. Every Lab contains all possible configurations for browsers
-   3. Selenium Timeouts
-   4. Test Environment Name [on which we run execution] : Testers are requested to mention name of the application configuration yaml file name. Usually, it is recommended 
-      to name application configuration file name as `dev.yml` or `qa.yml` or `uat.yml`
-   5. Output Folders: If not provided, the framework will choose a default path as defined in `org.seleniumbrain.lab.core.config.SeleniumConfigReader.java`
+It contains configurations related to the framework and selenium tool and is maintained
+at `src/main/resources/configs/selenium-config.yml`
 
-   `selenium-config.yml` file is mapped to its equivalent java object class `SeleniumConfigurations.java` using `ObjectMapper.java` class from a jackson library.
-   
-   **Usages**
-   
-You can access selenium configuration details present in `selenium-config.yml` file, from anywhere in the project, by directly using `SeleniumConfigReader.java` class name itself.
+Below are the types of configurations being maintained in the yml file.
+
+1. Test Lab [LocalLab/Grid/SauceLab/Perfecto/Docker]
+
+   > [!IMPORTANT]
+   > Currently only **LocalLab** is supported. Other Lab options are under Development.
+
+2. Every Lab contains all possible configurations for browsers
+3. Selenium Timeouts
+4. Test Environment Name [on which we run execution] : Testers are requested to mention name of the application
+   configuration yaml file name. Usually, it is recommended
+   to name application configuration file name as `dev.yml` or `qa.yml` or `uat.yml`
+5. Output Folders: If not provided, the framework will choose a default path as defined
+   in `org.seleniumbrain.lab.core.config.SeleniumConfigReader.java`
+
+`selenium-config.yml` file is mapped to its equivalent java object class `SeleniumConfigurations.java`
+using `ObjectMapper.java` class from a jackson library.
+
+**Usages**
+
+You can access selenium configuration details present in `selenium-config.yml` file, from anywhere in the project, by
+directly using `SeleniumConfigReader.java` class name itself.
+
 ``` java
 SeleniumConfigReader.getConfigs();
 ```
 
 #### 2. AUT Configurations
 
-It contains configuration related to the application Under Test [AUT] and is maintained at `src/main/resources/configs/aut-configs`
+It contains configuration related to the application Under Test [AUT] and is maintained
+at `src/main/resources/configs/aut-configs`
 
-It is recommended to maintain the name of the application-related configuration yaml file as the environment name itself. For Example,
-to maintain application configuration for a dev region, create a file `dev.yml` and maintain all configurations related to AUT.
+It is recommended to maintain the name of the application-related configuration yaml file as the environment name
+itself. For Example,
+to maintain application configuration for a dev region, create a file `dev.yml` and maintain all configurations related
+to AUT.
 Similarly, for other environments like QA or UAT, it could be `qa.yml` and `uat.yml` respectively.
 
 However, it is not mandated that the config file naming should be as above. You can maintain any name as you desire.
 
-Point is -- whatever the name that we provide for the application configuration yaml file, the same name should be given in `selenium-config.yml` file
+Point is -- whatever the name that we provide for the application configuration yaml file, the same name should be given
+in `selenium-config.yml` file
 for property `environment` without extension. For Example,
+
 ``` yaml
 test:
   app:
     environment: dev
 ```
 
-Framework, when started, will start looking for file under `src/main/resources/configs/aut-configs` package with the extension 'yml' and read it and map it to
+Framework, when started, will start looking for file under `src/main/resources/configs/aut-configs` package with the
+extension 'yml' and read it and map it to
 `org.seleniumbrain.lab.core.config.pojo.AUTConfiguration`
 
 **Usage**
 
-You can access application specific configurations details present in `<environment-name>.yml` file, from anywhere in the project, by directly using
+You can access application-specific configurations details present in `<environment-name>.yml` file,
+from anywhere in the project,
+by directly using
 `AUTConfigReader.java` class
+
 ``` java
 AUTConfigReader.get();
 ```
@@ -250,3 +270,62 @@ AUTConfigReader.get();
 
 ### 5. Selenium WebDriver Factory
 
+We require an instance of Selenium WebDriver for any desired browser to automate any Web UI applications.
+All we need to do is to use an instance of `WebDriverUtils.java` class as it has rich options of all basic web driver
+operations.
+
+Testers do not need to worry about writing snippets for initializing an instance for `WebDriver.java` class.
+They can simply provide all browser configurations in `selenium-config.yml` file itself and the remaining task
+will be taken care by framework itself to create an instance of the browser based on the given configurations.
+
+It has multiple reusable methods as in below table.
+
+| Method Name                             | Usage                                                                                                                     |
+|:----------------------------------------|:--------------------------------------------------------------------------------------------------------------------------|
+| getDriver()                             | returns an instance of `WebDriver.java` class                                                                             |
+| isWebDriverNull()                       | returns if an instance of WebDriver class is null or not any given instance                                               |
+| createNewSession()                      | opens new browser window of any given browser                                                                             |
+| launchUrl(String url)                   | loads any given url link in the browser                                                                                   |
+| launchUrlInNewWindow(String url)        | opens given URL in new Browser Window                                                                                     |
+| getCurrentUrl()                         | returns current url                                                                                                       |
+| getCurrentWindow()                      | returns the id of current Window                                                                                          |
+| getWindowsList()                        | returns `Set<String>` of IDs of all windows                                                                               |
+| refreshPage()                           | it refreshes the page and wait until page load is complete                                                                |
+| maximizeWindow()                        | it maximizes the current window                                                                                           |
+| minimizeWindow                          | it minimizes the current window                                                                                           |
+| navigateBack()                          | navigates to previous page                                                                                                |
+| navigateForward()                       | navigates to next page                                                                                                    |
+| fullScreen()                            | makes the browser to full scren                                                                                           |
+| clearCookies(String namedCookie)        | clears the cookie of given name                                                                                           |
+| closeCurrentWindow()                    | close current window                                                                                                      |
+| quiteWebDriver()                        | quite entire browser session                                                                                              |
+| attachScreenshot(String screenshotName) | attaches a screenshot of a web page to current cucumber step                                                              |
+| attachStepLogInfo(String logMsg)        | attaches a given step log as an evidence with current cucumber step                                                       |
+| getScreenshotAsImage(String imageName)  | takes screenshot of current web page and stores it in a .png format under output folder and returns the path of the image |
+| getScreenshotInBytes()                  | takes screenshot of current web page and returns in `byte[]` array format                                                 |
+| findElementBy(By by)                    | with given `By` locator, it returns an element if identified on WebPage. Else returns null                                |
+| findElements(By by)                     | with given `By` locator, it returns list of elements if identified on WebPage. Else returns an empty Collections list.    |
+
+
+Similar to above `WebDriverUtils.java` class, the framework provides rich methods of all possible `WebDriverWait.java` methods.
+
+**Usage**
+
+As `WebDriverUtils.java` is defined as a spring bean component, we do not need to create an object using `new` key-word, instead, we can request `CucumberContext` to return an instance
+and acces all above reusable methods.
+
+``` java
+@Autowired
+public WebDriverUtils webDriverUtils;
+
+@Autowired
+public WebDriverWaits webDriverWaits;
+
+public void createNewBrowserSessionAndLaunchUrl(String url) {
+    webDriverUtils.createNewSession();
+    webDriverUtils.launchUrl(url);
+   
+    WebElement brokerName = webDriverUtils.findElement(By.xpath("//p[@id='brokerName']"));
+    WebElement brokerEmail = webDriverWaits.untilElementToBeClickable(By.xpath("//p[@id='brokerEmail']")); 
+}
+```

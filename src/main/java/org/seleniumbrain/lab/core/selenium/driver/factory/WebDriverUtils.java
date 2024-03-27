@@ -17,12 +17,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import javax.imageio.ImageIO;
-import java.awt.Rectangle;
 import java.awt.*;
+import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.text.MessageFormat;
+import java.util.Collections;
+import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 
@@ -49,6 +52,24 @@ public class WebDriverUtils {
 
     public static WebDriver getWebDriver() {
         return ApplicationContextUtil.getBean(DriverFactory.class).getDriver();
+    }
+
+    public WebElement findElement(By by) {
+        try {
+            return getDriver().findElement(by);
+        } catch (NoSuchElementException | StaleElementReferenceException | TimeoutException e) {
+            log.error(MessageFormat.format("Element with locator({0}) is not found due to exception = {1}", by.toString(), e.getLocalizedMessage()));
+            return null;
+        }
+    }
+
+    public List<WebElement> findElements(By by) {
+        try {
+            return getDriver().findElements(by);
+        } catch (NoSuchElementException | StaleElementReferenceException | TimeoutException e) {
+            log.error(MessageFormat.format("Elements with locator({0}) is not found due to exception = {1}", by.toString(), e.getLocalizedMessage()));
+            return Collections.emptyList();
+        }
     }
 
     public boolean isWebDriverNull() {
