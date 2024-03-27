@@ -76,6 +76,7 @@ Project can be easily setup by following below simple steps,
 
 > [!IMPORTANT]
 > Ensure that you have installed JDK and your favorite IDE [IntelliJ/VS Code/Eclipse] on your system before following above steps
+---
 
 ### 2. Initializer
 
@@ -90,3 +91,47 @@ how we usually run any other cucumber project.
 > [!TIP]
 > You can customize the runner file by gluing exact location details for feature files, step definitions package
 > and tag information
+---
+
+### 3. Cucumber-Spring
+
+   #### a. About Spring
+
+   Spring is a vast subject to discus about it here. However, we have to mention here how much we extract from Spring
+   into this cucumber project and how it is beneficial to our automation project.
+   
+   Spring has a core feature called Inversion of Control [IoC] or Dependency Injection.
+   
+   Spring contains an application context where it stores all the objects created bounded with its scope.
+   In our automation code, wherever we need an instance from spring's application context, we can
+   simply call the object by using `@Autowired` annotation.
+   
+   #### Steps to make a class as Spring Bean and make CucumberContext aware of it
+   1. Create a class in any package under `src/main/java`
+   2. Annotate with spring stereotype `@Component` annotation.
+      This tells spring that a bean object needs to be created and stored in CucumberContext for future usage.
+   3. Annotate with cucumber scope `@ScenarioScope` annotation.
+      This defines the scope or life of bean.
+   4. The above steps will be more than enough to let Spring create an instance/bean of
+      the respective class in its application context memory
+
+   > [!NOTE]
+   > Spring provides multiple bean scopes such as `@Singleton`, `@Prototype` and few other types
+   > related to http request [those are not intended for testers].
+   > 
+   > However, cucumber-spring integration also provides us a special bean scope called `@ScenarioScope`.
+> 
+   > `@ScenarioScope` keeps the life span of the bean until the current cucumber scenario is alive.
+   > I.e, the scenario scoped bean is created and stored into Cucumber-Spring Application context [CucumberContext]
+   > at the beginning of every cucumber scenario and destroyed at the end of scenario execution.
+   > 
+   > For every scenario, `@ScenarioScope` beans will be created and destroyed. This gives
+   > an advantage for testers to keep the state of Gherkin steps stored and pass the data to next steps
+   > without being using any static instances and making code complex.
+   > 
+   > It helps us to avoid using `new` keyword everytime we need to create an instance of a certain 
+   > reusable bean.
+   
+   #### b. Spring step into Cucumber Project
+   
+   
