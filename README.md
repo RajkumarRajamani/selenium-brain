@@ -183,3 +183,18 @@ how we usually run any other cucumber project.
    
    By following the above two steps, while initiating cucumber execution from runner file, will first read the above configurations
    and run it like a spring project execution enabling all Spring Features internally.
+
+   #### c. Configuration Readers
+
+   We are maintaining two types of configurations
+   
+   - SeleniumConfiguration
+   - AUT Configurations
+
+   #### 1. Selenium Configurations
+   
+   It contains configurations related to the framework and selenium tool and is maintained at `src/main/resources/configs/selenium-config.yml`
+   
+   Below are the types of configurations being maintained in the yml file.
+   
+   1. 
