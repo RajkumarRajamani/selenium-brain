@@ -136,7 +136,9 @@ how we usually run any other cucumber project.
    > 
    > - [X] It helps us to avoid using `new` keyword everytime we need to create an instance of a certain 
    > reusable bean.
-   
+   ---   
+
+
    #### b. Spring Integration with Cucumber Project
    
    We can include spring features with our plain cucumber project by following below few simple steps.
@@ -153,8 +155,31 @@ how we usually run any other cucumber project.
       ```
       
       > [!NOTE]
-      > - [X] `@SpringBootApplication` - Tells cucumber to run project as spring application.
+      > - [X] `@SpringBootApplication` - Tells cucumber to run the project as spring application.
       > 
-      > - [X] `@ComponentScan` - Tells cucumber to allow spring to scan through all packages mentioned for
+      > - [X] `@ComponentScan` - Tells cucumber to allow spring to scan through all mentioned packages for
         `@Component` bean classes to create bean and store it into CucumberContext
    
+   2. Create another class with any name of your desire in any package under `src/main/java` [usually under same package as followed in above step]
+      and annotate it with Spring's annotations `` and ``
+
+      ```java
+      import io.cucumber.spring.CucumberContextConfiguration;
+      import org.springframework.boot.test.context.SpringBootTest;
+      
+      @CucumberContextConfiguration
+      @SpringBootTest(classes = {SeleniumBrainCucumberSpringConfiguration.class, SeleniumBrainCucumberTestExecutionEngine.class})
+      public class SeleniumBrainCucumberSpringConfiguration {
+      }
+      ```
+
+      > [!NOTE]
+      > - [X] `@CucumberContextConfiguration` - Tells cucumber to create a cucumber context [container] 
+         to store all beans that are created by Spring
+      > 
+      >
+      > - [X] `@SpringBootTest` - Tells cucumber to look for beans. In our project, we have mentioned 
+         `SeleniumBrainCucumberSpringConfiguration.class` and `SeleniumBrainCucumberTestExecutionEngine.class` to scan through for beans.
+   
+   By following the above two steps, while initiating cucumber execution from runner file, will first read the above configurations
+   and run it like a spring project execution enabling all Spring Features internally.
