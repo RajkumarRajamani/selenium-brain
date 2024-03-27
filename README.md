@@ -311,8 +311,8 @@ Similar to above `WebDriverUtils.java` class, the framework provides rich method
 
 **Usage**
 
-As `WebDriverUtils.java` and `WebDriverWaits.java` are defined as a spring bean component, we do not need to create an instance using `new` key-word, instead, we can request `CucumberContext` to return an instance
-and access all of its reusable methods.
+As `WebDriverUtils.java` and `WebDriverWaits.java` are defined as a spring bean component, we do not need to create an instance using `new` key-word,
+instead, we can request `CucumberContext` to return an instance using `@Autowired` annotation and access all of its reusable methods.
 
 ``` java
 @Autowired
