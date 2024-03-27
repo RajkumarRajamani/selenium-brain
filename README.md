@@ -197,4 +197,40 @@ how we usually run any other cucumber project.
    
    Below are the types of configurations being maintained in the yml file.
    
-   1. 
+   1. Test Lab [LocalLab/Grid/SauceLab/Perfecto/Docker]
+
+      > [!IMPORTANT]
+      > Currently only **LocalLab** is supported. Other Lab options are under Development.
+
+   2. Every Lab contains all possible configurations for browsers
+   3. Selenium Timeouts
+   4. Test Environment Name [on which we run execution] : Testers are requested to mention name of the application configuration yaml file name. Usually, it is recommended 
+      to name application configuration file name as `dev.yml` or `qa.yml` or `uat.yml`
+   5. Output Folders: If not provided, the framework will choose a default path as defined in `org.seleniumbrain.lab.core.config.SeleniumConfigReader.java`
+
+   `selenium-config.yml` file is mapped to its equivalent java object class `SeleniumConfigurations.java` using `ObjectMapper.java` class from a jackson library.
+   
+   **Usages**
+   
+You can access selenium configuration details present in `selenium-config.yml` file, from anywhere in the project, by directly using `SeleniumConfigReader.java` class name itself.
+``` java
+SeleniumConfigReader.getConfigs();
+```
+
+#### 2. AUT Configurations
+
+It contains configuration related to the application Under Test [AUT] and is maintained at `src/main/resources/configs/aut-configs`
+
+It is recommended to maintain the name of the application-related configuration yaml file as the environment name itself. For Example,
+to maintain application configuration for a dev region, create a file `dev.yml` and maintain all configurations related to AUT.
+Similarly, for other environments like QA or UAT, it could be `qa.yml` and `uat.yml` respectively.
+
+However, it is not mandated that the config file naming should be as above. You can maintain any name as you desire.
+
+Point is -- whatever the name that we provide for the application configuration yaml file, the same name should be given in `selenium-config.yml` file
+for property `environment` without extension. For Example,
+``` yaml
+test:
+  app:
+    environment: dev
+```
