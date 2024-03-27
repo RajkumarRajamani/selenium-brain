@@ -116,22 +116,45 @@ how we usually run any other cucumber project.
       the respective class in its application context memory
 
    > [!NOTE]
-   > Spring provides multiple bean scopes such as `@Singleton`, `@Prototype` and few other types
+   > 
+   > - [X] Spring provides multiple bean scopes such as `@Singleton`, `@Prototype` and few other types
    > related to http request [those are not intended for testers].
    > 
-   > However, cucumber-spring integration also provides us a special bean scope called `@ScenarioScope`.
-> 
-   > `@ScenarioScope` keeps the life span of the bean until the current cucumber scenario is alive.
-   > I.e, the scenario scoped bean is created and stored into Cucumber-Spring Application context [CucumberContext]
+   >
+   > - [X] However, cucumber-spring integration also provides us a special bean scope called `@ScenarioScope`.
+   > 
+   > 
+   > - [X] `@ScenarioScope` keeps the life span of the bean until the current cucumber scenario is alive.
+   > i.e., the scenario scoped bean is created and stored into Cucumber-Spring Application context [CucumberContext]
    > at the beginning of every cucumber scenario and destroyed at the end of scenario execution.
    > 
-   > For every scenario, `@ScenarioScope` beans will be created and destroyed. This gives
+   > 
+   > - [X] For every scenario, `@ScenarioScope` beans will be created and destroyed. This gives
    > an advantage for testers to keep the state of Gherkin steps stored and pass the data to next steps
    > without being using any static instances and making code complex.
    > 
-   > It helps us to avoid using `new` keyword everytime we need to create an instance of a certain 
+   > 
+   > - [X] It helps us to avoid using `new` keyword everytime we need to create an instance of a certain 
    > reusable bean.
    
-   #### b. Spring step into Cucumber Project
+   #### b. Spring Integration with Cucumber Project
    
+   We can include spring features with our plain cucumber project by following below few simple steps.
+
+   1. Create a class with any name of your desire in any package under `src/main/java` and annotate it with Spring's annotations `@SpringBootApplication` and `@ComponentScan`. 
+      ```java
+      import org.springframework.boot.autoconfigure.SpringBootApplication;
+      import org.springframework.context.annotation.ComponentScan;
+      
+      @SpringBootApplication
+      @ComponentScan("org.seleniumbrain")
+      public class SeleniumBrainCucumberTestExecutionEngine {
+      }
+      ```
+      
+      > [!NOTE]
+      > - [X] `@SpringBootApplication` - Tells cucumber to run project as spring application.
+      > 
+      > - [X] `@ComponentScan` - Tells cucumber to allow spring to scan through all packages mentioned for
+        `@Component` bean classes to create bean and store it into CucumberContext
    
