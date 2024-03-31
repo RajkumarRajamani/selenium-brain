@@ -38,8 +38,6 @@ User Acceptance Level documentation of business requirements.
 5. #### Selenium WebDriver Factory
 6. #### WebElement Validators
 7. #### Page Object Repository Setup
-    1. Base Object Repository
-    2. Usage
 8. #### Utilities
     1. CSV handler
     2. Date handler
@@ -448,10 +446,10 @@ public void validateIfLimitFieldShowsThousandSeparatorWithThreeDecimals(String l
  achieved by simply using `peek()` method.
 
  It accepts `BaseElement` and `Consumer<BaseElement>` as argument. If you want to perform some operation on
- the element being validated, before you start that validation, simply use it as below at run time.
+ the element being validated, before you start that validation, simply use it as below.
 
  For Example, the element that you are trying to validate is an `<input>` html element, and before checking
- thousand-separator format, assume you want to perform some operations either on that field itself or in generic to meet the criteria of validation, then the snippet goes as below, 
+ thousand-separator format, assume you want to perform some operations either on that field itself or any generic operation to meet the criteria of validation, then the snippet goes as below, 
 
  ``` java
 
@@ -474,7 +472,7 @@ public void validateIfLimitFieldShowsThousandSeparatorWithThreeDecimals(String l
     ValidatorOutput output = textBoxValidator.isDisplayed()
                                             .isEditable()
                                             .peek( 
-                                                textBox, // type of element being peeked upon inside next argument `Consumer<BaseElement>`
+                                                textBox, // instance of element of type `BaseElement` being peeked upon inside next argument `Consumer<BaseElement>`
                                                 txtBox -> {
                                                     // ... write anything you want here
                                                 }
@@ -495,6 +493,62 @@ public void validateIfLimitFieldShowsThousandSeparatorWithThreeDecimals(String l
  **Explanation**
 
  In the above code, when the method `apply` is executed in its chain, then the web element returned by `this.getLimitAmountField()` is undergoing `isDisplayed()` validation first, followed by `isEditable()` validation and before starting `isThousandSeperated()` validation, it is going to perform something which is written
-in `Consumer<BaseElement>` inside peek method. Finally `isThousandSeparated()` validation will be performed on the web element.
+in `Consumer<BaseElement>` inside peek method. Then it takes screenshot of outcome of the peek method and sleeps for 5 seconds and finally `isThousandSeparated()` validation will be performed on the web element.
 
 
+### 7. Page Object Repository Setup
+
+You can create a page object repository class and initialize the web elements by annotating the class with
+`@PageObjects`. This annotation not only initializes the PageObjectFactory elements and also makes the class as a spring/cucumber-spring context bean component, so you can retrieve it with `@Autowired` annotation
+
+Everytime you create a page object repository class, do follow below important steps to utilize most of the framework's features,
+
+1. Annotate it with `@PageObjects` to make it like Spring bean and initialize its `@FindBy` web elements as PageObjectFacgtory
+2. Annotate it with `@Data` to use lombok service which gives easy way to generate all `getters` and `setters`
+of all memebers
+3. Extend the class `BaseObjectRepository` which gives reference object all beans available in this framework, so you do not need to use `@Autowired` in all the classes
+4. Implement an interface `PageObjectRepository<classNameOfPageObjectRepositryImplementingThisInterface>` which force us to implement some of the very useful methods
+
+> [!NOTE]
+> For more information, please explore clases in below two packages
+> * org.seleniumbrain.lab.core.selenium.pageobjectmodel
+> * org.seleniumbrain.lab.snippet
+
+
+**Example**
+
+``` java
+@Slf4J
+@Data
+@PageObjects
+public class WillisQuoteSubmissionpageOR extends BaseObjectRepository implements PageObjectRepository<WillisQuoteSubmissionpageOR> {
+
+    @FindBy (xpath = "//p[@id='abcd']")
+    private WebElement brokeName();
+
+}
+
+```
+
+> [!IMPORTANT]
+> Always create page object repository classes in any package under `src/main/java`. However, it is recommended to use `snippet` package under `src/main/java` for creating any Object Repositories for maintanability.
+
+### 8. Utilities
+
+Framework provides some utilities that makes testers life easier. Some of the urilities are as follows
+
+#### 1. CSV handler
+
+It provides few resuable methods to handle csv files.
+
+#### 2. Date handler
+
+It provides few resuable methods to handle data string values.
+
+#### 3. JSON handler
+
+It provides more rich methods to handle more challenging requirement on json.
+
+4. File Utils
+5. Retry Mechanism
+6. Numeric Text Comparator
