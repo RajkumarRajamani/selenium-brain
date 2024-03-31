@@ -330,6 +330,7 @@ public void createNewBrowserSessionAndLaunchUrl(String url) {
     WebElement brokerEmail = webDriverWaits.untilElementToBeClickable(By.xpath("//p[@id='brokerEmail']")); 
 }
 ```
+---
 
 ### 6. WebElement Validators
 
@@ -472,7 +473,7 @@ public void validateIfLimitFieldShowsThousandSeparatorWithThreeDecimals(String l
     ValidatorOutput output = textBoxValidator.isDisplayed()
                                             .isEditable()
                                             .peek( 
-                                                textBox, // instance of element of type `BaseElement` being peeked upon inside next argument `Consumer<BaseElement>`
+                                                textBox, // instance of element of type `BaseElement` being peeked inside next `Consumer<BaseElement>` argument
                                                 txtBox -> {
                                                     // ... write anything you want here
                                                 }
@@ -494,7 +495,7 @@ public void validateIfLimitFieldShowsThousandSeparatorWithThreeDecimals(String l
 
  In the above code, when the method `apply` is executed in its chain, then the web element returned by `this.getLimitAmountField()` is undergoing `isDisplayed()` validation first, followed by `isEditable()` validation and before starting `isThousandSeperated()` validation, it is going to perform something which is written
 in `Consumer<BaseElement>` inside peek method. Then it takes screenshot of outcome of the peek method and sleeps for 5 seconds and finally `isThousandSeparated()` validation will be performed on the web element.
-
+---
 
 ### 7. Page Object Repository Setup
 
@@ -532,6 +533,7 @@ public class WillisQuoteSubmissionpageOR extends BaseObjectRepository implements
 
 > [!IMPORTANT]
 > Always create page object repository classes in any package under `src/main/java`. However, it is recommended to use `snippet` package under `src/main/java` for creating any Object Repositories for maintanability.
+---
 
 ### 8. Utilities
 
@@ -549,6 +551,45 @@ It provides few resuable methods to handle data string values.
 
 It provides more rich methods to handle more challenging requirement on json.
 
-4. File Utils
-5. Retry Mechanism
-6. Numeric Text Comparator
+#### 4. File Utils
+
+It provides few reusable methods to handle files.
+
+#### 5. Retry Mechanism
+
+It provides a mechanism to retry any operation for any given number of iteration ignoring any exception that occurs.
+
+***Usage***
+
+``` java
+
+    int numberOfRetry = SeleniumConfigReader.getFailureRetryCount();
+    boolean isElementUpdated = new RetryCommand<Boolean>(numberOfRetry).run( () -> {
+
+            try {
+                WebElement element = webDriverUtils.findElementBy(By.xpath("xpath"));
+                element.sendKeys("...");
+                return true;
+            } catch(Exception e) {
+                throw new SeleniumBrainException("reason");
+            }
+            return false;
+        }
+    );
+```
+
+> [!EXPLANATION]
+> If failureRetryCount is set to 10 in `selenium-config.yml` configuration file, then the operation mentioned in try block will continue to run repeatedly for 10 times if there are any exception occurred. 
+
+> If no exception occured, for example, in 2nd attempt itself, then retryComman will come to an end returning boolean result as `true`.
+
+> On the otherhand, if try block keeps throwing an error for all 10 retry attempt and unable to complete the task, then retryComman will finally throw an exception `SeleniumBrainException`
+
+> This RetryCommand is used in places where certain operation might take some time to produce the expected results. 
+
+#### 6. Numeric Text Comparator
+
+It provides a resuable method to compare any numerical value such as 1, 1.0, 1.1.2.1, 10000.99
+
+---
+
