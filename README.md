@@ -36,19 +36,20 @@ User Acceptance Level documentation of business requirements.
     1. Framework Specific [SeleniumConfig]
     2. Application Specific [Application Under Test - AUT Configs]
 5. #### Selenium WebDriver Factory
-6. #### Page Object Repository Setup
+6. #### WebElement Validators
+7. #### Page Object Repository Setup
     1. Base Object Repository
     2. Usage
-7. #### Utilities
+8. #### Utilities
     1. CSV handler
     2. Date handler
     3. JSON handler
     4. File Utils
     5. Retry Mechanism
     6. Numeric Text Comparator
-8. #### Reports [Easy Cucumber Report]
-9. #### Test Script Definitions
-10. #### Quick Start
+9. #### Reports [Easy Cucumber Report]
+10. #### Test Script Definitions
+11. #### Quick Start
 
 ---
 
@@ -306,13 +307,15 @@ It has multiple reusable methods as in below table.
 | findElementBy(By by)                    | with given `By` locator, it returns an element if identified on WebPage. Else returns null                                |
 | findElements(By by)                     | with given `By` locator, it returns list of elements if identified on WebPage. Else returns an empty Collections list.    |
 
-
-Similar to above `WebDriverUtils.java` class, the framework provides rich methods of all possible `WebDriverWait.java` methods.
+Similar to above `WebDriverUtils.java` class, the framework provides rich methods of all possible `WebDriverWait.java`
+methods.
 
 **Usage**
 
-As `WebDriverUtils.java` and `WebDriverWaits.java` are defined as a spring bean component, we do not need to create an instance using `new` key-word,
-instead, we can request `CucumberContext` to return an instance using `@Autowired` annotation and access all of its reusable methods.
+As `WebDriverUtils.java` and `WebDriverWaits.java` are defined as a spring bean component, we do not need to create an
+instance using `new` key-word,
+instead, we can request `CucumberContext` to return an instance using `@Autowired` annotation and access all of its
+reusable methods.
 
 ``` java
 @Autowired
@@ -329,3 +332,112 @@ public void createNewBrowserSessionAndLaunchUrl(String url) {
     WebElement brokerEmail = webDriverWaits.untilElementToBeClickable(By.xpath("//p[@id='brokerEmail']")); 
 }
 ```
+
+### 6. WebElement Validators
+
+As UI automation ultimately aims at validating UI web elements, for example, validating element text,
+editable/read-only, enabled/disabled, displayed/not-displayed,
+this framework is enriched with few validator classes for some common UI elements. Below are some of the common elements
+validators.
+
+- `CommonElementValidator.java`
+- `TextBoxValidator.java`
+- `AutoPrefixedTextBoxValidator.java`
+- `CheckboxValidator.java`
+- `CollapsibleValidator.java`
+- `DropdownValidator.java`
+
+Each of the above validator classes is provided with some of the common validations and some validations specific to the
+element type. Please explore the methods
+in each class as they are self-explanatory.
+
+In the interest of documentation, mentioning the validation methods from `TextBoxValidator.java` class as below.
+
+| Method Name                                                                             | Usage                                                                                                                                                                                                                                                                                                                                                                                                         |
+|:----------------------------------------------------------------------------------------|:--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| takeScreenshot(String caption)                                                          | takes screenshot of web page while validating the element                                                                                                                                                                                                                                                                                                                                                     |
+| peek(BaseElement elementType, Consumer<BaseElement> consumer)                           | use this method when we want to perform something on this element or any other random operation before performing next validation chain on the element                                                                                                                                                                                                                                                        |
+| pause(long milliseconds)                                                                | pause the execution while the element is being validated                                                                                                                                                                                                                                                                                                                                                      |
+| isDisplayed()                                                                           | validates if given element is displayed on UI within max timeout set on the framework configuration                                                                                                                                                                                                                                                                                                           |
+| isDisplayed(long maxTimeoutInSeconds)                                                   | validates if given element is displayed on UI within given `maxTimeOoutInSeconds`                                                                                                                                                                                                                                                                                                                             |
+| isEnabled()                                                                             | validates if given element is enabled on UI                                                                                                                                                                                                                                                                                                                                                                   |
+| isNotEnabled()                                                                          | validates if given element is not enabled on UI                                                                                                                                                                                                                                                                                                                                                               |
+| isNotDisplayed(By elementLocatedBy, long maxTImeoutInSeconds)                           | validates if element located by `By elementLocatedBy` is not displayed within given `long maxTimeoutInSeconds`                                                                                                                                                                                                                                                                                                |
+| isDisabled()                                                                            | validates if given element is disabled on UI                                                                                                                                                                                                                                                                                                                                                                  |
+| isDisabledUsingClassAttribute()                                                         | validates if given element is disabled when `class` attribute does not contain `disabled` value                                                                                                                                                                                                                                                                                                               |
+| isDisabledUsingClassAttribute(String classAttributeKey)                                 | validates if given element is disabled when `class` attribute does not contain given key                                                                                                                                                                                                                                                                                                                      |
+| isNotDisabledUsingClassAttribute()                                                      | validates if given element is not disabled when `class` attribute does not contain `disabled`  value                                                                                                                                                                                                                                                                                                          |
+| isNotDisabledUsingClassAttribute(String classAttributeKey)                              | validates if given element is not disabled when `class` attribute does not contain given key                                                                                                                                                                                                                                                                                                                  |
+| isEditable()                                                                            | validates if given element is editable in nature                                                                                                                                                                                                                                                                                                                                                              |
+| isNotEditable()                                                                         | validates if given element is not editable in nature                                                                                                                                                                                                                                                                                                                                                          |
+| isMatching(String expectedValue)                                                        | validates if given element text is matching `expectedValue                                                                                                                                                                                                                                                                                                                                                    |
+| isTextLengthAllowedTill(int expectedAllowedLength)                                      | validates if given element allows to enter text of length equal to `expectedAllowedLength`                                                                                                                                                                                                                                                                                                                    |
+| isTextLengthBeyondLimitShowsError(int expectedAllowedLength, WebElement uiErrorElement) | validates if given element shows `uiErrorElement` while updating the field with more than allowed character length `expectedAllowedLength`                                                                                                                                                                                                                                                                    |
+| isErrorDisplayedWhenTextMatches(String matchingText, By uiErrorElement)                 | validates if given element shows `uiErrorElement` when element's pre-populated text matches given `matchingText`                                                                                                                                                                                                                                                                                              |
+| isErrorDisplayedForInvalidValueUpdate(String invalidInputText, By uiErrorElement)       | validates if given element shows `uiErrorElement` while updating the field with `invalidInputText`                                                                                                                                                                                                                                                                                                            |
+| isEditableNumberFields()                                                                | validates if given element is editable and allows only numbers                                                                                                                                                                                                                                                                                                                                                |
+| isThousandSeparated(String numberInput, int decimalPrecision, Locale locale)            | validates if given element displays the updated numeric value with thousand separator and decimal precision of given decimal limits according to the `Locale`                                                                                                                                                                                                                                                 |
+| apply(WebElement elementToValidate, String elementName)                                 | All above validations are performed only while calling this method by supplying `elementToValidate` and `elementName`. This method does not add validations into `Assertions` and hence not reflected in "Easy Cucumber HTML Report". From this method, We can get either boolean result of success/failure or list of errors occurred.                                                                       |
+| applyAndAssert(WebElement elementToValidate, String elementName, Assertions assertions) | All above validations are performed only wheile calling this method by supplying `elementToValidate`, `elementName` and `Assertions` object. This method do add all validations into `Assertions` object and therefore failures are reported in "Easy Cucumber HTML Report" with elementName as identifier. From this method, We can get either boolean result of success/failure or list of errors occurred. |
+
+**Usage**
+
+Assume that you are trying to perform below validations on any desired element.
+
+- to check if an element is displayed
+- to check if an element is editable
+- to check if an element is showing the updated text with a thousand-separator format of UK format wit 3 decimal precisions
+
+First when we do not want to add above validations into assertions,
+
+``` java
+@Autowired
+private TextBoxValidator textBoxValidator;
+
+@FindBy(xpath = "//input[@id='Limit-Amount-data-test-id'])
+private WebElement limitAmountField;
+
+
+public void validateIfLimitFieldShowsThousandSeparatorWithThreeDecimals(String limitInputAmount) {
+
+    // below lines carry out each validations lined up in the method chaining below and returns either boolean or `Set<String> errors`.
+    ValidatorOutput output = textBoxValidator.isDisplayed()
+                                            .isEditable()
+                                            .sThousandSeparated(limitInputAmount, 3, Locale.UK)
+                                            .apply(this.getLimitAmountField(), "Limit Amount");
+
+    boolean areAllValidationsPassed = output.isPassed();
+    
+    if(areAllValidationsPassed) {
+        ... // rest of the code
+    }
+}
+ ```
+
+ On the other hand, when we do prefer to add all validations into assertions,
+
+``` java
+@Autowired
+private TextBoxValidator textBoxValidator;
+
+@FindBy(xpath = "//input[@id='Limit-Amount-data-test-id'])
+private WebElement limitAmountField;
+
+
+public void validateIfLimitFieldShowsThousandSeparatorWithThreeDecimals(String limitInputAmount) {
+
+    Assertions assertions = new Assertions();
+
+    // below lines carry out each validations lined up in the method chaining below and add them up to assertions by default to write them on the easy-cucumber-html-report.
+    // Also, we can retrieve boolean result or `Set<String> errors`.
+    ValidatorOutput output = textBoxValidator.isDisplayed()
+                                            .isEditable()
+                                            .sThousandSeparated(limitInputAmount, 3, Locale.UK)
+                                            .apply(this.getLimitAmountField(), "Limit Amount", assertions);
+
+    
+    ... // rest of the code
+
+    assertions.assertAll();
+}
+ ```
