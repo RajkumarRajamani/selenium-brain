@@ -386,7 +386,7 @@ Assume that you are trying to perform below validations on any desired element.
 
 - to check if an element is displayed
 - to check if an element is editable
-- to check if an element is showing the updated text with a thousand-separator format of UK format wit 3 decimal precisions
+- to check if an element is showing the updated text with a thousand-separator format of UK region with 3 decimal precisions
 
 First when we do not want to add above validations into assertions,
 
@@ -403,7 +403,7 @@ public void validateIfLimitFieldShowsThousandSeparatorWithThreeDecimals(String l
     // below lines carry out each validations lined up in the method chaining below and returns either boolean or `Set<String> errors`.
     ValidatorOutput output = textBoxValidator.isDisplayed()
                                             .isEditable()
-                                            .sThousandSeparated(limitInputAmount, 3, Locale.UK)
+                                            .isThousandSeparated(limitInputAmount, 3, Locale.UK)
                                             .apply(this.getLimitAmountField(), "Limit Amount");
 
     boolean areAllValidationsPassed = output.isPassed();
@@ -432,7 +432,7 @@ public void validateIfLimitFieldShowsThousandSeparatorWithThreeDecimals(String l
     // Also, we can retrieve boolean result or `Set<String> errors`.
     ValidatorOutput output = textBoxValidator.isDisplayed()
                                             .isEditable()
-                                            .sThousandSeparated(limitInputAmount, 3, Locale.UK)
+                                            .isThousandSeparated(limitInputAmount, 3, Locale.UK)
                                             .apply(this.getLimitAmountField(), "Limit Amount", assertions);
 
     
@@ -441,3 +441,60 @@ public void validateIfLimitFieldShowsThousandSeparatorWithThreeDecimals(String l
     assertions.assertAll();
 }
  ```
+
+ **Special Note on peek() method**
+
+ If you like to perform certain operation at any point, while chaining multiple validation methods, it can be 
+ achieved by simply using `peek()` method.
+
+ It accepts `BaseElement` and `Consumer<BaseElement>` as argument. If you want to perform some operation on
+ the element being validated, before you start that validation, simply use it as below at run time.
+
+ For Example, the element that you are trying to validate is an `<input>` html element, and before checking
+ thousand-separator format, assume you want to perform some operations either on that field itself or in generic to meet the criteria of validation, then the snippet goes as below, 
+
+ ``` java
+
+@Autowired
+private TextBoxValidator textBoxValidator;
+
+@Autowired
+private TextBox textBox; // it represents a text box type of UI element customized in this framework
+
+@FindBy(xpath = "//input[@id='Limit-Amount-data-test-id'])
+private WebElement limitAmountField;
+
+
+public void validateIfLimitFieldShowsThousandSeparatorWithThreeDecimals(String limitInputAmount) {
+
+    Assertions assertions = new Assertions();
+
+    // below lines carry out each validations lined up in the method chaining below and add them up to assertions by default to write them on the easy-cucumber-html-report.
+    // Also, we can retrieve boolean result or `Set<String> errors`.
+    ValidatorOutput output = textBoxValidator.isDisplayed()
+                                            .isEditable()
+                                            .peek( 
+                                                textBox, // type of element being peeked upon inside next argument `Consumer<BaseElement>`
+                                                txtBox -> {
+                                                    // ... write anything you want here
+                                                }
+                                            ) // this peek method will be peformed first before proceeding to next method
+                                            .takeScreenshot("Performed some operation before checking thousand separator validation") // you can add screenshot in between into cucumber step
+                                            .pause(5000) // you can hault the execution for sometime in between in case next validation in sequence requires some time to take effect on the element
+                                            .isThousandSeparated(limitInputAmount, 3, Locale.UK)
+                                            .apply(this.getLimitAmountField(), "Limit Amount", assertions);
+
+    
+    ... // rest of the code
+
+    assertions.assertAll();
+}
+
+ ```
+
+ **Explanation**
+
+ In the above code, when the method `apply` is executed in its chain, then the web element returned by `this.getLimitAmountField()` is undergoing `isDisplayed()` validation first, followed by `isEditable()` validation and before starting `isThousandSeperated()` validation, it is going to perform something which is written
+in `Consumer<BaseElement>` inside peek method. Finally `isThousandSeparated()` validation will be performed on the web element.
+
+
