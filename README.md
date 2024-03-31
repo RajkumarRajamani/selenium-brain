@@ -494,7 +494,8 @@ public void validateIfLimitFieldShowsThousandSeparatorWithThreeDecimals(String l
  **Explanation**
 
  In the above code, when the method `apply` is executed in its chain, then the web element returned by `this.getLimitAmountField()` is undergoing `isDisplayed()` validation first, followed by `isEditable()` validation and before starting `isThousandSeperated()` validation, it is going to perform something which is written
-in `Consumer<BaseElement>` inside peek method. Then it takes screenshot of outcome of the peek method and sleeps for 5 seconds and finally `isThousandSeparated()` validation will be performed on the web element.
+in `Consumer<BaseElement>` inside peek method. Then it takes screenshot of outcome of the peek method and sleeps for 5 seconds and finally `isThousandSeparated()` validation will be performed on web element.
+
 ---
 
 ### 7. Page Object Repository Setup
