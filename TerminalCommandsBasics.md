@@ -1,3 +1,5 @@
+### Referenced from [bradtraversy GitHub Link](https://gist.github.com/bradtraversy/cc180de0edee05075a6139e42d5f28ce)
+
 # Common Terminal Commands
 
 ## Key Commands & Navigation
