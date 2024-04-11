@@ -1,5 +1,14 @@
 package org.seleniumbrain.lab.testng;
 
+import org.seleniumbrain.lab.core.selenium.validator.Validator;
+import org.seleniumbrain.lab.utility.date.DateFormats;
+
+import java.text.NumberFormat;
+import java.text.ParseException;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.Currency;
+import java.util.Locale;
 import java.util.prefs.BackingStoreException;
 import java.util.prefs.Preferences;
 
@@ -34,7 +43,67 @@ public class PreferenceTest {
   }
 
   public static void main(String[] args) throws BackingStoreException {
-    PreferenceTest test = new PreferenceTest();
-    test.setPreference();
+//    PreferenceTest test = new PreferenceTest();
+//    test.setPreference();
+
+    System.out.println(DateTimeFormatter.ofPattern(DateFormats.DD_MM_YYYY_SLASH.getFormat()).format(LocalDateTime.now().plusDays(30)));
+    System.out.println(Double.parseDouble("0"));
+
+    String input = "USD 10,000.78";
+    String numbersOnly = input.replaceAll("[^0-9.]", ""); // Remove anything that is not a digit or a decimal point
+    System.out.println("Numbers only: " + numbersOnly);
+
+
+    double number = 10000000.78;
+    String countryCode = "US"; // Country code (ISO 3166-1 alpha-2 code), e.g., "US", "GB", "FR", "DE", etc.
+
+    // Create Locale for the given country code
+    Locale locale = new Locale(countryCode);
+
+    // Get number format for the locale
+    NumberFormat numberFormat = NumberFormat.getNumberInstance(locale);
+
+    // Format the number
+    String formattedNumber = numberFormat.format(number);
+
+    System.out.println("Formatted number for " + countryCode + ": " + formattedNumber);
+
+    Double value = 4000389 * 20 * 0.01;
+    System.out.println(value.toString());
+    System.out.println(Validator.getNumberWithThousandSeparator(value, 5, Locale.UK));
+
+    test(); // gist.github.com/bradtraversy
+  }
+
+  public static void test() {
+    String amountString = "EUR 1 000 000 000,89"; // Example input amount string
+    String countryCode = "FR"; // Default country code (e.g., France)
+
+    // Extract numerical part from the input string
+    String numericPart = amountString.replaceAll("[^0-9,]", "");
+
+    // Replace thousands separator with standard format
+    numericPart = numericPart.replace(',', '.');
+
+    // Parse the numerical part to a number
+    double amount;
+    try {
+      Locale locale = new Locale("", countryCode);
+      NumberFormat numberFormat = NumberFormat.getNumberInstance(locale);
+      amount = numberFormat.parse(numericPart).doubleValue();
+    } catch (ParseException e) {
+      // Handle parsing exception
+      amount = 0.0; // Default value if parsing fails
+      e.printStackTrace();
+    }
+
+    // Get currency format for the locale
+    Locale locale = new Locale("", countryCode);
+    NumberFormat currencyFormat = NumberFormat.getCurrencyInstance(locale);
+
+    // Format the number
+    String formattedAmount = currencyFormat.format(amount);
+
+    System.out.println("Formatted amount for " + countryCode + ": " + formattedAmount);
   }
 }
