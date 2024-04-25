@@ -612,21 +612,21 @@ It provides a resuable method to compare any numerical value such as 1, 1.0, 1.1
 
 ### 12. Maven Dependencies
 
-| Dependency Name       | Recommended Version | Latest Version |
-|:----------------------|:-------------------:|:--------------:|
-| Spring-Boot           |        3.0.9        |     3.2.5      |
-| Selenium              |       4.19.1        |     4.19.1     |
-| Cucumber              |       7.17.0        |     7.17.0     |
-| TestNG                |       7.10.1        |     7.10.1     |
-| Lombok                |       1.18.32       |    1.18.32     |
-| SLF4J                 |        2.0.7        |                |
-| RestAssured           |        5.3.1        |                |
-| Jackson               |       2.15.2        |                |
-| Snake YAML            |         2.0         |                |
-| Commons-IO            |       2.14.0        |                |
-| Commons-Text          |       1.10.0        |                |
-| Commons-Validator     |         1.7         |                |
-| Commons-Lang3         |       3.13.0        |                |
-| Faker                 |        1.0.2        |                |
-| OpenCSV               |       5.71.1        |                |
-| Maven-Surefire-Plugin |      3.0.0-M4       |     3.2.5      |
+| Dependency Name         | Recommended Version | Latest Version |
+|:------------------------|:-------------------:|:--------------:|
+| `Spring-Boot`           |        3.0.9        |     3.2.5      |
+| `Selenium`              |       4.19.1        |     4.19.1     |
+| `Cucumber`              |       7.17.0        |     7.17.0     |
+| `TestNG`                |       7.10.1        |     7.10.1     |
+| `Lombok`                |       1.18.32       |    1.18.32     |
+| `SLF4J`                 |        2.0.7        |                |
+| `RestAssured`           |        5.3.1        |                |
+| `Jackson`               |       2.15.2        |                |
+| `Snake YAML`            |         2.0         |                |
+| `Commons-IO`            |       2.14.0        |                |
+| `Commons-Text`          |       1.10.0        |                |
+| `Commons-Validator`     |         1.7         |                |
+| `Commons-Lang3`         |       3.13.0        |                |
+| `Faker`                 |        1.0.2        |                |
+| `OpenCSV`               |       5.71.1        |                |
+| `Maven-Surefire-Plugin` |      3.0.0-M4       |     3.2.5      |
