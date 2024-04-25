@@ -93,7 +93,7 @@ To fix the above error, all we need is to import the self-signed certificate int
   
   # in case of IntelliJ Idea IDE, open the file vmoptions in any editor and add below two parameters
   # For Windows - <IntelliJIdea-installation-directory>/bin/idea64.exe.vmoptions
-  # For Mac - /Users/rajkumarrajamani/Applications/IntelliJ IDEA Community Edition.app/Contents/bin/idea.vmoptions
+  # For Mac - /Users/<useName>/Applications/IntelliJ IDEA Community Edition.app/Contents/bin/idea.vmoptions
   ```
   ###### idea.vmoptions file
 
