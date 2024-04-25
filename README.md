@@ -14,8 +14,8 @@ User Acceptance Level documentation of business requirements.
 | <img src="https://user-images.githubusercontent.com/25181517/117201156-9a724800-adec-11eb-9a9d-3cd0f67da4bc.png" alt="JDK" width="40" />           |              **JDK**               |        `17+`        |
 | <img src="https://user-images.githubusercontent.com/25181517/117207242-07d5a700-adf4-11eb-975e-be04e62b984b.png" alt="Maven" width="40" />         |             **Maven**              |       `3.8.9`       |
 | <img src="https://user-images.githubusercontent.com/25181517/190229463-87fa862f-ccf0-48da-8023-940d287df610.png" alt="Lombok" width="40" />        |             **Lombok**             |      `Latest`       |
-| <img src="https://user-images.githubusercontent.com/25181517/184103699-d1b83c07-2d83-4d99-9a1e-83bd89e08117.png" alt="Selenium" width="40" />      |            **Selenium**            |      `4.16.1`       |
-| <img src="https://user-images.githubusercontent.com/25181517/184117353-4b437677-c4bb-4f4c-b448-af4920576732.png" alt="Cucumber" width="40" />      |            **Cucumber**            |      `7.15.0`       |
+| <img src="https://user-images.githubusercontent.com/25181517/184103699-d1b83c07-2d83-4d99-9a1e-83bd89e08117.png" alt="Selenium" width="40" />      |            **Selenium**            |      `4.19.1`       |
+| <img src="https://user-images.githubusercontent.com/25181517/184117353-4b437677-c4bb-4f4c-b448-af4920576732.png" alt="Cucumber" width="40" />      |            **Cucumber**            |      `7.17.0`       |
 | <img src="https://user-images.githubusercontent.com/25181517/183891303-41f257f8-6b3d-487c-aa56-c497b880d0fb.png" alt="Spring Boot" width="40" />   |          **Spring Boot**           |       `3.0.9`       |
 | <img src="https://user-images.githubusercontent.com/25181517/192107858-fe19f043-c502-4009-8c47-476fc89718ad.png" alt="RestAssured" width="40" />   |          **RestAssured**           |       `5.3.1`       |
 | <img src="https://howtodoinjava.com/wp-content/uploads/2016/08/Super-CSV.png" alt="OpenCSV" width="40" />                                          |            **OpenCSV**             |       `5.7.1`       |
@@ -48,6 +48,7 @@ User Acceptance Level documentation of business requirements.
 9. #### Reports [Easy Cucumber Report]
 10. #### Test Script Definitions
 11. #### Quick Start
+12. #### Maven Dependencies
 
 ---
 
@@ -330,6 +331,7 @@ public void createNewBrowserSessionAndLaunchUrl(String url) {
     WebElement brokerEmail = webDriverWaits.untilElementToBeClickable(By.xpath("//p[@id='brokerEmail']")); 
 }
 ```
+
 ---
 
 ### 6. WebElement Validators
@@ -385,7 +387,8 @@ Assume that you are trying to perform below validations on any desired element.
 
 - to check if an element is displayed
 - to check if an element is editable
-- to check if an element is showing the updated text with a thousand-separator format of UK region with 3 decimal precisions
+- to check if an element is showing the updated text with a thousand-separator format of UK region with 3 decimal
+  precisions
 
 First when we do not want to add above validations into assertions,
 
@@ -413,7 +416,7 @@ public void validateIfLimitFieldShowsThousandSeparatorWithThreeDecimals(String l
 }
  ```
 
- On the other hand, when we do prefer to add all validations into assertions,
+On the other hand, when we do prefer to add all validations into assertions,
 
 ``` java
 @Autowired
@@ -441,16 +444,17 @@ public void validateIfLimitFieldShowsThousandSeparatorWithThreeDecimals(String l
 }
  ```
 
- **Special Note on peek() method**
+**Special Note on peek() method**
 
- If you like to perform certain operation at any point, while chaining multiple validation methods, it can be 
- achieved by simply using `peek()` method.
+If you like to perform certain operation at any point, while chaining multiple validation methods, it can be
+achieved by simply using `peek()` method.
 
- It accepts `BaseElement` and `Consumer<BaseElement>` as argument. If you want to perform some operation on
- the element being validated, before you start that validation, simply use it as below.
+It accepts `BaseElement` and `Consumer<BaseElement>` as argument. If you want to perform some operation on
+the element being validated, before you start that validation, simply use it as below.
 
- For Example, the element that you are trying to validate is an `<input>` html element, and before checking
- thousand-separator format, assume you want to perform some operations either on that field itself or any generic operation to meet the criteria of validation, then the snippet goes as below, 
+For Example, the element that you are trying to validate is an `<input>` html element, and before checking
+thousand-separator format, assume you want to perform some operations either on that field itself or any generic
+operation to meet the criteria of validation, then the snippet goes as below,
 
  ``` java
 
@@ -491,25 +495,33 @@ public void validateIfLimitFieldShowsThousandSeparatorWithThreeDecimals(String l
 
  ```
 
- **Explanation**
+**Explanation**
 
- In the above code, when the method `apply` is executed in its chain, then the web element returned by `this.getLimitAmountField()` is undergoing `isDisplayed()` validation first, followed by `isEditable()` validation and before starting `isThousandSeperated()` validation, it is going to perform something which is written
-in `Consumer<BaseElement>` inside peek method. Then it takes screenshot of outcome of the peek method and sleeps for 5 seconds and finally `isThousandSeparated()` validation will be performed on web element.
+In the above code, when the method `apply` is executed in its chain, then the web element returned
+by `this.getLimitAmountField()` is undergoing `isDisplayed()` validation first, followed by `isEditable()` validation
+and before starting `isThousandSeperated()` validation, it is going to perform something which is written
+in `Consumer<BaseElement>` inside peek method. Then it takes screenshot of outcome of the peek method and sleeps for 5
+seconds and finally `isThousandSeparated()` validation will be performed on web element.
 
 ---
 
 ### 7. Page Object Repository Setup
 
 You can create a page object repository class and initialize the web elements by annotating the class with
-`@PageObjects`. This annotation not only initializes the PageObjectFactory elements and also makes the class as a spring/cucumber-spring context bean component, so you can retrieve it with `@Autowired` annotation
+`@PageObjects`. This annotation not only initializes the PageObjectFactory elements and also makes the class as a
+spring/cucumber-spring context bean component, so you can retrieve it with `@Autowired` annotation
 
-Everytime you create a page object repository class, do follow below important steps to utilize most of the framework's features,
+Everytime you create a page object repository class, do follow below important steps to utilize most of the framework's
+features,
 
-1. Annotate it with `@PageObjects` to make it like Spring bean and initialize its `@FindBy` web elements as PageObjectFacgtory
+1. Annotate it with `@PageObjects` to make it like Spring bean and initialize its `@FindBy` web elements as
+   PageObjectFacgtory
 2. Annotate it with `@Data` to use lombok service which gives easy way to generate all `getters` and `setters`
-of all memebers
-3. Extend the class `BaseObjectRepository` which gives reference object all beans available in this framework, so you do not need to use `@Autowired` in all the classes
-4. Implement an interface `PageObjectRepository<classNameOfPageObjectRepositryImplementingThisInterface>` which force us to implement some of the very useful methods
+   of all memebers
+3. Extend the class `BaseObjectRepository` which gives reference object all beans available in this framework, so you do
+   not need to use `@Autowired` in all the classes
+4. Implement an interface `PageObjectRepository<classNameOfPageObjectRepositryImplementingThisInterface>` which force us
+   to implement some of the very useful methods
 
 > [!NOTE]
 > For more information, please explore clases in below two packages
@@ -533,7 +545,8 @@ public class WillisQuoteSubmissionpageOR extends BaseObjectRepository implements
 ```
 
 > [!IMPORTANT]
-> Always create page object repository classes in any package under `src/main/java`. However, it is recommended to use `snippet` package under `src/main/java` for creating any Object Repositories for maintanability.
+> Always create page object repository classes in any package under `src/main/java`. However, it is recommended to
+> use `snippet` package under `src/main/java` for creating any Object Repositories for maintanability.
 ---
 
 ### 8. Utilities
@@ -580,13 +593,16 @@ It provides a mechanism to retry any operation for any given number of iteration
 ```
 
 > [!EXPLANATION]
-> If failureRetryCount is set to 10 in `selenium-config.yml` configuration file, then the operation mentioned in try block will continue to run repeatedly for 10 times if there are any exception occurred. 
+> If failureRetryCount is set to 10 in `selenium-config.yml` configuration file, then the operation mentioned in try
+> block will continue to run repeatedly for 10 times if there are any exception occurred.
 
-> If no exception occured, for example, in 2nd attempt itself, then retryComman will come to an end returning boolean result as `true`.
+> If no exception occured, for example, in 2nd attempt itself, then retryComman will come to an end returning boolean
+> result as `true`.
 
-> On the otherhand, if try block keeps throwing an error for all 10 retry attempt and unable to complete the task, then retryComman will finally throw an exception `SeleniumBrainException`
+> On the otherhand, if try block keeps throwing an error for all 10 retry attempt and unable to complete the task, then
+> retryComman will finally throw an exception `SeleniumBrainException`
 
-> This RetryCommand is used in places where certain operation might take some time to produce the expected results. 
+> This RetryCommand is used in places where certain operation might take some time to produce the expected results.
 
 #### 6. Numeric Text Comparator
 
@@ -594,3 +610,23 @@ It provides a resuable method to compare any numerical value such as 1, 1.0, 1.1
 
 ---
 
+### 12. Maven Dependencies
+
+| Dependency Name       | Recommended Version | Latest Version |
+|:----------------------|:-------------------:|:--------------:|
+| Spring-Boot           |        3.0.9        |     3.2.5      |
+| Selenium              |       4.19.1        |     4.19.1     |
+| Cucumber              |       7.17.0        |     7.17.0     |
+| TestNG                |       7.10.1        |     7.10.1     |
+| Lombok                |       1.18.32       |    1.18.32     |
+| SLF4J                 |        2.0.7        |                |
+| RestAssured           |        5.3.1        |                |
+| Jackson               |       2.15.2        |                |
+| Snake YAML            |         2.0         |                |
+| Commons-IO            |       2.14.0        |                |
+| Commons-Text          |       1.10.0        |                |
+| Commons-Validator     |         1.7         |                |
+| Commons-Lang3         |       3.13.0        |                |
+| Faker                 |        1.0.2        |                |
+| OpenCSV               |       5.71.1        |                |
+| Maven-Surefire-Plugin |      3.0.0-M4       |     3.2.5      |

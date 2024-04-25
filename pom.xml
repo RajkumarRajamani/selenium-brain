@@ -22,7 +22,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <java.version>17</java.version>
         <cucumber.version>7.17.0</cucumber.version>
-        <selenium.version>4.12.1</selenium.version>
+        <selenium.version>4.19.1</selenium.version>
         <opentelemetry.version>1.28.0</opentelemetry.version>
         <testng.version>7.10.1</testng.version>
         <jackson.version>2.15.2</jackson.version>
@@ -311,7 +311,7 @@
         <dependency>
             <groupId>org.testng</groupId>
             <artifactId>testng</artifactId>
-            <version>7.7.1</version>
+            <version>${testng.version}</version>
             <scope>test</scope>
             <exclusions>
                 <exclusion>
@@ -367,12 +367,12 @@
         </dependency>
 
         <!-- https://mvnrepository.com/artifact/junit/junit -->
-<!--        <dependency>-->
-<!--            <groupId>junit</groupId>-->
-<!--            <artifactId>junit</artifactId>-->
-<!--            <version>4.13.1</version>-->
-<!--            <scope>test</scope>-->
-<!--        </dependency>-->
+        <!--        <dependency>-->
+        <!--            <groupId>junit</groupId>-->
+        <!--            <artifactId>junit</artifactId>-->
+        <!--            <version>4.13.1</version>-->
+        <!--            <scope>test</scope>-->
+        <!--        </dependency>-->
 
 
     </dependencies>
@@ -385,21 +385,31 @@
                 <artifactId>maven-compiler-plugin</artifactId>
             </plugin>
 
+            <!-- This plugin helps to run the maven project with customization -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
                 <version>3.0.0-M4</version>
+
+                <!-- Customization part for Surefire Plugin -->
                 <configuration>
+
+                    <!-- This sets the class to initiate the cucumber execution -->
+                    <includes>
+                        <include>org.seleniumbrain.lab.cucumber.init.CucumberRunnerTest.java</include>
+                    </includes>
+
+                    <!-- This sets the thread counts for Cucumber Parallel Execution -->
                     <properties>
                         <property>
                             <name>dataproviderthreadcount</name>
-                            <value>5</value>
+                            <value>2</value>
                         </property>
 
-<!--                        <property>-->
-<!--                            <name>junit</name>-->
-<!--                            <value>false</value>-->
-<!--                        </property>-->
+                        <property>
+                            <name>junit</name>
+                            <value>false</value>
+                        </property>
 
                     </properties>
                 </configuration>

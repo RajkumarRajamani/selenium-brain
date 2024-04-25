@@ -1,6 +1,8 @@
 ## Challenge 1: In case of the below type of error with intellij, please try to follow these steps to resolve it
 
-> [!ISSUE] com.fasterxml.jackson.core.jackson-databind:jar:2.14.3 failed to transfer from https://repo.maven.apache.org/maven2 during a previous attempt.
+> [!ISSUE] 
+> 
+> com.fasterxml.jackson.core.jackson-databind:jar:2.14.3 failed to transfer from https://repo.maven.apache.org/maven2 during a previous attempt.
 > This failure was cached in the local repository and resolution is not reattempted until the update interval of central has elapsed or updates are forced.
 > Original error: Could not transfer artifact com.fasterxml.jackson.core:jackson-databind:jar:2.14.3 from/to central (https://repo.maven.apache.org/maven2):
 > PKIX path building failed: sun.security.provider.certpath.SunCertPathBuilderException: unable to find valid certification path to requested target
