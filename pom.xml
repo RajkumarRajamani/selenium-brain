@@ -21,10 +21,10 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <java.version>17</java.version>
-        <cucumber.version>7.14.0</cucumber.version>
+        <cucumber.version>7.17.0</cucumber.version>
         <selenium.version>4.12.1</selenium.version>
         <opentelemetry.version>1.28.0</opentelemetry.version>
-        <testng.version>7.8.0</testng.version>
+        <testng.version>7.10.1</testng.version>
         <jackson.version>2.15.2</jackson.version>
         <maven.compiler.source>17</maven.compiler.source>
         <maven.compiler.target>17</maven.compiler.target>
@@ -366,5 +366,44 @@
             <version>5.7.1</version>
         </dependency>
 
+        <!-- https://mvnrepository.com/artifact/junit/junit -->
+<!--        <dependency>-->
+<!--            <groupId>junit</groupId>-->
+<!--            <artifactId>junit</artifactId>-->
+<!--            <version>4.13.1</version>-->
+<!--            <scope>test</scope>-->
+<!--        </dependency>-->
+
+
     </dependencies>
+
+    <build>
+        <plugins>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>3.0.0-M4</version>
+                <configuration>
+                    <properties>
+                        <property>
+                            <name>dataproviderthreadcount</name>
+                            <value>5</value>
+                        </property>
+
+<!--                        <property>-->
+<!--                            <name>junit</name>-->
+<!--                            <value>false</value>-->
+<!--                        </property>-->
+
+                    </properties>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
 </project>

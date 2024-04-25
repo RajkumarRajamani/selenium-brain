@@ -42,8 +42,8 @@ public class LoginFeature_StepDefinitions {
         Assertions assertions = new Assertions();
 //        assertions.addKnownFailureLabels("UserName Field", "ID1000");
         homePageOR
-                .withAssertion(assertions, homePageOR)
-                .enterUserName("standard_user");
+                .withAssertion(assertions, homePageOR);
+//                .enterUserName("standard_user");
 //                .enterPassword("secret_sauce")
 //                .login()
 //                .openSideMenu()

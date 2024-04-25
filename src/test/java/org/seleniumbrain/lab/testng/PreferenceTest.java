@@ -45,6 +45,26 @@ public class PreferenceTest {
   public static void main(String[] args) throws BackingStoreException {
 //    PreferenceTest test = new PreferenceTest();
 //    test.setPreference();
+    System.out.println(Validator.getNumberWithThousandSeparator(55.0078, 2, Locale.UK));
+    decimalDigits(34.984);
+    decimalDigits(34.30);
+    decimalDigits(34.0039);
+    decimalDigits(34.0059);
+    decimalDigits(34.0069);
+    decimalDigits(34.003);
+    decimalDigits(34.000);
+
+    System.out.println();
+
+    Double val = 11912000000.00005;
+    decimalDigits(val);
+    decimalDigits(34.300000);
+    decimalDigits(34.000039);
+    decimalDigits(34.000059);
+    decimalDigits(34.00006);
+    decimalDigits(34.00003);
+    decimalDigits(34.000000);
+
 
     System.out.println(DateTimeFormatter.ofPattern(DateFormats.DD_MM_YYYY_SLASH.getFormat()).format(LocalDateTime.now().plusDays(30)));
     System.out.println(Double.parseDouble("0"));
@@ -72,8 +92,10 @@ public class PreferenceTest {
     System.out.println(value.toString());
     System.out.println(Validator.getNumberWithThousandSeparator(value, 5, Locale.UK));
 
-    test(); // gist.github.com/bradtraversy
+//    test(); // gist.github.com/bradtraversy
   }
+
+
 
   public static void test() {
     String amountString = "EUR 1 000 000 000,89"; // Example input amount string
@@ -105,5 +127,25 @@ public class PreferenceTest {
     String formattedAmount = currencyFormat.format(amount);
 
     System.out.println("Formatted amount for " + countryCode + ": " + formattedAmount);
+  }
+
+  public static void decimalDigits(double val) {
+//    double val = 34.584;
+
+    // Extracting the decimal portion
+    double decimalPortion = val - (long) val;
+
+    // Extracting the first two digits of the decimal portion
+    int firstTwoDigits = (int) (decimalPortion * 100000);
+
+    // Checking if the first two digits are greater than 0
+    if (firstTwoDigits < 5) {
+      String result = Validator.getNumberWithThousandSeparator(val, 0, Locale.UK);
+      System.out.println(val + " The first two digits of the decimal portion are not greater than 0(" + firstTwoDigits + ")  = " + result);
+    } else {
+
+      String result = Validator.getNumberWithThousandSeparator(val, 4, Locale.UK);
+      System.out.println(val + " The first two digits of the decimal portion are greater than 0(" + firstTwoDigits + ") = " + result);
+    }
   }
 }
