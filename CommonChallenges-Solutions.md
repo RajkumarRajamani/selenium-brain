@@ -44,7 +44,7 @@ To fix the above error, all we need is to import the self-signed certificate int
   /Library/Java/JavaVirtualMachines/jdk-17.jdk/Contents/Home/lib/security/cacerts
   ```
 * Once you have located the cacerts file, now we need to import certificates
-* To install/add certificates to java cacerts file, we need to Java's keytool which is located under java's /bin folder
+* To install/add certificates to java cacerts file, we need Java's keytool which is located under java's /bin folder
 * Open ```cmd``` or ```powershell``` for windows or ```terminal``` for mac
 * Then locate the terminal to java's bin directory where keytool.exe is located using below command
 
@@ -103,3 +103,12 @@ To fix the above error, all we need is to import the self-signed certificate int
 * https://stackoverflow.com/questions/21076179/pkix-path-building-failed-and-unable-to-find-valid-certification-path-to-requ
 * https://www.littlebigextra.com/how-to-fix-pkix-path-building-failed-sun-security-provider-certpath-suncertpathbuilderexception/
 * https://www.littlebigextra.com/how-to-enable-communication-over-https-between-2-spring-boot-applications-using-self-signed-certificate/
+
+
+## Challenge 2: Unable to add files with lengthy file name into git Commit
+
+When some files are not added into git commit due to its lengthy file name, then run below command to allow lengthy files path as well into git commit
+
+  ```shell
+  $ git config core.longpaths true
+  ```
