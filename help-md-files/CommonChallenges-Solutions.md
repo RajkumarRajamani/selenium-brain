@@ -16,8 +16,9 @@ This is generally accompanied by another error message saying - “unable to fin
 
 #### Further Cause of error
 
-The reason, we get the above error is that JDK is bundled with a lot of trusted Certificate Authority (CA) certificates into a file called ‘cacerts’ but this file has no clue of our self-signed certificate.
-In other words, the cacerts file doesn’t have our self-signed certificate imported and thus doesn’t treat it as a trusted entity and hence it gives the above error.
+The reason, we get the above error is that JDK is bundled with a lot of trusted Certificate Authority (CA) certificates into a file called ‘cacerts’ 
+but this file has no clue of our self-signed certificate. In other words, the cacerts file doesn’t have our self-signed certificate imported and 
+thus doesn’t treat it as a trusted entity, and hence it gives the above error.
 
 #### How to fix the above error
 
@@ -63,7 +64,8 @@ To fix the above error, all we need is to import the self-signed certificate int
   keytool -trustcacerts -keystore "{absolute-path-of-cacerts-directory}" -storepass changeit -importcert -alias "{alias-certificate-name}"  -file "{.cer-file-location}"
   
   # Note
-  # {alias-certificate-name} could be any name as you wish. This is generally given to make uniqueness of certificates while adding different certificates of different versions of same dependency - to avoid duplicate certificate key
+  # {alias-certificate-name} could be any name as you wish. This is generally given to make uniqueness of certificates 
+  # while adding different certificates of different versions of same dependency - to avoid duplicate certificate key
   # {.cer-file-location} could be path of the downloaded .crt file
   
   # For Windows
