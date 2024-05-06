@@ -266,6 +266,12 @@
             <version>${cucumber.version}</version>
         </dependency>
 
+        <dependency>
+            <groupId>io.cucumber</groupId>
+            <artifactId>cucumber-junit</artifactId>
+            <version>${cucumber.version}</version>
+        </dependency>
+
         <!-- Jackson Json Library -->
         <!-- https://mvnrepository.com/artifact/com.fasterxml.jackson.core/jackson-core -->
         <dependency>
@@ -366,13 +372,13 @@
             <version>5.7.1</version>
         </dependency>
 
-        <!-- https://mvnrepository.com/artifact/junit/junit -->
-        <!--        <dependency>-->
-        <!--            <groupId>junit</groupId>-->
-        <!--            <artifactId>junit</artifactId>-->
-        <!--            <version>4.13.1</version>-->
-        <!--            <scope>test</scope>-->
-        <!--        </dependency>-->
+<!--         https://mvnrepository.com/artifact/junit/junit-->
+                <dependency>
+                    <groupId>junit</groupId>
+                    <artifactId>junit</artifactId>
+                    <version>4.13.1</version>
+                    <scope>test</scope>
+                </dependency>
 
 
     </dependencies>
@@ -403,7 +409,7 @@
                     <properties>
                         <property>
                             <name>dataproviderthreadcount</name>
-                            <value>2</value>
+                            <value>4</value>
                         </property>
 
                         <property>

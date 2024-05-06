@@ -1,8 +1,15 @@
 package org.seleniumbrain.lab.cucumber.init;
 
-import io.cucumber.testng.AbstractTestNGCucumberTests;
-import io.cucumber.testng.CucumberOptions;
+import io.cucumber.testng.*;
+import io.cucumber.testng.PickleWrapper;
+import org.testng.annotations.BeforeTest;
 import org.testng.annotations.DataProvider;
+import org.testng.annotations.Test;
+
+import java.util.Arrays;
+import java.util.Comparator;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @CucumberOptions(
         plugin = {
@@ -25,10 +32,12 @@ import org.testng.annotations.DataProvider;
 )
 
 public class CucumberRunnerTest extends AbstractTestNGCucumberTests {
-//        @Override
-//        @DataProvider(parallel = true)
-//        public Object[][] scenarios() {
-//                return super.scenarios();
-//        }
+
+        @Override
+        @DataProvider(parallel = true)
+        public Object[][] scenarios() {
+                return super.scenarios();
+        }
+
 }
 

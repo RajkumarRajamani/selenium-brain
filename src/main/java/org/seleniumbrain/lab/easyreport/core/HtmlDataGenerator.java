@@ -68,12 +68,20 @@ public class HtmlDataGenerator {
                 .map(dt -> dt.toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime())
                 .min(Comparator.naturalOrder()).orElseThrow();
 
-        long totalDuration = features.stream()
+        LocalDateTime endTime = features.stream()
                 .map(ReportJsonFeature::getElements)
-                .flatMap(Collection::stream).toList()
-                .stream().mapToLong(ReportJsonFeature.Element::getTotalScenarioDuration)
-                .sum();
-        LocalDateTime endTime = startTime.plus(Duration.ofNanos(totalDuration));
+                .flatMap(Collection::stream)
+                .map(ReportJsonFeature.Element::getStart_timestamp)
+                .map(dt -> dt.toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime())
+                .max(Comparator.naturalOrder()).orElseThrow();
+
+        long totalDuration = Duration.between(startTime, endTime).toNanos();
+//        long totalDuration = features.stream()
+//                .map(ReportJsonFeature::getElements)
+//                .flatMap(Collection::stream).toList()
+//                .stream().mapToLong(ReportJsonFeature.Element::getTotalScenarioDuration)
+//                .sum();
+//        LocalDateTime endTime = startTime.plus(Duration.ofNanos(totalDuration));
         String totalExecutionDuration = this.getReadableTime(totalDuration);
 
         projectInfo.put("startTime", startTime.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss:SSS")));

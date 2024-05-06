@@ -18,6 +18,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import java.io.File;
 import java.lang.reflect.Field;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Objects;
 
@@ -41,6 +42,19 @@ public class CucumberBaseHooks {
 
     @Autowired
     private ScenarioState scenarioState;
+
+    private static LocalDateTime startTime;
+    private static LocalDateTime endTime;
+
+    @BeforeAll(order = 0)
+    public static void noteStartTime() {
+        startTime = LocalDateTime.now();
+    }
+
+    @AfterAll()
+    public static void noteEndTime() {
+        endTime = LocalDateTime.now();
+    }
 
     /**
      * @implNote Generates a prefix text based on the current feature file and a scenario being executed.

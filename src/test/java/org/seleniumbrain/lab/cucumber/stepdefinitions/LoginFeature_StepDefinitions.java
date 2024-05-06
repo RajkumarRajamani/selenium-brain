@@ -10,6 +10,8 @@ import org.seleniumbrain.lab.core.selenium.driver.factory.WebDriverUtils;
 import org.seleniumbrain.lab.snippet.pagerepositories.demo.SwagLabLoginPageOR;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import java.util.Random;
+
 public class LoginFeature_StepDefinitions {
 
 
@@ -41,6 +43,9 @@ public class LoginFeature_StepDefinitions {
         System.out.println("user login with valid credentials");
         Assertions assertions = new Assertions();
 //        assertions.addKnownFailureLabels("UserName Field", "ID1000");
+        try {
+            Thread.sleep(new Random().nextInt(10000, 15000));
+        } catch (Exception ignored) {}
         homePageOR
                 .withAssertion(assertions, homePageOR);
 //                .enterUserName("standard_user");
