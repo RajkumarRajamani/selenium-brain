@@ -67,6 +67,9 @@ public class CucumberHooks {
         String lob = getLobOfScenario(scenario);
         String scenarioId = String.join("|", lob, scenario.getId(), String.valueOf(scenario.getLine()), scenario.getName());
         LobSynchronizer.getInstance().closeScenarioStatus(scenarioId, scenario);
+        try {
+            Thread.sleep(5000);
+        } catch (Exception ignored) {}
     }
 
     @AfterAll

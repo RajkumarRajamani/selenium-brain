@@ -2,6 +2,7 @@ package org.seleniumbrain.lab.cucumber.hooks;
 
 import io.cucumber.java.Scenario;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Component;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -36,6 +37,10 @@ public class LobSynchronizer {
     }
 
     public synchronized boolean canLobBeSwitchedTo(String lob, String scenarioId) {
+        try {
+            Thread.sleep(5000);
+        } catch (Exception ignored) {}
+
         log.info("Trying for scenario : " + scenarioId);
         String printFormat = "%-10s %-500s";
         activeScenarios.forEach((key, value) -> {
