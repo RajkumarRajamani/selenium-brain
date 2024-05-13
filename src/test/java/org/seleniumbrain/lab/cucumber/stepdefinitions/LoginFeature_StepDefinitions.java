@@ -4,6 +4,7 @@ import com.azure.security.keyvault.secrets.SecretClient;
 import io.cucumber.java.en.*;
 import org.seleniumbrain.lab.core.cucumber.spring.configure.ScenarioState;
 import org.seleniumbrain.lab.core.selenium.pageobjectmodel.SharedStateKey;
+import org.seleniumbrain.lab.cucumber.hooks.LobSynchronizer;
 import org.seleniumbrain.lab.easyreport.assertions.Assertions;
 import org.seleniumbrain.lab.core.selenium.driver.factory.DriverFactory;
 import org.seleniumbrain.lab.core.selenium.driver.factory.WebDriverUtils;
@@ -34,7 +35,8 @@ public class LoginFeature_StepDefinitions {
     @Given("user launch app")
     public void userLaunchApp() {
         System.out.println("User Launched the application");
-        driverFactory.getDriver().get("https://www.saucedemo.com/");
+//        driverFactory.getDriver().get("https://www.saucedemo.com/");
+        driverFactory.getDriver().get("https://www.saucedemo.com/" + scenarioState.getText(SharedStateKey.dummyText));
 //        System.out.println(azureKeyVaulet.getSecret("h2db"));
     }
 
@@ -53,6 +55,7 @@ public class LoginFeature_StepDefinitions {
 //                .login()
 //                .openSideMenu()
 //                .navigateToAboutPage();
+        driverUtils.attachStepLogInfo("C:\\abc\\asdjk\\asdj\\sdskjd\\jdj.txt");
         assertions.assertAll();
     }
 

@@ -380,11 +380,11 @@ public class HtmlDataGenerator {
                                             if(!screenshots.isEmpty()) {
                                                 screenshots.forEach(embedding -> {
                                                     embedding.setName(this.getEncodedText(this.replaceEscapesWithHtml(embedding.getName())));
-                                                    if(embedding.getMime_type().equals("text/plain")) {
-                                                        byte[] byteArray = Base64.getDecoder().decode(embedding.getData());
-                                                        String text = new String(byteArray, StandardCharsets.UTF_8);
-                                                        embedding.setData(this.replaceEscapesWithHtml(text));
-                                                    }
+//                                                    if(embedding.getMime_type().equals("text/plain")) {
+//                                                        byte[] byteArray = Base64.getDecoder().decode(embedding.getData());
+//                                                        String text = new String(byteArray, StandardCharsets.UTF_8);
+//                                                        embedding.setData(this.replaceEscapesWithHtml(text));
+//                                                    }
                                                 });
                                             }
 

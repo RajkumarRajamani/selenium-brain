@@ -1208,7 +1208,8 @@ function getStepEmbeddingElements(embeddings, stepStatus) {
 
 function getStepScreenshotElement(mimeType, encodedString, imageCaption, index) {
   if (mimeType == "text/plain") {
-    return `<div>${encodedString}</div>`;
+    var text = atob(encodedString);
+    return `<div>${text}</div>`;
   } else {
     var uint8array = new TextEncoder("utf-8").encode(encodedString);
     var text = new TextDecoder().decode(uint8array);

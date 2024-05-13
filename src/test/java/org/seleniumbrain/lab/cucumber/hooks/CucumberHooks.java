@@ -5,8 +5,10 @@ import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.seleniumbrain.lab.core.config.SeleniumConfigReader;
 import org.seleniumbrain.lab.core.config.pojo.SeleniumConfigurations;
+import org.seleniumbrain.lab.core.cucumber.spring.configure.ScenarioState;
 import org.seleniumbrain.lab.core.selenium.driver.factory.DriverFactory;
 import org.seleniumbrain.lab.core.selenium.driver.factory.WebDriverUtils;
+import org.seleniumbrain.lab.core.selenium.pageobjectmodel.SharedStateKey;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.net.MalformedURLException;
@@ -24,6 +26,9 @@ public class CucumberHooks {
     @Autowired
     private WebDriverUtils driverUtil;
 
+    @Autowired
+    private ScenarioState scenarioState;
+
     @SneakyThrows
     @Before(order = 10)
     public void createBrowserSession(Scenario scenario) {
@@ -38,6 +43,7 @@ public class CucumberHooks {
     public void switchLobHook(Scenario scenario) {
         String lob = getLobOfScenario(scenario);
         String scenarioId = String.join("|", lob, scenario.getId(), String.valueOf(scenario.getLine()), scenario.getName());
+        scenarioState.saveText(SharedStateKey.dummyText, String.join("|", lob, scenario.getName().replaceAll("", "_")));
         while (!LobSynchronizer.getInstance().canLobBeSwitchedTo(lob, scenarioId)) {
             try {
                 log.info(Thread.currentThread().getName() + " assigned for " + lob + " Test Case is waiting as other LOB case is still running in parallel thread.");

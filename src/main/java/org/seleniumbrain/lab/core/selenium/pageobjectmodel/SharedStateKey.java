@@ -14,5 +14,6 @@ public enum SharedStateKey {
      */
     SCENARIO_NAME_PREFIX,
 
-    NAME;
+    NAME,
+    dummyText; // delete this later
 }
