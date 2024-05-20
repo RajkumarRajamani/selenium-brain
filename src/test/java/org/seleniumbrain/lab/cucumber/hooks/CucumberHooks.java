@@ -47,8 +47,8 @@ public class CucumberHooks {
         while (!LobSynchronizer.getInstance().canLobBeSwitchedTo(lob, scenarioId)) {
             try {
                 log.info(Thread.currentThread().getName() + " assigned for " + lob + " Test Case is waiting as other LOB case is still running in parallel thread.");
-                Thread.sleep(10000);
-                wait(10000);
+//                Thread.sleep(10000);
+//                wait(10000);
             } catch (Exception ignored) {
 
             }
@@ -73,9 +73,9 @@ public class CucumberHooks {
         String lob = getLobOfScenario(scenario);
         String scenarioId = String.join("|", lob, scenario.getId(), String.valueOf(scenario.getLine()), scenario.getName());
         LobSynchronizer.getInstance().closeScenarioStatus(scenarioId, scenario);
-        try {
-            Thread.sleep(5000);
-        } catch (Exception ignored) {}
+//        try {
+//            Thread.sleep(5000);
+//        } catch (Exception ignored) {}
     }
 
     @AfterAll

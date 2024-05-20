@@ -921,7 +921,7 @@ var table = new gridjs.Grid({
     }
   ],
   pagination: {
-    limit: 10,
+    limit: 50,
     summary: true
   },
   search: true,
@@ -1056,6 +1056,8 @@ function getScenarioElements(scenarios) {
     var stepElements = getStepElements(steps);
     var scLineColor = getScenarioLineColorBasedOnStatus(scenario.status);
     var scenarioId = replaceAccentsChars(scenario.id, '', 'SINGLE_FOR_MULTI') + "-" + createUUID();
+    var scenarioDuration = scenario.duration;
+    var scenarioTags = scenario.tags;
 
     var beforeScenarioError = "";
     if (scenario.beforeError.length != 0) {
@@ -1084,11 +1086,15 @@ function getScenarioElements(scenarios) {
     // On clicking scenario line, step is displayed
     scenarioElements += `
     <div class="scenario-item-box">
+        <div class = "scenario-tags-line">${scenarioTags}</div>
         ${beforeScenarioError}
         <div id="#${scenarioId}" class="scenario-item">
           <div id="#${scenarioId}-collapsible" class="scenario-name collapsible" onclick="collapseExpandScenario('#${scenarioId}-collapsible-content')">
             <div ${scLineColor}>${atob(scenario.name)}</div>
-            <span class="fa-solid fa-angle-down scenario-expand-icon" style="color: #9eb3c2;"></span>
+            <div class = "scenario-stats">
+                <div ${scLineColor}>${scenarioDuration}</div>
+                <span class="fa-solid fa-angle-down scenario-expand-icon" style="color: #9eb3c2;"></span>
+            </div>
           </div>
           <div id="#${scenarioId}-collapsible-content" class="step-items">
             ${stepElements}
@@ -1145,6 +1151,7 @@ function getStepElements(steps) {
     var stepEmbeddings = getStepEmbeddingElements(step.embeddings, step.status);
     var stepName = atob(step.name);
     var stepNameForId = replaceAccentsChars(stepName, '', 'SINGLE_FOR_MULTI')  + "-" + createUUID();
+    var stepDuration = step.duration;
 
     stepElements += `
       <div id="#${stepNameForId}-${step.line}" class="step-item">
@@ -1154,7 +1161,12 @@ function getStepElements(steps) {
           class="step-name" ${stepLineColor}
           onclick="collapseExpandStep('#step-${stepNameForId}-${step.line}-collapsible-content')">
             <div>${stepName}</div>
-            <div><i class="fa-sharp fa-solid fa-circle"></i></div>
+            <div class = "step-name-stats">
+                <div>${stepDuration}</div>
+                <div><i class="fa-sharp fa-solid fa-circle"></i></div>
+                <span class="fa-solid fa-angle-down scenario-expand-icon" style="color: #9eb3c2;"></span>
+            </div>
+
         </div>
 
         <div

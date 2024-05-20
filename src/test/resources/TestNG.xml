@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<suite name="Cucumber Test Suite" parallel="false">
+
+<!--    <test name="Terrorism Tests">-->
+<!--        <classes>-->
+<!--            <class name="org.seleniumbrain.lab.cucumber.init.TerrorismCucumberRunnerTest"/>-->
+<!--        </classes>-->
+<!--    </test>-->
+
+<!--    <test name="Casualty Tests">-->
+<!--        <classes>-->
+<!--            <class name="org.seleniumbrain.lab.cucumber.init.CasualtyCucumberRunnerTest"/>-->
+<!--        </classes>-->
+<!--    </test>-->
+
+    <test name="Prcb Tests">
+        <classes>
+            <class name="org.seleniumbrain.lab.cucumber.init.PrcbCucumberRunnerTest"/>
+        </classes>
+    </test>
+
+</suite>

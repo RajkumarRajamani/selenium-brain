@@ -401,6 +401,8 @@ public class HtmlDataGenerator {
                                 scenariosSet.put("afterStatus", scenario.getAfterStatus());
                                 scenariosSet.put("afterError", this.getEncodedText(scenario.getAfterError()));
                                 scenariosSet.put("steps", stepMapList);
+                                scenariosSet.put("tags", Objects.requireNonNullElse(scenario.getTags(), new ArrayList<ReportJsonFeature.Tag>())
+                                        .stream().map(ReportJsonFeature.Tag::getName).collect(Collectors.joining(" ; ")));
                                 scenarioMapList.add(scenariosSet);
                             });
                     featuresSet.put("id", this.replaceEscapesWithHtml(feature.getId()));

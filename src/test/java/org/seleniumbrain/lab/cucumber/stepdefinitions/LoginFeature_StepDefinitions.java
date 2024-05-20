@@ -36,8 +36,6 @@ public class LoginFeature_StepDefinitions {
     public void userLaunchApp() {
         System.out.println("User Launched the application");
 //        driverFactory.getDriver().get("https://www.saucedemo.com/");
-        driverFactory.getDriver().get("https://www.saucedemo.com/" + scenarioState.getText(SharedStateKey.dummyText));
-//        System.out.println(azureKeyVaulet.getSecret("h2db"));
     }
 
     @When("they login with valid credentials")
@@ -45,16 +43,19 @@ public class LoginFeature_StepDefinitions {
         System.out.println("user login with valid credentials");
         Assertions assertions = new Assertions();
 //        assertions.addKnownFailureLabels("UserName Field", "ID1000");
-        try {
-            Thread.sleep(new Random().nextInt(10000, 15000));
-        } catch (Exception ignored) {}
-        homePageOR
-                .withAssertion(assertions, homePageOR);
-//                .enterUserName("standard_user");
+//        try {
+//            Thread.sleep(new Random().nextInt(10000, 15000));
+//        } catch (Exception ignored) {}
+//        homePageOR
+//                .withAssertion(assertions, homePageOR)
+//                .enterUserName("standard_user")
 //                .enterPassword("secret_sauce")
 //                .login()
-//                .openSideMenu()
+//                .openSideMenu();
 //                .navigateToAboutPage();
+//        try {
+//            driverFactory.getDriver().get("https://www.saucedemo.com/" + scenarioState.getText(SharedStateKey.dummyText));
+//        } catch (Exception ignored) {}
         driverUtils.attachStepLogInfo("C:\\abc\\asdjk\\asdj\\sdskjd\\jdj.txt");
         assertions.assertAll();
     }

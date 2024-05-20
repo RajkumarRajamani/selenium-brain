@@ -372,13 +372,13 @@
             <version>5.7.1</version>
         </dependency>
 
-<!--         https://mvnrepository.com/artifact/junit/junit-->
-                <dependency>
-                    <groupId>junit</groupId>
-                    <artifactId>junit</artifactId>
-                    <version>4.13.1</version>
-                    <scope>test</scope>
-                </dependency>
+        <!--         https://mvnrepository.com/artifact/junit/junit-->
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>4.13.1</version>
+            <scope>test</scope>
+        </dependency>
 
 
     </dependencies>
@@ -401,9 +401,14 @@
                 <configuration>
 
                     <!-- This sets the class to initiate the cucumber execution -->
-                    <includes>
-                        <include>org.seleniumbrain.lab.cucumber.init.CucumberRunnerTest.java</include>
-                    </includes>
+                    <!--                    <includes>-->
+                    <!--                        <include>org.seleniumbrain.lab.cucumber.init.TerrorismCucumberRunnerTest.java</include>-->
+                    <!--                    </includes>-->
+
+                    <!-- This sets the TestNG.xml file to refer all the runner classes to be executed-->
+                    <suiteXmlFiles>-->
+                        <suiteXmlFile>src/test/resources/TestNG.xml</suiteXmlFile>
+                    </suiteXmlFiles>
 
                     <!-- This sets the thread counts for Cucumber Parallel Execution -->
                     <properties>
@@ -420,6 +425,31 @@
                     </properties>
                 </configuration>
             </plugin>
+
+<!--            <plugin>-->
+<!--                <groupId>net.masterthought</groupId>-->
+<!--                <artifactId>maven-cucumber-reporting</artifactId>-->
+<!--                <version>5.8.1</version>-->
+<!--                <executions>-->
+<!--                    <execution>-->
+<!--                        <id>cucumber-report</id>-->
+<!--                        <phase>verify</phase>-->
+<!--                        <goals>-->
+<!--                            <goal>generate</goal>-->
+<!--                        </goals>-->
+<!--                        <configuration>-->
+<!--                            <projectName>Cucumber Project</projectName>-->
+<!--                            <outputDirectory>test-output/single/cucumber-reports</outputDirectory>-->
+<!--                            <jsonFiles>-->
+<!--                                <jsonFile>test-output/cucumber/cucumber-report-terrorism.json</jsonFile>-->
+<!--                                <jsonFile>test-output/cucumber/cucumber-report-casualty.json</jsonFile>-->
+<!--                                <jsonFile>test-output/cucumber/cucumber-report-prcb.json</jsonFile>-->
+<!--                            </jsonFiles>-->
+<!--                        </configuration>-->
+<!--                    </execution>-->
+<!--                </executions>-->
+<!--            </plugin>-->
+
         </plugins>
     </build>
 </project>
