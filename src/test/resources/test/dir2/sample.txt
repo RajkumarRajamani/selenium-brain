@@ -9,7 +9,12 @@ Benefits: The Easy Cucumber Report will significantly reduce the time required f
 
 
 
+Issue: The Selenium automation framework previously uploaded a new document to Azure Cloud storage for each test case, leading to the saturation of the document blob storage. This approach not only consumed excessive storage space but also negatively impacted the efficiency and performance of the automation framework, resulting in longer regression run times.
 
+Objective: The goal is to optimize the use of Azure Cloud storage by reducing unnecessary document uploads. This involves improving the efficiency and performance of the automation framework, thereby reducing the overall regression timing and enhancing the project's operational effectiveness.
 
+Solution: To address the issue, a new method was developed to create a document ID once and reuse it across all test cases as needed. This solution eliminates the need for repeated document uploads, significantly reducing the storage consumption on Azure Cloud. By reusing the document ID, the framework avoids the redundancy of uploading the same document multiple times, streamlining the entire process.
+
+Benefits: This solution drastically reduces storage usage on Azure Cloud, preventing the saturation of document blob storage. Consequently, it improves the overall efficiency and performance of the automation framework, reducing the regression run time by approximately 20 minutes. This enhancement not only optimizes resource utilization but also accelerates the testing cycle, leading to quicker feedback and more efficient project management.
 
 
