@@ -49,8 +49,11 @@ public class Test {
 //            System.out.println(resultA.trim());
 //
 //            Process processB = Runtime.getRuntime().exec("whoami");
-//            String resultB = IOUtils.toString(processA.getInputStream(), Charset.defaultCharset());
+//            String resultB = IOUtils.toString(processB.getInputStream(), Charset.defaultCharset());
 //            System.out.println(resultB.trim());
+//            System.out.println(System.getProperty("user.name"));
+//
+//
 //        } catch (IOException e) {
 //            e.printStackTrace();
 //        }
@@ -67,39 +70,39 @@ public class Test {
 //            e.printStackTrace();
 //        }
 
-        String s = JsonBuilder.getObjectBuilder()
-                .append("personal.name", "rajkumar")
-                .append("personal.workDetails", "", NodeValueType.ARRAY_STYLE_JSON.getType())
-                .append("personal.empHistory", null)
-                .buildAsJsonNode()
-                .toPrettyString();
-        System.out.println(s);
-
-        String printFormat = "%-50s %-10s";
-        Map<String, String> map = new HashMap<>() {
-            {
-                put("Company Name1", "Cognizant");
-                put("Company Name2", "TCS");
-                put("Company Name3", "Infosys");
-            }
-        };
-        map.forEach((key, value) -> System.out.printf(printFormat + "%n", key, value));
-
-        System.out.println("CasualtyBusiness".contains("Casualty"));
-        System.out.println(LOB.TERRORISM.name());
-        System.out.println(LOB.valueOf("TERRORISM"));
-        String val = LOB.TERRORISM.name() + "|adsd|sadfs|234|sdfs";
-        System.out.println(val.split("\\|")[0]);
-        System.out.println(val.split("\\|")[1]);
-        System.out.println(val.split("\\|")[2]);
-
-        String[] words = {"fruit", "TERRORISM", "Casualty"};
-        for (String word : words) {
-            String capitalizedText = StringUtils.capitalize(word.toLowerCase());
-            System.out.println(capitalizedText);
-        }
-
-        System.out.println(LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd-MM-yyyy")));
+//        String s = JsonBuilder.getObjectBuilder()
+//                .append("personal.name", "rajkumar")
+//                .append("personal.workDetails", "", NodeValueType.ARRAY_STYLE_JSON.getType())
+//                .append("personal.empHistory", null)
+//                .buildAsJsonNode()
+//                .toPrettyString();
+//        System.out.println(s);
+//
+//        String printFormat = "%-50s %-10s";
+//        Map<String, String> map = new HashMap<>() {
+//            {
+//                put("Company Name1", "Cognizant");
+//                put("Company Name2", "TCS");
+//                put("Company Name3", "Infosys");
+//            }
+//        };
+//        map.forEach((key, value) -> System.out.printf(printFormat + "%n", key, value));
+//
+//        System.out.println("CasualtyBusiness".contains("Casualty"));
+//        System.out.println(LOB.TERRORISM.name());
+//        System.out.println(LOB.valueOf("TERRORISM"));
+//        String val = LOB.TERRORISM.name() + "|adsd|sadfs|234|sdfs";
+//        System.out.println(val.split("\\|")[0]);
+//        System.out.println(val.split("\\|")[1]);
+//        System.out.println(val.split("\\|")[2]);
+//
+//        String[] words = {"fruit", "TERRORISM", "Casualty"};
+//        for (String word : words) {
+//            String capitalizedText = StringUtils.capitalize(word.toLowerCase());
+//            System.out.println(capitalizedText);
+//        }
+//
+//        System.out.println(LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd-MM-yyyy")));
     }
 
     private static boolean flag = true;

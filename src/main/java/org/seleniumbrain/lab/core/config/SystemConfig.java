@@ -42,4 +42,8 @@ public class SystemConfig {
     public static String getUserAccountName() {
         return System.getProperty("user.name");
     }
+
+    public static void main(String[] args) {
+        System.out.println(getUserAccountName());
+    }
 }
