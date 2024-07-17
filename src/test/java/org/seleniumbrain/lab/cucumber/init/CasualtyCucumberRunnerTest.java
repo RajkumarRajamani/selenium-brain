@@ -21,7 +21,7 @@ import org.testng.annotations.DataProvider;
                 "org.seleniumbrain.lab.cucumber.stepdefinitions"
         },
         monochrome = true,
-        tags = "@Casualty"
+        tags = "@Test-feature"
 )
 
 public class CasualtyCucumberRunnerTest extends AbstractTestNGCucumberTests {

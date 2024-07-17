@@ -18,3 +18,34 @@ Solution: To address the issue, a new method was developed to create a document 
 Benefits: This solution drastically reduces storage usage on Azure Cloud, preventing the saturation of document blob storage. Consequently, it improves the overall efficiency and performance of the automation framework, reducing the regression run time by approximately 20 minutes. This enhancement not only optimizes resource utilization but also accelerates the testing cycle, leading to quicker feedback and more efficient project management.
 
 
+
+
+import javax.net.ssl.HttpsURLConnection;
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.TrustManager;
+import javax.net.ssl.X509TrustManager;
+
+    private void ignoreCertificates() {
+    TrustManager[] trustAllCerts = new TrustManager[] { new X509TrustManager() {
+        @Override
+        public X509Certificate[] getAcceptedIssuers() {
+            return null;
+        }
+
+        @Override
+        public void checkClientTrusted(X509Certificate[] certs, String authType) {
+        }
+
+        @Override
+        public void checkServerTrusted(X509Certificate[] certs, String authType) {
+        }
+    } };
+
+    try {
+        SSLContext sc = SSLContext.getInstance("TLS");
+        sc.init(null, trustAllCerts, new SecureRandom());
+        HttpsURLConnection.setDefaultSSLSocketFactory(sc.getSocketFactory());
+    } catch (Exception e) {
+
+
+    }

@@ -27,6 +27,12 @@ public class Test {
     }
 
     public static void main(String[] args) throws MalformedURLException {
+        String str = "&, \", <, >";
+        str = StringUtils.replaceEach(str,
+                new String[]{"&", "\"", "<", ">"},
+                new String[]{"&amp;", "&quot;", "&lt;", "&gt;"});
+        System.out.println(str);
+
 //        ChromeOptions browserOptions = new ChromeOptions();
 //        browserOptions.setPlatformName("Windows 11");
 //        browserOptions.setBrowserVersion("117");

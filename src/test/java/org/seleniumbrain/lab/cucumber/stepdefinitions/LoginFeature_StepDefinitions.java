@@ -1,17 +1,22 @@
 package org.seleniumbrain.lab.cucumber.stepdefinitions;
 
 import com.azure.security.keyvault.secrets.SecretClient;
+import io.cucumber.datatable.DataTable;
+import io.cucumber.java.DataTableType;
 import io.cucumber.java.en.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.seleniumbrain.lab.core.cucumber.spring.configure.ScenarioState;
 import org.seleniumbrain.lab.core.selenium.pageobjectmodel.SharedStateKey;
-import org.seleniumbrain.lab.cucumber.hooks.LobSynchronizer;
 import org.seleniumbrain.lab.easyreport.assertions.Assertions;
 import org.seleniumbrain.lab.core.selenium.driver.factory.DriverFactory;
 import org.seleniumbrain.lab.core.selenium.driver.factory.WebDriverUtils;
 import org.seleniumbrain.lab.snippet.pagerepositories.demo.SwagLabLoginPageOR;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import java.util.Random;
+import java.util.*;
 
 public class LoginFeature_StepDefinitions {
 
@@ -64,5 +69,61 @@ public class LoginFeature_StepDefinitions {
     public void directedToHomePage() {
         System.out.println("user is directed to home page");
         System.out.println("Scenario State Shared Value: " + scenarioState.getCacheText().get(SharedStateKey.NAME));
+    }
+
+    @Given("Step 1")
+    public void testStep(DataTable dataTable) {
+
+//        System.out.println(request.requestFileName);
+//        request.getDocumentNames().forEach(System.out::println);
+        List<Map<String, String>> rows = dataTable.asMaps(String.class, String.class);
+
+        Request request = new Request();
+        List<String> documentNames = new ArrayList<>();
+
+        for (Map<String, String> row : rows) {
+            if (row.get("requestFileName") != null && !row.get("requestFileName").isEmpty()) {
+                request.setRequestFileName(row.get("requestFileName"));
+            }
+            if (row.get("documentNames") != null && !row.get("documentNames").isEmpty()) {
+                documentNames.add(row.get("documentNames"));
+            }
+        }
+        request.setDocumentNames(documentNames);
+
+        // Use the request object as needed
+        System.out.println("Request File Name: " + request.getRequestFileName());
+        System.out.println("Document Names: " + request.getDocumentNames());
+    }
+
+//    @DataTableType
+//    public Request requestEntry(Map<String, String> entries) {
+//        Request request = Request.builder()
+//                .documentNames(new ArrayList<>())
+//                .build();
+//
+//        entries.forEach((key, value) -> System.out.println("REQUEST NAME: " + key + " ### DOCS : " + value));
+//
+//        request.setRequestFileName(entries.keySet().stream().filter(item -> !item.isBlank()).findFirst().get());
+//        request.setDocumentNames(entries.values().stream().toList());
+//
+////        for(Map.Entry<String, String> entry : entries.entrySet()) {
+////            if(Objects.nonNull(entry.) && !entry.get("requestFileName").isBlank())
+////                request.setRequestFileName(entry.get("requestFileName"));
+////
+////            if(Objects.nonNull(entry.get("documentNames")) && !entry.get("documentNames").isBlank())
+////                request.getDocumentNames().add(entry.get("documentNames"));
+////        }
+//
+//        return request;
+//    }
+
+    @Data
+    @Builder
+    @AllArgsConstructor
+    @NoArgsConstructor
+    public static class Request {
+        private String requestFileName;
+        private List<String> documentNames;
     }
 }
