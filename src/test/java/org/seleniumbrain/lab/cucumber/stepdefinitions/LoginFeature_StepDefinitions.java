@@ -2,7 +2,6 @@ package org.seleniumbrain.lab.cucumber.stepdefinitions;
 
 import com.azure.security.keyvault.secrets.SecretClient;
 import io.cucumber.datatable.DataTable;
-import io.cucumber.java.DataTableType;
 import io.cucumber.java.en.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -13,12 +12,14 @@ import org.seleniumbrain.lab.core.selenium.pageobjectmodel.SharedStateKey;
 import org.seleniumbrain.lab.easyreport.assertions.Assertions;
 import org.seleniumbrain.lab.core.selenium.driver.factory.DriverFactory;
 import org.seleniumbrain.lab.core.selenium.driver.factory.WebDriverUtils;
+import org.seleniumbrain.lab.snippet.BaseObjectRepository;
+import org.seleniumbrain.lab.snippet.pagerepositories.demo.SwagLabHomePageOR;
 import org.seleniumbrain.lab.snippet.pagerepositories.demo.SwagLabLoginPageOR;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.*;
 
-public class LoginFeature_StepDefinitions {
+public class LoginFeature_StepDefinitions extends BaseObjectRepository {
 
 
     @Autowired
@@ -31,7 +32,10 @@ public class LoginFeature_StepDefinitions {
     private SecretClient azureKeyVaulet;
 
     @Autowired
-    private SwagLabLoginPageOR homePageOR;
+    private SwagLabLoginPageOR loginPageOR;
+
+    @Autowired
+    private SwagLabHomePageOR homePageOR;
 
     @Autowired
     private ScenarioState scenarioState;
@@ -72,28 +76,38 @@ public class LoginFeature_StepDefinitions {
     }
 
     @Given("Step 1")
-    public void testStep(DataTable dataTable) {
+    public void testStep() {
 
 //        System.out.println(request.requestFileName);
 //        request.getDocumentNames().forEach(System.out::println);
-        List<Map<String, String>> rows = dataTable.asMaps(String.class, String.class);
+//        List<Map<String, String>> rows = dataTable.asMaps(String.class, String.class);
+//
+//        Request request = new Request();
+//        List<String> documentNames = new ArrayList<>();
+//
+//        for (Map<String, String> row : rows) {
+//            if (row.get("requestFileName") != null && !row.get("requestFileName").isEmpty()) {
+//                request.setRequestFileName(row.get("requestFileName"));
+//            }
+//            if (row.get("documentNames") != null && !row.get("documentNames").isEmpty()) {
+//                documentNames.add(row.get("documentNames"));
+//            }
+//        }
+//        request.setDocumentNames(documentNames);
+//
+//        // Use the request object as needed
+//        System.out.println("Request File Name: " + request.getRequestFileName());
+//        System.out.println("Document Names: " + request.getDocumentNames());
 
-        Request request = new Request();
-        List<String> documentNames = new ArrayList<>();
+//        Assertions assertions = new Assertions();
 
-        for (Map<String, String> row : rows) {
-            if (row.get("requestFileName") != null && !row.get("requestFileName").isEmpty()) {
-                request.setRequestFileName(row.get("requestFileName"));
-            }
-            if (row.get("documentNames") != null && !row.get("documentNames").isEmpty()) {
-                documentNames.add(row.get("documentNames"));
-            }
+//        this.assertions = assertions;
+        try {
+            assertions.assertEqualsTo("UserName Field", 1, 2, "Not Equal Failed", "Equal Passed");
+        } finally {
+            assertions.assertAll();
         }
-        request.setDocumentNames(documentNames);
 
-        // Use the request object as needed
-        System.out.println("Request File Name: " + request.getRequestFileName());
-        System.out.println("Document Names: " + request.getDocumentNames());
     }
 
 //    @DataTableType

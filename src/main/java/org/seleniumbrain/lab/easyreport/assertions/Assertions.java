@@ -1,6 +1,7 @@
 package org.seleniumbrain.lab.easyreport.assertions;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import io.cucumber.spring.ScenarioScope;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -11,10 +12,13 @@ import org.assertj.core.error.AssertJMultipleFailuresError;
 import org.seleniumbrain.lab.easyreport.util.dateutils.DateUtils;
 import org.seleniumbrain.lab.easyreport.exception.EasyReportException;
 import org.seleniumbrain.lab.easyreport.util.VersionHelper;
+import org.springframework.stereotype.Component;
 
 import java.util.*;
 
 @Slf4j
+@Component
+@ScenarioScope
 public class Assertions implements Assertion {
 
     private final ThreadLocal<Map<String, String>> knownFailureLabelSet = ThreadLocal.withInitial(HashMap::new);

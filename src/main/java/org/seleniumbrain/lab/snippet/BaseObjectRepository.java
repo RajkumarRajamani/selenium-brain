@@ -1,6 +1,8 @@
 package org.seleniumbrain.lab.snippet;
 
 import io.cucumber.spring.ScenarioScope;
+import lombok.Getter;
+import lombok.Setter;
 import org.seleniumbrain.lab.core.config.SeleniumConfigReader;
 import org.seleniumbrain.lab.core.cucumber.spring.configure.ScenarioState;
 import org.seleniumbrain.lab.easyreport.assertions.Assertions;
@@ -62,7 +64,12 @@ public class BaseObjectRepository {
     @Autowired
     public SwagLabHomePageOR swagLabHomePageOR;
 
+    @Autowired
     public Assertions assertions;
+
+    @Getter
+    @Setter
+    public String sharedValue;
 
     public <T> T withAssertion(Assertions assertions, T repository) {
         this.assertions = assertions;
