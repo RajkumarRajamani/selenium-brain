@@ -1,0 +1,16 @@
+<div @class='paris'>
+    <div>paris1<div>
+ </div>
+<div @class='paris'>
+    <div>paris2<div>
+</div>
+
+//div[text()='paris1']/parent:div[@class='paris']
+
+String str="apple";
+String str1="apple";
+String str2=new String("apple");
+System.out.println(str==str1); //  false
+System.out.println(str==str2); // false
+System.out.println(str.equals(str2)); // true
+

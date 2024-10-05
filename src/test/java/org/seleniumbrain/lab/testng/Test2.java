@@ -1,9 +1,11 @@
 package org.seleniumbrain.lab.testng;
 
+import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.math.NumberUtils;
 import org.seleniumbrain.lab.core.selenium.validator.Validator;
 
+import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.math.RoundingMode;
 import java.text.DecimalFormat;
@@ -18,43 +20,54 @@ public class Test2 {
     }
 
     public static void method1(String... values) {
-//        System.out.println(calculatePlaceholderText("90000000000023", 4));
-//        System.out.println(calculatePlaceholderText("90000011.000", 4));
+        System.out.println(String.valueOf(Double.valueOf(90000000000023.0)));
+        System.out.println(FilenameUtils.getBaseName("a/b/c.txt"));
+
+
+//        System.out.println(calculatePlaceholderText(90000000000023.0, 4));
+//        System.out.println(calculatePlaceholderText(90000011.000, 4));
 //        System.out.println(calculatePlaceholderText("90000012.0000", 4));
 //        System.out.println(calculatePlaceholderText("90000013.00000", 4));
 //        System.out.println(calculatePlaceholderText("90000014.00001", 4));
 //        System.out.println(calculatePlaceholderText("90000015.00035", 4));
 //        System.out.println(calculatePlaceholderText("90000016.00036", 4));
 //        System.out.println(calculatePlaceholderText("90000017.12956", 4));
-//        System.out.println(calculatePlaceholderText("90000018.12952", 4));
+//        System.out.println(calculatePlaceholderText(900000180090.12955, 4));
 //        System.out.println(calculatePlaceholderText("90000019.99962", 4));
 //        System.out.println(calculatePlaceholderText("90000020.99965", 4));
-//        System.out.println(calculatePlaceholderText("90000021.99996", 4));
+//        System.out.println(calculatePlaceholderText("90000021.99903", 4));
+//        System.out.println(calculatePlaceholderText("90000022.99905", 4));
+//        System.out.println(calculatePlaceholderText("90000023.99916", 4));
+//        System.out.println(calculatePlaceholderText("-90000024.99996", 4));
+//        System.out.println(calculatePlaceholderText("0.76335", 4));
+//        System.out.println(calculatePlaceholderText("0.76336", 4));
+//        System.out.println(calculatePlaceholderText("0.76334", 4));
+//        System.out.println(calculatePlaceholderText("-0.00023", 4));
 //        System.out.println(calculatePlaceholderText("0.0", 4));
 //        System.out.println(calculatePlaceholderText("0.00", 4));
 //        System.out.println(calculatePlaceholderText("", 4));
 //        System.out.println(calculatePlaceholderText("sd", 4));
 //        System.out.println(calculatePlaceholderText(null, 4));
 
-        System.out.println(calculatePlaceholderText("11", 2));
-        System.out.println(calculatePlaceholderText("12.0", 2));
-        System.out.println(calculatePlaceholderText("13.00", 2));
-        System.out.println(calculatePlaceholderText("14.000", 2));
-        System.out.println(calculatePlaceholderText("15.001", 2));
-        System.out.println(calculatePlaceholderText("16.01", 2));
-        System.out.println(calculatePlaceholderText("17.013", 2));
-        System.out.println(calculatePlaceholderText("18.034", 2));
-        System.out.println(calculatePlaceholderText("19.045", 2));
-        System.out.println(calculatePlaceholderText("20.056", 2));
-        System.out.println(calculatePlaceholderText("21.983", 2));
-        System.out.println(calculatePlaceholderText("22.985", 2));
-        System.out.println(calculatePlaceholderText("23.986", 2));
-        System.out.println(calculatePlaceholderText("23.996", 2));
+//        System.out.println(calculatePlaceholderText("11", 2));
+//        System.out.println(calculatePlaceholderText("12.0", 2));
+//        System.out.println(calculatePlaceholderText("13.00", 2));
+//        System.out.println(calculatePlaceholderText("14.000", 2));
+//        System.out.println(calculatePlaceholderText("15.001", 2));
+//        System.out.println(calculatePlaceholderText("16.01", 2));
+//        System.out.println(calculatePlaceholderText("17.013", 2));
+//        System.out.println(calculatePlaceholderText("18.034", 2));
+//        System.out.println(calculatePlaceholderText("19.045", 2));
+//        System.out.println(calculatePlaceholderText("20.056", 2));
+//        System.out.println(calculatePlaceholderText("21.983", 2));
+//        System.out.println(calculatePlaceholderText("22.985", 2));
+//        System.out.println(calculatePlaceholderText("23.986", 2));
+//        System.out.println(calculatePlaceholderText("23.996", 2));
     }
 
     static String calculatePlaceholderText(Object value, int requiredDecimalDigits) {
         String text = calculatePlaceholderTexts(value, requiredDecimalDigits).replaceAll("[^0-9.]", "").trim();
-        return calculatePlaceholderTexts(text, requiredDecimalDigits);
+        return Objects.nonNull(value) && value.toString().startsWith("-") ? "-" + calculatePlaceholderTexts(text, requiredDecimalDigits) : calculatePlaceholderTexts(text, requiredDecimalDigits);
     }
 
     static String calculatePlaceholderTexts(Object value, int requiredDecimalDigits) {
@@ -87,22 +100,40 @@ public class Test2 {
                 }
                 String precisionTextToAdd = "0." + builderText;
                 double precisionValueToAdd = Double.parseDouble(precisionTextToAdd);
-                double doubleValueFormatted = characteristicValue.intValue() + mantissaValue + precisionValueToAdd;
+                double doubleValueFormatted = characteristicValue.doubleValue() + mantissaValue + precisionValueToAdd;
                 df.setGroupingUsed(true);
-                return df.format(doubleValueFormatted);
+                objValue = df.format(doubleValueFormatted);
             } else {
                 String doubleValueTobeFormatted = characteristicValue + "." + mantissa.substring(0, requiredDecimalDigits);
                 df.setGroupingUsed(true);
                 if (mantissaValue > 0) {
-                    return df.format(Double.parseDouble(doubleValueTobeFormatted));
+                    objValue = df.format(Double.parseDouble(doubleValueTobeFormatted));
                 } else {
                     df.setMaximumFractionDigits(0);
                     df.setMinimumFractionDigits(0);
-                    return df.format(Double.parseDouble(doubleValueTobeFormatted));
+                    objValue = df.format(Double.parseDouble(doubleValueTobeFormatted));
                 }
             }
         }
         return objValue;
+    }
+
+    static int getDecimalPlaces(String value) {
+        if(Objects.isNull(value)) return 0;
+
+        if(value.contains(".") && StringUtils.countMatches(value, ".") == 1)
+            return value.replaceAll("[^\\d.]", "").trim().split("\\.")[1].length();
+        else
+            return 0;
+    }
+
+    static double getDecimal(String value) {
+        if(Objects.isNull(value)) return 0;
+
+        if(value.contains(".") && StringUtils.countMatches(value, ".") == 1)
+            return Double.parseDouble("0." + value.replaceAll("[^\\d.]", "").trim().split("\\.")[1]);
+        else
+            return 0;
     }
 
 }
