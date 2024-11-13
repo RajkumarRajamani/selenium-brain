@@ -20,7 +20,8 @@ import org.testng.annotations.DataProvider;
                 "org.seleniumbrain.lab.cucumber.stepdefinitions"
         },
         monochrome = true,
-        tags = "@Terrorism"
+//        tags = "@Terrorism"
+        tags = "@Search-amazon"
 )
 
 public class TerrorismCucumberRunnerTest extends AbstractTestNGCucumberTests {

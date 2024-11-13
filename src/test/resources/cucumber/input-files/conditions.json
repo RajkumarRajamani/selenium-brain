@@ -1,0 +1,88 @@
+[
+  {
+    "field": "address.street",
+    "value": "",
+    "operator": "",
+    "type": "",
+    "requiredField": {
+      "root": "",
+      "paths": []
+    }
+  },
+  {
+    "field": "address.city",
+    "value": "",
+    "operator": "",
+    "type": "",
+    "requiredField": {
+      "root": "",
+      "paths": []
+    }
+  },
+  {
+    "field": "address.state",
+    "value": "",
+    "operator": "",
+    "type": "",
+    "requiredField": {
+      "root": "",
+      "paths": []
+    }
+  },
+  {
+    "field": "address.zip",
+    "value": "",
+    "operator": "",
+    "type": "",
+    "requiredField": {
+      "root": "",
+      "paths": []
+    }
+  },
+  {
+    "field": "customs",
+    "value": "",
+    "operator": "",
+    "type": "",
+    "requiredField": {
+      "root": "",
+      "paths": []
+    }
+  },
+  {
+    "field": "friends.age",
+    "value": "",
+    "operator": "",
+    "type": "",
+    "requiredField": {
+      "root": "",
+      "paths": []
+    }
+  },
+  {
+    "field": "work.company",
+    "value": "",
+    "operator": "",
+    "type": "",
+    "requiredField": {
+      "root": "",
+      "paths": []
+    }
+  },
+  {
+    "field": "work.projects.tasks.status",
+    "value": "pending",
+    "operator": "EQUALS",
+    "type": "STRING",
+    "requiredField": {
+      "root": "work.projects",
+      "paths": [
+        "name",
+        "team",
+        "tasks.description",
+        "tasks.status"
+      ]
+    }
+  }
+]
+

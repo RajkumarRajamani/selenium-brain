@@ -1,0 +1,27 @@
+uiConfig:
+  url: https://www.google.com
+
+apiConfig:
+  host:
+    host1: https://host1-test.com/
+    host2: https://host2-test.com/
+
+  endPoints:
+    endPoint1: api/addContact
+    endPoiint2: api/updateContact
+
+  tokens:
+    tokenA:
+      tokenUrl: https://login.microsoftonline.com/233jk2l3k23jl23/oauth2/v2.0/token
+      grantType: client_credentials
+      clientId: asdsdf-asda-34sd8-sdf32
+      secret:
+      scope:
+      resource:
+      redirectUrl:
+
+switches:
+  flagA: true
+  flagB: false
+  generateDocsBeforeExecution: true
+  deleteRecordsEndExecution: false

@@ -142,11 +142,23 @@ public interface JsonBuilder {
                 final String path = parentPath.isBlank() ? innerNode.getKey() : parentPath + "." + innerNode.getKey();
 
                 if (valueNode.isArray()) {
-                    for (int i = 0; i < valueNode.size(); i++) {
-                        printJsonPath(valueNode.get(i), path + "[" + i + "]", pathCollections);
+                    if(valueNode.isEmpty()) {
+                        pathCollections.add(path);
+                    } else {
+                        for (int i = 0; i < valueNode.size(); i++) {
+                            if(valueNode.get(i).isObject()) {
+                                printJsonPath(valueNode.get(i), path + "[" + i + "]", pathCollections);
+                            } else {
+                                pathCollections.add(path + "[" + i + "]");
+                            }
+                        }
                     }
                 } else if (valueNode.isObject()) {
-                    printJsonPath(valueNode, path, pathCollections);
+                    if(valueNode.isEmpty()) {
+                        pathCollections.add(path);
+                    } else {
+                        printJsonPath(valueNode, path, pathCollections);
+                    }
                 } else {
                     pathCollections.add(path);
                 }
@@ -159,6 +171,32 @@ public interface JsonBuilder {
         return pathCollections;
     }
 
+//    static List<String> printJsonPath(JsonNode jsonNode, String parentPath, List<String> pathCollections) {
+//        if (jsonNode.isObject()) {
+//            final Iterator<Entry<String, JsonNode>> iterator = jsonNode.fields();
+//            while (iterator.hasNext()) {
+//                final Entry<String, JsonNode> innerNode = iterator.next();
+//                final JsonNode valueNode = innerNode.getValue();
+//                final String path = parentPath.isBlank() ? innerNode.getKey() : parentPath + "." + innerNode.getKey();
+//
+//                if (valueNode.isArray()) {
+//                    for (int i = 0; i < valueNode.size(); i++) {
+//                        printJsonPath(valueNode.get(i), path + "[" + i + "]", pathCollections);
+//                    }
+//                } else if (valueNode.isObject()) {
+//                    printJsonPath(valueNode, path, pathCollections);
+//                } else {
+//                    pathCollections.add(path);
+//                }
+//            }
+//        } else if (jsonNode.isArray()) {
+//            for (int i = 0; i < jsonNode.size(); i++) {
+//                printJsonPath(jsonNode.get(i), parentPath + "[" + i + "]", pathCollections);
+//            }
+//        }
+//        return pathCollections;
+//    }
+
     static Map<String, String> printJsonPathKeyValuePair(JsonNode jsonNode, String parentPath, Map<String, String> pathKeyValueMap) {
         if (jsonNode.isObject()) {
             final Iterator<Entry<String, JsonNode>> iterator = jsonNode.fields();
@@ -168,11 +206,23 @@ public interface JsonBuilder {
                 final String path = parentPath.isBlank() ? innerNode.getKey() : parentPath + "." + innerNode.getKey();
 
                 if (valueNode.isArray()) {
-                    for (int i = 0; i < valueNode.size(); i++) {
-                        printJsonPathKeyValuePair(valueNode.get(i), path + "[" + i + "]", pathKeyValueMap);
+                    if(valueNode.isEmpty()) {
+                        pathKeyValueMap.put(path, "");
+                    } else {
+                        for (int i = 0; i < valueNode.size(); i++) {
+                            if(valueNode.get(i).isObject()) {
+                                printJsonPathKeyValuePair(valueNode.get(i), path + "[" + i + "]", pathKeyValueMap);
+                            } else {
+                                pathKeyValueMap.put(path + "[" + i + "]", valueNode.get(i).textValue());
+                            }
+                        }
                     }
                 } else if (valueNode.isObject()) {
-                    printJsonPathKeyValuePair(valueNode, path, pathKeyValueMap);
+                    if(valueNode.isEmpty()) {
+                        pathKeyValueMap.put(path, "");
+                    } else {
+                        printJsonPathKeyValuePair(valueNode, path, pathKeyValueMap);
+                    }
                 } else {
                     pathKeyValueMap.put(path, valueNode.asText());
                 }

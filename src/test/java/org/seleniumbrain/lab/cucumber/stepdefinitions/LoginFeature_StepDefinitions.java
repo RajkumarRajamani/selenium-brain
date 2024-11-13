@@ -2,6 +2,7 @@ package org.seleniumbrain.lab.cucumber.stepdefinitions;
 
 import com.azure.security.keyvault.secrets.SecretClient;
 import io.cucumber.datatable.DataTable;
+import io.cucumber.java.DataTableType;
 import io.cucumber.java.en.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -75,8 +76,19 @@ public class LoginFeature_StepDefinitions extends BaseObjectRepository {
         System.out.println("Scenario State Shared Value: " + scenarioState.getCacheText().get(SharedStateKey.NAME));
     }
 
+    // Register DataTableType to map a row to TestData object
+    @DataTableType
+    public TestData mapToTestData(Map<String, String> row) {
+        TestData testData = new TestData();
+        testData.setEventType(row.get("eventType"));
+        testData.setCode(row.get("code"));
+        testData.setUmr(row.get("umr"));
+        testData.setPolicy(row.get("policy"));
+        return testData;
+    }
+
     @Given("Step 1")
-    public void testStep() {
+    public void testStep(DataTable dataTable) {
 
 //        System.out.println(request.requestFileName);
 //        request.getDocumentNames().forEach(System.out::println);
@@ -103,7 +115,9 @@ public class LoginFeature_StepDefinitions extends BaseObjectRepository {
 
 //        this.assertions = assertions;
         try {
-            assertions.assertEqualsTo("UserName Field", 1, 2, "Not Equal Failed", "Equal Passed");
+            List<TestData> list = dataTable.asList(TestData.class);
+            System.out.println(list);
+//            assertions.assertEqualsTo("UserName Field", 1, 2, "Not Equal Failed", "Equal Passed");
         } finally {
             assertions.assertAll();
         }

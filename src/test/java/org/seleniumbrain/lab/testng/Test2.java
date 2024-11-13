@@ -10,8 +10,11 @@ import java.math.BigInteger;
 import java.math.RoundingMode;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
+import java.util.Comparator;
 import java.util.Locale;
 import java.util.Objects;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class Test2 {
 
@@ -22,6 +25,22 @@ public class Test2 {
     public static void method1(String... values) {
         System.out.println(String.valueOf(Double.valueOf(90000000000023.0)));
         System.out.println(FilenameUtils.getBaseName("a/b/c.txt"));
+
+        String val = "ABC DEF GHI";
+        String[] arr = val.split(" ");
+
+        String s = Stream.of(arr)
+                .sorted(Comparator.reverseOrder())
+                .collect(Collectors.joining(" "));
+        System.out.println(s);
+
+        int length = arr.length;
+
+        for(int i = length - 1 ; i >= 0 ; i-- ) {
+
+            System.out.print(arr[i] +  " ");
+
+        }
 
 
 //        System.out.println(calculatePlaceholderText(90000000000023.0, 4));

@@ -1,0 +1,38 @@
+{
+  "address" : {
+    "street" : "123 Main St",
+    "city" : "Anytown",
+    "state" : "CA",
+    "zip" : "12345"
+  },
+  "customs" : [ "reading", "coding", "hiking" ],
+  "friends" : [ {
+    "age" : "28.09"
+  }, {
+    "age" : "32"
+  } ],
+  "work" : {
+    "company" : "TechCorp",
+    "projects" : [ {
+      "name" : "Project A",
+      "team" : [ "Alice", "Bob" ],
+      "tasks" : [ {
+        "description" : "Task 1",
+        "status" : "completed"
+      }, {
+        "description" : "Task 2",
+        "status" : "in progress"
+      }, {
+        "description" : "Task 3",
+        "status" : "pending"
+      } ]
+    }, {
+      "name" : "Project B",
+      "team" : [ "Alice", "Charlie" ],
+      "tasks" : [ {
+        "description" : "Task 3",
+        "status" : "pending"
+      } ]
+    } ]
+  }
+}

@@ -16,6 +16,7 @@ import org.seleniumbrain.lab.core.selenium.validator.AutoPrefixedTextBoxValidato
 import org.seleniumbrain.lab.core.selenium.validator.CommonElementValidator;
 import org.seleniumbrain.lab.core.selenium.validator.TextBoxValidator;
 import org.seleniumbrain.lab.easyreport.assertions.Assertions;
+import org.seleniumbrain.lab.snippet.pagerepositories.AmazonHomePage;
 import org.seleniumbrain.lab.snippet.pagerepositories.demo.SwagLabHomePageOR;
 import org.seleniumbrain.lab.snippet.pagerepositories.demo.SwagLabLoginPageOR;
 import org.seleniumbrain.lab.utility.PathBuilder;
@@ -63,6 +64,11 @@ public class BaseObjectRepository {
 
     @Autowired
     public SwagLabHomePageOR swagLabHomePageOR;
+
+
+
+    @Autowired
+    public AmazonHomePage amazonHomePage;
 
     @Autowired
     public Assertions assertions;

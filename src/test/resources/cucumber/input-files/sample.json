@@ -1,0 +1,37 @@
+{
+  "exchangeRate": "8.5450",
+  "name": "",
+  "place": "chennai",
+  "pin": "238 8923",
+  "parties": [
+    {
+      "type": "actuary",
+      "name":"x",
+      "age":34,
+      "codes": [
+        {
+          "c": 23
+        },
+        {
+          "c": 25
+        },
+        {
+          "c": 26
+        },
+        {
+          "c": 28
+        }
+      ]
+    },
+    {
+      "type": "insured",
+      "name":"y",
+      "age":36
+    },
+    {
+      "type": "insurer",
+      "name":"x",
+      "age":56
+    }
+  ]
+}

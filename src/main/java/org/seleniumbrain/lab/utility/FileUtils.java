@@ -171,4 +171,12 @@ public class FileUtils {
             log.error("Error while writing json into file '" + fileName + "'" + e.getMessage());
         }
     }
+
+    public void write(String fileName, String jsonContent) {
+        try {
+            org.apache.commons.io.FileUtils.writeStringToFile(new File(fileName), jsonContent, Charset.defaultCharset());
+        } catch (Exception e) {
+            log.error("Error while writing json into file '" + fileName + "'" + e.getMessage());
+        }
+    }
 }

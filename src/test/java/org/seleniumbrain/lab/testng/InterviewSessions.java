@@ -9,11 +9,11 @@ public class InterviewSessions {
 
     public static void main(String[] args) {
         List<Integer> list = Arrays.asList(10, 2, 4, 7, 5, 14, 11, 10, 1, 3);
-        int targetSum = 57;
+        int targetSum = 28;
 
         List<List<Integer>> finalList = extractSubList_thatSumsTo(targetSum, list);
 
-        System.out.println(finalList);
+        finalList.forEach(System.out::println);
     }
 
     /**

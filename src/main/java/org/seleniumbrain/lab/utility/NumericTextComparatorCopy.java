@@ -1,6 +1,6 @@
 package org.seleniumbrain.lab.utility;
 
-public class NumericTextComparator {
+public class NumericTextComparatorCopy {
 
     /**
      * Compares one version string to another version string by dotted ordinals.
@@ -15,16 +15,29 @@ public class NumericTextComparator {
         if (left.equals(right)) {
             return 0;
         }
+        String regEx = "(\\.0+|(\\.\\d*?[1-9])0+)$";
         int leftStart = 0, rightStart = 0, result;
         do {
             int leftEnd = left.indexOf('.', leftStart);
             int rightEnd = right.indexOf('.', rightStart);
-            Integer leftValue = Integer.parseInt(leftEnd < 0
+
+            // left
+            String leftTxt = leftEnd < 0
                     ? left.substring(leftStart)
-                    : left.substring(leftStart, leftEnd));
-            Integer rightValue = Integer.parseInt(rightEnd < 0
+                    : left.substring(leftStart, leftEnd);
+            if(left.endsWith("." + leftTxt))
+                leftTxt = leftTxt.replaceAll("0+$", "");
+            Integer leftValue = Integer.parseInt(leftTxt);
+
+            // right
+            String rightTxt = rightEnd < 0
                     ? right.substring(rightStart)
-                    : right.substring(rightStart, rightEnd));
+                    : right.substring(rightStart, rightEnd);
+            if(right.endsWith("." + rightTxt))
+                rightTxt = rightTxt.replaceAll("0+$", "");
+            Integer rightValue = Integer.parseInt(rightTxt);
+
+
             result = leftValue.compareTo(rightValue);
             leftStart = leftEnd + 1;
             rightStart = rightEnd + 1;
@@ -51,11 +64,12 @@ public class NumericTextComparator {
     }
 
     public static void main(String[] args) {
-        System.out.println(NumericTextComparator.compare("1", "1"));
-        System.out.println(NumericTextComparator.compare("1.4", "1.4.1"));
-        System.out.println(NumericTextComparator.compare("1.0", "1"));
-        System.out.println(NumericTextComparator.compare("134", "134"));
-        System.out.println(NumericTextComparator.compare("8.545", "8.5450"));
-//        System.out.println(NumericTextComparator.compare("8.09.00", "8.9"));
+        System.out.println(NumericTextComparatorCopy.compare("1", "1"));
+        System.out.println(NumericTextComparatorCopy.compare("1.10", "1.01"));
+        System.out.println(NumericTextComparatorCopy.compare("1.40.40", "1.40.40"));
+        System.out.println(NumericTextComparatorCopy.compare("1.0", "1"));
+        System.out.println(NumericTextComparatorCopy.compare("134", "1345"));
+        System.out.println(NumericTextComparatorCopy.compare("8.545", "8.5450"));
+        System.out.println(NumericTextComparator.compare("8.09.00", "8.9"));
     }
 }
