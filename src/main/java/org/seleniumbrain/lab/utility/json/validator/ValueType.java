@@ -1,4 +1,4 @@
-package org.seleniumbrain.lab.utility.json.core;
+package org.seleniumbrain.lab.utility.json.validator;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;

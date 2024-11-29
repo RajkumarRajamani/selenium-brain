@@ -1,0 +1,13 @@
+[
+  {
+    "field": "$.name",
+    "value": "Alice",
+    "operator": "",
+    "type": "",
+    "requiredField": {
+      "root": "",
+      "paths": []
+    }
+  }
+]
+

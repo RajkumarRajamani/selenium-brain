@@ -11,6 +11,7 @@ import org.openqa.selenium.edge.EdgeDriver;
 import org.openqa.selenium.edge.EdgeDriverService;
 import org.openqa.selenium.edge.EdgeOptions;
 import org.openqa.selenium.firefox.*;
+import org.openqa.selenium.remote.RemoteWebDriver;
 import org.seleniumbrain.lab.core.config.SeleniumConfigReader;
 import org.seleniumbrain.lab.core.config.pojo.SeleniumConfigurations;
 import org.seleniumbrain.lab.core.selenium.driver.Browsers;
@@ -76,14 +77,17 @@ public class LocalWebDriver implements DriverEngine {
                     }
                     case FIREFOX -> {
                         FirefoxOptions firefoxOptions = this.addFirefoxOptions(browserOptionDetails, new FirefoxOptions());
-                        FirefoxDriverService edgeDriverService = new GeckoDriverService.Builder()
+                        FirefoxDriverService firefoxDriverService = new GeckoDriverService.Builder()
                                 .withLogFile(new File(browserLogFilePath))
                                 .withLogLevel(FirefoxDriverLogLevel.DEBUG)
                                 .withTruncatedLogs(false)
                                 .build();
 
+                        firefoxDriverService.start();
+
                         log.info(MessageFormat.format("initiating firefox browser session for version ({0}) in local machine", firefoxOptions.getBrowserVersion()));
-                        driver = new FirefoxDriver(edgeDriverService, firefoxOptions);
+//                        driver = new FirefoxDriver(firefoxDriverService, firefoxOptions);
+                        driver = new RemoteWebDriver(firefoxDriverService.getUrl(), firefoxOptions);
                     }
                 }
 

@@ -1,4 +1,5 @@
 {
+  "name" : "Alice",
   "address" : {
     "street" : "123 Main St",
     "city" : "Anytown",

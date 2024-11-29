@@ -2,6 +2,8 @@ package org.seleniumbrain.lab.core.selenium.driver.factory;
 
 import io.cucumber.spring.ScenarioScope;
 import org.openqa.selenium.WebDriver;
+import org.seleniumbrain.lab.core.config.SeleniumConfigReader;
+import org.seleniumbrain.lab.core.config.pojo.SeleniumConfigurations;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -9,6 +11,7 @@ import org.springframework.stereotype.Component;
 public class SauceLabWebDriver implements DriverEngine {
 
     private WebDriver driver;
+    private static final SeleniumConfigurations.LocalLab localLabConfig = SeleniumConfigReader.getConfigs().getLab().getLocalLab();
     /**
      * @return
      */

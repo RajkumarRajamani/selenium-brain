@@ -1,66 +1,6 @@
 [
   {
-    "field": "address.street",
-    "value": "",
-    "operator": "",
-    "type": "",
-    "requiredField": {
-      "root": "",
-      "paths": []
-    }
-  },
-  {
-    "field": "address.city",
-    "value": "",
-    "operator": "",
-    "type": "",
-    "requiredField": {
-      "root": "",
-      "paths": []
-    }
-  },
-  {
-    "field": "address.state",
-    "value": "",
-    "operator": "",
-    "type": "",
-    "requiredField": {
-      "root": "",
-      "paths": []
-    }
-  },
-  {
-    "field": "address.zip",
-    "value": "",
-    "operator": "",
-    "type": "",
-    "requiredField": {
-      "root": "",
-      "paths": []
-    }
-  },
-  {
-    "field": "customs",
-    "value": "",
-    "operator": "",
-    "type": "",
-    "requiredField": {
-      "root": "",
-      "paths": []
-    }
-  },
-  {
-    "field": "friends.age",
-    "value": "",
-    "operator": "",
-    "type": "",
-    "requiredField": {
-      "root": "",
-      "paths": []
-    }
-  },
-  {
-    "field": "work.company",
+    "field": "name",
     "value": "",
     "operator": "",
     "type": "",
@@ -76,11 +16,15 @@
     "type": "STRING",
     "requiredField": {
       "root": "work.projects",
-      "paths": [
-        "name",
-        "team",
-        "tasks.description",
-        "tasks.status"
+      "members": [
+        {
+          "path": "name",
+          "value": "Project A"
+        },
+        {
+          "path": "tasks.description",
+          "value": "Task 1"
+        }
       ]
     }
   }

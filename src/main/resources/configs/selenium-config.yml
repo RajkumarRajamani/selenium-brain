@@ -16,7 +16,7 @@ wait:
 
 lab:
   localLab:
-    browserName: chrome
+    browserName: firefox
     chrome:
       browserLogFileName: chrome-driver-log.log
       browserVersion: stable #Acceptable values are - <version number>, stable, beta, dev, canary
@@ -61,8 +61,11 @@ lab:
       extensions: #List values
       excludeSwitches: #List values
       prefs: #List values
-        - key:
-          value:
+        - key: dom.webnotifications.enabled
+          value: false
+
+        - key: browser.helperApps.neverAsk.saveToDisk
+          value: application/pdf,application/octet-stream
 
   gridLab:
     hub:

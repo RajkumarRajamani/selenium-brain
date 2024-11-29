@@ -1,4 +1,4 @@
-package org.seleniumbrain.lab.utility.json.core;
+package org.seleniumbrain.lab.utility.json.validator;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -13,5 +13,7 @@ import java.util.List;
 @NoArgsConstructor
 public class RequiredField {
     private String root;
-    private List<String> paths;
+    private List<Member> members;
+
+    private List<String> paths; // not required for validator method
 }
