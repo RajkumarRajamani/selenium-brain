@@ -15,7 +15,7 @@
   "friends": [
     {
       "name": "Bob",
-      "age": 28.09,
+      "age": 28,
       "hobbies": [
         "gaming",
         "music"
@@ -25,8 +25,8 @@
       "name": "Charlie",
       "age": 32,
       "hobbies": [
-        "painting",
-        "writing"
+        "paintting",
+        "writting"
       ],
       "pets": [
         {
