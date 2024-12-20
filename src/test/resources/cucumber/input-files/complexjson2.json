@@ -1,0 +1,50 @@
+[
+  {
+    "name": "Alice",
+    "age": 30,
+    "friends": [
+      {
+        "name": "Bob",
+        "age": 27,
+        "hobbies": [
+          "gaming",
+          "music"
+        ],
+        "pets": [
+          {
+            "name": "Fluffy",
+            "species": "cat"
+          },
+          {
+            "name": "Buddy",
+            "species": "dog"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "name": "John",
+    "age": 35,
+    "friends": [
+      {
+        "name": "Bob",
+        "age": 55,
+        "hobbies": [
+          "gaming",
+          "music"
+        ],
+        "pets": [
+          {
+            "name": "Fluffy",
+            "species": "Donkey"
+          },
+          {
+            "name": "Buddy",
+            "species": "Chicken"
+          }
+        ]
+      }
+    ]
+  }
+]

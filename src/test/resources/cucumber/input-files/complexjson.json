@@ -15,18 +15,28 @@
   "friends": [
     {
       "name": "Bob",
-      "age": 28,
+      "age": 27,
       "hobbies": [
         "gaming",
         "music"
+      ],
+      "pets": [
+        {
+          "name": "Fluffy",
+          "species": "cat"
+        },
+        {
+          "name": "Buddy",
+          "species": "dog"
+        }
       ]
     },
     {
-      "name": "Charlie",
-      "age": 32,
+      "name": "john",
+      "age": 30,
       "hobbies": [
-        "paintting",
-        "writting"
+        "gaming",
+        "music"
       ],
       "pets": [
         {

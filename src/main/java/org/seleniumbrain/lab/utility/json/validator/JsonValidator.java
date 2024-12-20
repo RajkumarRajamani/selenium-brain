@@ -15,16 +15,32 @@ import java.util.stream.Collectors;
 public class JsonValidator {
 
     private static final String fileName = "src/test/resources/cucumber/input-files/sample.json";
-    private static final String complexJsonFile = "src/test/resources/cucumber/input-files/complexjson.json";
+    private static final String complexJsonFile = "src/test/resources/cucumber/input-files/complexjson2.json";
     String conditionFile = "src/test/resources/cucumber/input-files/conditions.json";
 
     static final String ruleBookFile = "src/test/resources/cucumber/input-files/rule-book.json";
 
     public static void main(String[] args) throws JsonProcessingException {
 
-//        getExpectedJson();
+        JsonBuilder actualJson_builder = JsonBuilder.getArrayBuilder().fromJsonFile(complexJsonFile).build();
+        String actualJson = actualJson_builder.toPrettyString();
 
-        compare(ruleBookFile, complexJsonFile);
+        // Set up configuration for JsonPath Expression
+        Configuration configuration = Configuration.defaultConfiguration()
+                .addOptions(Option.DEFAULT_PATH_LEAF_TO_NULL)
+                .addOptions(Option.ALWAYS_RETURN_LIST);
+
+        // read the entire actual JSON and store as ReadContext by using the above configurations
+        ReadContext context = JsonPath.using(configuration).parse(actualJson);
+
+        // $[?(@.attributes[?(@.type == 'A') && @.attributes[?(@.value == 15)])]]
+//        List<String> res = context.read("$.friends[?(@.age == 28 && @.pets[?(@.species == /^cowq$/)])]");
+//        @.pets[?(@.species == /^cowq$/)]
+//        List<String> res = context.read("$.friends[?(@.age == 28) && @.friends[?(@.pets[?(@.species == 'cat')])]]");
+        List<Object> res = context.read("$[?(@.friends[?(@.age == 27 && @.pets[?(@.species == 'cat')])])]");
+        System.out.println(JsonBuilder.transformPojoToJsonNode(res).toPrettyString());
+
+//        compare(ruleBookFile, complexJsonFile);
     }
 
     public static void getExpectedJson() {
@@ -237,7 +253,9 @@ public class JsonValidator {
      *     "description": "name node",
      *     "dirCheck": true,
      *     "dirValidation": {
-     *       "expression": "$[?(@.name == 'Alice')]"
+     *       "expressions": [
+     *         "$[?(@.name == 'Alice')]"
+     *       ]
      *     },
      *     "indValidation": {
      *       "condition": "",
@@ -248,7 +266,9 @@ public class JsonValidator {
      *     "description": "name1 node",
      *     "dirCheck": true,
      *     "dirValidation": {
-     *       "expression": "$[?(@.name1 == 'Alice')]"
+     *       "expressions": [
+     *         "$[?(@.name1 == 'Alice')]"
+     *       ]
      *     },
      *     "indValidation": {
      *       "condition": "",
@@ -259,7 +279,7 @@ public class JsonValidator {
      *     "description": "friends[].hobbies node",
      *     "dirCheck": false,
      *     "dirValidation": {
-     *       "expression": ""
+     *       "expressions": []
      *     },
      *     "indValidation": {
      *       "condition": "$.friends[?(@.age == 32)]",
@@ -340,13 +360,15 @@ public class JsonValidator {
         List<String> failedRules = new ArrayList<>();
 
         for (RuleBook rule : rules) {
-
             if (rule.isDirCheck()) {
-                String jsonPathExpression = rule.getDirValidation().getExpression();
-                List<Object> result = context.read(jsonPathExpression);
+                List<String> jsonPathExpressions = rule.getDirValidation().getExpressions();
 
-                if (result.isEmpty()) // result's size > 0, then a match is found in actual JSON. Otherwise, failed.
-                    failedRules.add(String.join(" => ", rule.getDescription(), jsonPathExpression));
+                for (String jsonPathExpression : jsonPathExpressions) {
+                    List<Object> result = context.read(jsonPathExpression);
+
+                    if (result.isEmpty()) // result's size > 0, then a match is found in actual JSON. Otherwise, failed.
+                        failedRules.add(String.join(" => ", rule.getDescription(), jsonPathExpression));
+                }
             } else {
                 InDirectValidation inDirectValidation = rule.getIndValidation();
                 String conditionPathExpression = inDirectValidation.getCondition();
@@ -369,11 +391,8 @@ public class JsonValidator {
                     failedRules.add(rule.getDescription());
                 }
             }
-
         }
-
         failedRules.forEach(System.out::println);
-
         return failedRules;
     }
 }

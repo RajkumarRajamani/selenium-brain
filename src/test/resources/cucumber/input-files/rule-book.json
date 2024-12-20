@@ -3,7 +3,9 @@
     "description": "name node",
     "dirCheck": true,
     "dirValidation": {
-      "expression": "$[?(@.name == 'Alice')]"
+      "expressions": [
+        "$[?(@.name == 'Alice')]"
+      ]
     },
     "indValidation": {
       "condition": "",
@@ -14,7 +16,9 @@
     "description": "name1 node",
     "dirCheck": true,
     "dirValidation": {
-      "expression": "$[?(@.name1 == 'Alice')]"
+      "expressions": [
+        "$[?(@.name1 == 'Alice')]"
+      ]
     },
     "indValidation": {
       "condition": "",
@@ -25,7 +29,7 @@
     "description": "friends[].hobbies node",
     "dirCheck": false,
     "dirValidation": {
-      "expression": ""
+      "expressions": []
     },
     "indValidation": {
       "condition": "$.friends[?(@.age == 32)]",
