@@ -1,7 +1,5 @@
 package org.seleniumbrain.lab.utils.date;
 
-import org.seleniumbrain.lab.utility.date.TimeZoneId;
-
 import java.time.format.DateTimeFormatter;
 import java.util.Collections;
 import java.util.Locale;
@@ -9,7 +7,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 
-public enum DateFormatEnum {
+public enum DateTimeFormat {
 
     // ISO 8601 Formats
     FORMAT_ISO_LOCAL_DATE("yyyy-MM-dd"), // Example: 2024-12-20
@@ -112,7 +110,7 @@ public enum DateFormatEnum {
 
     private final String format;
 
-    DateFormatEnum(String format) {
+    DateTimeFormat(String format) {
         this.format = format;
     }
 
@@ -124,17 +122,17 @@ public enum DateFormatEnum {
         return DateTimeFormatter.ofPattern(this.format, Locale.US);
     }
 
-    private static final Map<String, DateFormatEnum> ENUM_MAP;
+    private static final Map<String, DateTimeFormat> ENUM_MAP;
 
     static {
-        Map<String, DateFormatEnum> map = new ConcurrentHashMap<>();
-        for (DateFormatEnum format : DateFormatEnum.values()) {
+        Map<String, DateTimeFormat> map = new ConcurrentHashMap<>();
+        for (DateTimeFormat format : DateTimeFormat.values()) {
             map.put(format.getFormat().toLowerCase(), format);
         }
         ENUM_MAP = Collections.unmodifiableMap(map);
     }
 
-    public static Optional<DateFormatEnum> get(String formatCode) {
+    public static Optional<DateTimeFormat> get(String formatCode) {
         try {
             return Optional.of(ENUM_MAP.get(formatCode.toLowerCase()));
         } catch (Exception e) {
