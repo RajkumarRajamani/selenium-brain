@@ -1,7 +1,13 @@
 package org.seleniumbrain.lab.utils.date;
 
+import org.seleniumbrain.lab.utility.date.TimeZoneId;
+
 import java.time.format.DateTimeFormatter;
+import java.util.Collections;
 import java.util.Locale;
+import java.util.Map;
+import java.util.Optional;
+import java.util.concurrent.ConcurrentHashMap;
 
 public enum DateFormatEnum {
 
@@ -22,7 +28,7 @@ public enum DateFormatEnum {
     FORMAT_US_SHORT_DATE_TIME("MM/dd/yyyy HH:mm:ss"), // Example: 12/20/2024 14:30:00
     FORMAT_US_SHORT_DATE_TIME_AM_PM("MM/dd/yyyy hh:mm:ss a"), // Example: 12/20/2024 02:30:00 PM
     FORMAT_US_MEDIUM_DATE_TIME("MMM dd, yyyy HH:mm:ss"), // Example: Dec 20, 2024 14:30:00
-    FORMAT_US_MEDIUM_DATE_TIME_AM_PM("MMM dd, yyyy hh:mm:ss a"), // Example: Dec 20, 2024 02:30:00 PM
+    FORMAT_US_MEDIUM_DATE_TIME_am_pm("MMM dd, yyyy hh:mm:ss a"), // Example: Dec 20, 2024 02:30:00 PM
     FORMAT_US_MONTH_YEAR("MMMM yyyy"), // Example: December 2024
     FORMAT_US_MONTH_DAY("MMMM dd"), // Example: December 20
 
@@ -50,26 +56,29 @@ public enum DateFormatEnum {
 
     // Time Formats
     FORMAT_TIME_HH_MM_SS("HH:mm:ss"), // Example: 14:30:00
+    FORMAT_TIME_hh_MM_SS("hh:mm:ss"), // Example: 14:30:00
     FORMAT_TIME_HH_MM("HH:mm"), // Example: 14:30
+    FORMAT_TIME_hh_MM("hh:mm"), // Example: 14:30
     FORMAT_TIME_HHMMSS("HHmmss"), // Example: 143000
+    FORMAT_TIME_hhMMSS("hhmmss"), // Example: 143000
     FORMAT_TIME_HHMM("HHmm"), // Example: 1430
-    FORMAT_TIME_AM_PM_HH_MM_SS("hh:mm:ss a"), // Example: 02:30:00 PM
-    FORMAT_TIME_AM_PM_HH_MM("hh:mm a"), // Example: 02:30 PM
-    FORMAT_TIME_WITH_MILLIS("HH:mm:ss.SSS"), // Example: 14:30:00.123
-    FORMAT_TIME_WITH_NANOS("HH:mm:ss.SSSSSSSSS"), // Example: 14:30:00.123456789
-    FORMAT_TIME_AM_PM_HH_MM_SS_WITH_MILLIS("hh:mm:ss.SSS a"), // Example: 02:30:00.123 PM
+    FORMAT_TIME_hhMM("hhmm"), // Example: 1430
+    FORMAT_TIME_AM_PM_HH_MM_SS("HH:mm:ss a"), // Example: 02:30:00 PM
+    FORMAT_TIME_AM_PM_hh_MM_SS("hh:mm:ss a"), // Example: 02:30:00 PM
+    FORMAT_TIME_AM_PM_HH_MM("HH:mm a"), // Example: 02:30 PM
+    FORMAT_TIME_AM_PM_hh_MM("hh:mm a"), // Example: 02:30 PM
+    FORMAT_TIME_HH_MM_SS_SSS("HH:mm:ss.SSS"), // Example: 14:30:00.123
+    FORMAT_TIME_hh_MM_SS_SSS("hh:mm:ss.SSS"), // Example: 14:30:00.123
+    FORMAT_TIME_HH_MM_SS_SSSSSSSSS("HH:mm:ss.SSSSSSSSS"), // Example: 14:30:00.123456789
+    FORMAT_TIME_hh_MM_SS_SSSSSSSSS("hh:mm:ss.SSSSSSSSS"), // Example: 14:30:00.123456789
+    FORMAT_TIME_AM_PM_HH_MM_SS_WITH_MILLIS("HH:mm:ss.SSS a"), // Example: 02:30:00.123 PM
+    FORMAT_TIME_AM_PM_hh_MM_SS_WITH_MILLIS("hh:mm:ss.SSS a"), // Example: 02:30:00.123 PM
 
     // Other Common Formats
     FORMAT_COMMON_YYYYMMDD_HHMMSS("yyyyMMddHHmmss"), // Example: 20241220143000
     FORMAT_COMMON_YYYYMMDD_HHMM("yyyyMMddHHmm"), // Example: 202412201430
     FORMAT_COMMON_YYYY_MM("yyyy-MM"), // Example: 2024-12
     FORMAT_COMMON_MM_YYYY("MM-yyyy"), // Example: 12-2024
-    FORMAT_COMMON_DD_MM("dd-MM"), // Example: 20-12
-    FORMAT_COMMON_MM_DD("MM-dd"), // Example: 12-20
-    FORMAT_COMMON_YYYY("yyyy"), // Example: 2024
-    FORMAT_COMMON_YY("yy"), // Example: 24
-    FORMAT_COMMON_MM("MM"), // Example: 12
-    FORMAT_COMMON_DD("dd"), // Example: 20
     FORMAT_COMMON_MMM_YYYY("MMM yyyy"), // Example: Dec 2024
     FORMAT_COMMON_MMMM_YYYY("MMMM yyyy"), // Example: December 2024
     FORMAT_COMMON_MMM_DD("MMM dd"), // Example: Dec 20
@@ -113,5 +122,23 @@ public enum DateFormatEnum {
 
     public DateTimeFormatter getFormatter() {
         return DateTimeFormatter.ofPattern(this.format, Locale.US);
+    }
+
+    private static final Map<String, DateFormatEnum> ENUM_MAP;
+
+    static {
+        Map<String, DateFormatEnum> map = new ConcurrentHashMap<>();
+        for (DateFormatEnum format : DateFormatEnum.values()) {
+            map.put(format.getFormat().toLowerCase(), format);
+        }
+        ENUM_MAP = Collections.unmodifiableMap(map);
+    }
+
+    public static Optional<DateFormatEnum> get(String formatCode) {
+        try {
+            return Optional.of(ENUM_MAP.get(formatCode.toLowerCase()));
+        } catch (Exception e) {
+            return Optional.empty();
+        }
     }
 }
