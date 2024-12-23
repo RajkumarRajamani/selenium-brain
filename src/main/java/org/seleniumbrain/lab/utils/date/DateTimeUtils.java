@@ -1,5 +1,12 @@
 package org.seleniumbrain.lab.utils.date;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import org.junit.jupiter.api.Test;
+import org.seleniumbrain.lab.utility.date.TimeZoneId;
+
 import java.time.*;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeFormatterBuilder;
@@ -8,6 +15,9 @@ import java.util.Date;
 import java.util.Locale;
 import java.util.Objects;
 import java.util.Optional;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class DateTimeUtils {
 
@@ -42,6 +52,15 @@ public class DateTimeUtils {
     }
 
 
+    @Data
+    @Builder
+    @AllArgsConstructor
+    @NoArgsConstructor
+    public static class FormatOptions {
+        private Locale locale;
+        private ZoneId zoneId;
+        private ZoneOffset zoneOffset;
+    }
     /*
     Given a date string,
 
@@ -76,7 +95,7 @@ public class DateTimeUtils {
      * {@code false} otherwise, including if the input string is {@code null}.
      * @since 1.0
      */
-    private static boolean isValid(String dateStr, Locale locale) {
+    public static boolean isValid(String dateStr, Locale locale) {
         if (dateStr != null) {
             DateTimeFormat[] dateFormats = DateTimeFormat.values();
             boolean isValid = false;
@@ -281,6 +300,21 @@ public class DateTimeUtils {
         return parsedDateTime.map(zdt -> zdt.format(outputTextFormatter)).orElse(dateStr);
     }
 
+    public static String formatTo(String dateStr, DateTimeFormat toFormat, FormatOptions options) {
+        if (options != null) {
+            if (options.getLocale() != null) {
+                setLocale(options.getLocale());
+            }
+            if (options.getZoneId() != null) {
+                setZoneId(options.getZoneId());
+            }
+            if (options.getZoneOffset() != null) {
+                setZoneOffset(options.getZoneOffset());
+            }
+        }
+        return formatTo(dateStr, toFormat);
+    }
+
     /**
      * Attempts to parse a String representation of a date and time into a LocalDateTime object.
      * <p>
@@ -460,6 +494,18 @@ public class DateTimeUtils {
         }
     }
 
+    public static boolean compareDate(String dateStr1, String dateStr2) {
+        String date1 = formatTo(dateStr1, DateTimeFormat.FORMAT_ISO_LOCAL_DATE);
+        String date2 = formatTo(dateStr2, DateTimeFormat.FORMAT_ISO_LOCAL_DATE);
+        return date1.equals(date2);
+    }
+
+    public static boolean compareDateTime(String dateStr1, String dateStr2) {
+        String dateTime1 = formatTo(dateStr1, DateTimeFormat.FORMAT_ISO_LOCAL_DATE_TIME);
+        String dateTime2 = formatTo(dateStr2, DateTimeFormat.FORMAT_ISO_LOCAL_DATE_TIME);
+        return dateTime1.equals(dateTime2);
+    }
+
     public static void main(String[] args) {
         test_toMethods();
     }
@@ -486,6 +532,8 @@ public class DateTimeUtils {
         System.out.println(isValid("11:12:45 PM"));
         System.out.println(isValid("23:12:45 PM"));
         System.out.println(isValid("14:30:00.123456789"));
+        System.out.println(isValid(""));
+        System.out.println(isValid(null));
     }
 
     private static void test_getFormatOf() {
@@ -510,6 +558,8 @@ public class DateTimeUtils {
         System.out.println(getFormatOf("11:12:45 PM"));
         System.out.println(getFormatOf("23:12:45 PM"));
         System.out.println(getFormatOf("14:30:00.123456789"));
+        System.out.println(getFormatOf(""));
+        System.out.println(getFormatOf(null));
     }
 
     private static void test_toMethods() {
@@ -523,6 +573,8 @@ public class DateTimeUtils {
         System.out.println(toDate("Fri"));
         System.out.println(toLocalTime("Friday"));
         System.out.println(getFormatOf("20 Dec 2024"));
+        System.out.println(getFormatOf(""));
+        System.out.println(getFormatOf(null));
     }
 
     private static void test_formatTo() {
@@ -617,6 +669,8 @@ public class DateTimeUtils {
         System.out.println(formatTo("12/20/2024 02:30:00 PM", DateTimeFormat.FORMAT_DAY_OF_WEEK_SHORT));
         System.out.println(formatTo("12/20/2024 02:30:00 PM", DateTimeFormat.FORMAT_DAY_OF_WEEK_FULL));
         System.out.println(formatTo("12/20/2024 02:30:00 PM", DateTimeFormat.FORMAT_RFC_1123_DATE_TIME));
+        System.out.println(formatTo("", DateTimeFormat.FORMAT_RFC_1123_DATE_TIME));
+        System.out.println(formatTo(null, DateTimeFormat.FORMAT_RFC_1123_DATE_TIME));
     }
 
 }

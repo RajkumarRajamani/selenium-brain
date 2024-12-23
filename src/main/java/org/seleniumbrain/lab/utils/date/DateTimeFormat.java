@@ -1,6 +1,7 @@
 package org.seleniumbrain.lab.utils.date;
 
 import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeFormatterBuilder;
 import java.util.Collections;
 import java.util.Locale;
 import java.util.Map;
@@ -54,23 +55,23 @@ public enum DateTimeFormat {
 
     // Time Formats
     FORMAT_TIME_HH_MM_SS("HH:mm:ss"), // Example: 14:30:00
-    FORMAT_TIME_hh_MM_SS("hh:mm:ss"), // Example: 14:30:00
+    FORMAT_TIME_hh_MM_SS("hh:mm:ss"), // Example: 11:30:00
     FORMAT_TIME_HH_MM("HH:mm"), // Example: 14:30
-    FORMAT_TIME_hh_MM("hh:mm"), // Example: 14:30
+    FORMAT_TIME_hh_MM("hh:mm"), // Example: 11:30
     FORMAT_TIME_HHMMSS("HHmmss"), // Example: 143000
-    FORMAT_TIME_hhMMSS("hhmmss"), // Example: 143000
+    FORMAT_TIME_hhMMSS("hhmmss"), // Example: 113000
     FORMAT_TIME_HHMM("HHmm"), // Example: 1430
-    FORMAT_TIME_hhMM("hhmm"), // Example: 1430
+    FORMAT_TIME_hhMM("hhmm"), // Example: 1130
     FORMAT_TIME_AM_PM_HH_MM_SS("HH:mm:ss a"), // Example: 02:30:00 PM
-    FORMAT_TIME_AM_PM_hh_MM_SS("hh:mm:ss a"), // Example: 02:30:00 PM
+    FORMAT_TIME_AM_PM_hh_MM_SS("hh:mm:ss a"), // Example: 11:30:00 AM
     FORMAT_TIME_AM_PM_HH_MM("HH:mm a"), // Example: 02:30 PM
-    FORMAT_TIME_AM_PM_hh_MM("hh:mm a"), // Example: 02:30 PM
+    FORMAT_TIME_AM_PM_hh_MM("hh:mm a"), // Example: 02:30 AM
     FORMAT_TIME_HH_MM_SS_SSS("HH:mm:ss.SSS"), // Example: 14:30:00.123
-    FORMAT_TIME_hh_MM_SS_SSS("hh:mm:ss.SSS"), // Example: 14:30:00.123
+    FORMAT_TIME_hh_MM_SS_SSS("hh:mm:ss.SSS"), // Example: 11:30:00.123
     FORMAT_TIME_HH_MM_SS_SSSSSSSSS("HH:mm:ss.SSSSSSSSS"), // Example: 14:30:00.123456789
-    FORMAT_TIME_hh_MM_SS_SSSSSSSSS("hh:mm:ss.SSSSSSSSS"), // Example: 14:30:00.123456789
+    FORMAT_TIME_hh_MM_SS_SSSSSSSSS("hh:mm:ss.SSSSSSSSS"), // Example: 11:30:00.123456789
     FORMAT_TIME_AM_PM_HH_MM_SS_WITH_MILLIS("HH:mm:ss.SSS a"), // Example: 02:30:00.123 PM
-    FORMAT_TIME_AM_PM_hh_MM_SS_WITH_MILLIS("hh:mm:ss.SSS a"), // Example: 02:30:00.123 PM
+    FORMAT_TIME_AM_PM_hh_MM_SS_WITH_MILLIS("hh:mm:ss.SSS a"), // Example: 02:30:00.123 AM
 
     // Other Common Formats
     FORMAT_COMMON_YYYYMMDD_HHMMSS("yyyyMMddHHmmss"), // Example: 20241220143000
@@ -119,7 +120,10 @@ public enum DateTimeFormat {
     }
 
     public DateTimeFormatter getFormatter() {
-        return DateTimeFormatter.ofPattern(this.format, Locale.US);
+        return new DateTimeFormatterBuilder()
+                .parseCaseInsensitive()  // Enable case-insensitive parsing
+                .appendPattern(format)
+                .toFormatter(Locale.US);
     }
 
     private static final Map<String, DateTimeFormat> ENUM_MAP;
