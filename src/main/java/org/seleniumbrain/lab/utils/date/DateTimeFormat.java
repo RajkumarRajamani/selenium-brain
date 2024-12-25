@@ -92,6 +92,7 @@ public enum DateTimeFormat {
     FORMAT_YYYY_MMMM_DD("yyyy-MMMM-dd"), // Example: 2024-December-20
     FORMAT_YYYY_MM_DD_HH_MM_SS("yyyy-MM-dd HH:mm:ss"), // Example: 2024-12-20 14:30:00
     FORMAT_YYYY_MM_DD__HH_MM_SS("yyyy-MM-dd - HH:mm:ss"), // Example: 2024-12-20 - 14:30:00
+    FORMAT_YYYY_MM_DD_T_HH_MM("yyyy-MM-dd'T'HH:mm"), // Example: 2024-12-20 14:30:00
     FORMAT_YYYY_MM_DD_T_HH_MM_SS_SSS("yyyy-MM-dd'T'HH:mm:ss.SSS"), // Example: 2024-12-20T14:30:00.123
     FORMAT_YYYY_MM_DD_T_HH_MM_SS_SSS_X("yyyy-MM-dd'T'HH:mm:ss.SSSX"), // Example: 2024-12-20T14:30:00.123+05:30
     FORMAT_YYYY_MM_DD_HH_MM_SS_SSS_X("yyyy-MM-dd HH:mm:ss.SSSX"), // Example: 2024-12-20 14:30:00.123+05:30

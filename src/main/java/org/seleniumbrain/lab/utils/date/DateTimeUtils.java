@@ -5,11 +5,9 @@ import lombok.*;
 import java.time.*;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeFormatterBuilder;
+import java.time.temporal.ChronoUnit;
 import java.time.temporal.TemporalAdjusters;
-import java.util.Date;
-import java.util.Locale;
-import java.util.Objects;
-import java.util.Optional;
+import java.util.*;
 
 /**
  * The `DateTimeUtils` class provides utility methods for date and time manipulation and formatting.
@@ -22,26 +20,86 @@ import java.util.Optional;
  *   <li>Determine the format of a given date string</li>
  *   <li>Format date strings from one format to another</li>
  *   <li>Convert date strings to `LocalDateTime`, `LocalDate`, `LocalTime`, and `Date` objects</li>
+ *   <li>Compare date and date-time strings</li>
+ *   <li>Calculate the difference between dates and times</li>
+ *   <li>Calculate the number of workdays between dates</li>
  * </ul>
  *
  * <p>The class uses a `FormatOptions` inner class to encapsulate locale, time zone, and offset settings.
  * Default options can be set through constructors, and specific options can be passed to methods as needed.
  *
- * <p>Example usage:
+ * <h3>Note:</h3>
+ * <ul>
+ *   <li>Ensure date strings are in supported formats as defined in `DateTimeFormat` enum.</li>
+ *   <li>Null or empty date strings will result in default or zero values.</li>
+ *   <li>Locale and time zone settings can affect the output of date and time operations.</li>
+ * </ul>
+ *
+ * <p>Note: This class is immutable and thread-safe.
+ *
+ * <h3>Example usage:</h3>
+ *
+ * <h4>Positive Examples:</h4>
  * <pre>
  * {@code
  * DateTimeUtils utils = new DateTimeUtils(Locale.US, ZoneId.of("America/New_York"));
  * String formattedDate = utils.formatTo("2024-12-20 14:30:00", DateTimeFormat.FORMAT_US_SHORT_DATE);
+ * System.out.println(formattedDate); // Output: 12/20/2024
+ *
+ * boolean isValid = utils.isValid("2024-12-20 14:30:00");
+ * System.out.println(isValid); // Output: true
+ *
+ * LocalDateTime dateTime = utils.toLocalDateTime("2024-12-20 14:30:00");
+ * System.out.println(dateTime); // Output: 2024-12-20T14:30
  * }
  * </pre>
  *
- * <p>Note: This class is immutable and thread-safe.
+ * <h4>Negative Examples:</h4>
+ * <pre>
+ * {@code
+ * DateTimeUtils utils = new DateTimeUtils(Locale.US, ZoneId.of("America/New_York"));
+ * String formattedDate = utils.formatTo("invalid-date", DateTimeFormat.FORMAT_US_SHORT_DATE);
+ * System.out.println(formattedDate); // Output: invalid-date
+ *
+ * boolean isValid = utils.isValid("invalid-date");
+ * System.out.println(isValid); // Output: false
+ *
+ * LocalDateTime dateTime = utils.toLocalDateTime("invalid-date");
+ * System.out.println(dateTime); // Output: null
+ * }
+ * </pre>
+ *
+ * <h4>Edge Case Examples:</h4>
+ * <pre>
+ * {@code
+ * DateTimeUtils utils = new DateTimeUtils(Locale.US, ZoneId.of("America/New_York"));
+ * String formattedDate = utils.formatTo("", DateTimeFormat.FORMAT_US_SHORT_DATE);
+ * System.out.println(formattedDate); // Output: ""
+ *
+ * boolean isValid = utils.isValid("");
+ * System.out.println(isValid); // Output: false
+ *
+ * LocalDateTime dateTime = utils.toLocalDateTime("");
+ * System.out.println(dateTime); // Output: null
+ *
+ * formattedDate = utils.formatTo(null, DateTimeFormat.FORMAT_US_SHORT_DATE);
+ * System.out.println(formattedDate); // Output: null
+ *
+ * isValid = utils.isValid(null);
+ * System.out.println(isValid); // Output: false
+ *
+ * dateTime = utils.toLocalDateTime(null);
+ * System.out.println(dateTime); // Output: null
+ * }
+ * </pre>
  *
  * @since 1.0
  */
 public class DateTimeUtils {
 
     private FormatOptions defaultOptions;
+
+    private static final Set<DayOfWeek> DEFAULT_WEEKENDS = Set.of(DayOfWeek.SATURDAY, DayOfWeek.SUNDAY);
 
     public DateTimeUtils() {
         defaultOptions = FormatOptions.builder()
@@ -183,7 +241,7 @@ public class DateTimeUtils {
      * </pre>
      */
     public String getFormatOf(String dateStr, Locale locale) {
-        if (dateStr == null) return null;
+        if (Objects.isNull(dateStr) || dateStr.isBlank()) return null;
 
         for (DateTimeFormat format : DateTimeFormat.values()) {
             DateTimeFormatter formatter = getFormatter(format, locale);
@@ -195,14 +253,14 @@ public class DateTimeUtils {
                     tryParseDayWeek(dateStr, formatter).isPresent()) {
                 return format.getFormat();
             }
-        }
+        }//tryParse(dateStr, getFormatter(DateTimeFormat.FORMAT_EURO_SHORT_DATE, locale), LocalDate.class).isPresent()
         return null;
     }
 
     /**
      * Attempts to determine the format of a given date string by iterating through predefined date formats.
      * This method uses case-insensitive parsing to match the input string against the available formats.
-     * Uses the default locale for date/time parsing.
+     * Use the default locale for date/time parsing.
      *
      * @param dateStr The date string to analyze. Can be {@code null}.
      * @return The format string (e.g., "yyyy-MM-dd", "MM/dd/yyyy") if a matching format is found;
@@ -421,7 +479,7 @@ public class DateTimeUtils {
      * or null if parsing fails or the input string is null.
      */
     public LocalDateTime toLocalDateTime(String dateStr) {
-        if (dateStr == null) return null;
+        if (Objects.isNull(dateStr) || dateStr.isBlank()) return null;
 
         String inputDateFormat = this.getFormatOf(dateStr, defaultOptions.getLocale());
         if (inputDateFormat == null) return null;
@@ -444,7 +502,7 @@ public class DateTimeUtils {
      * or the input string is null.
      */
     public LocalDate toLocalDate(String dateStr) {
-        if (dateStr == null) return null;
+        if (Objects.isNull(dateStr) || dateStr.isBlank()) return null;
 
         String inputDateFormat = this.getFormatOf(dateStr, defaultOptions.getLocale());
         if (inputDateFormat == null) return null;
@@ -467,7 +525,7 @@ public class DateTimeUtils {
      * or the input string is null.
      */
     public LocalTime toLocalTime(String dateStr) {
-        if (dateStr == null) return null;
+        if (Objects.isNull(dateStr) || dateStr.isBlank()) return null;
 
         String inputDateFormat = this.getFormatOf(dateStr, defaultOptions.getLocale());
         if (inputDateFormat == null) return null;
@@ -492,7 +550,7 @@ public class DateTimeUtils {
      *                                  offset of more than 18 hours from UTC (limitations of java.util.Date).
      */
     public Date toDate(String dateStr) {
-        if (dateStr == null) return null;
+        if (Objects.isNull(dateStr) || dateStr.isBlank()) return null;
 
         String inputDateFormat = this.getFormatOf(dateStr, defaultOptions.getLocale());
         if (inputDateFormat == null) return null;
@@ -503,22 +561,23 @@ public class DateTimeUtils {
     }
 
     /**
-     * Compares two date strings given in any different format to check if they represent the same date.
+     * Compares two date strings to check if they represent the same date.
      * <p>
      * This method formats both date strings to the ISO local date format ("yyyy-MM-dd")
      * and then compares them for equality.
      *
-     * @param dateStr1 The first date string to compare.
-     * @param dateStr2 The second date string to compare.
-     * @return {@code true} if both date strings represent the same date;
-     * {@code false} otherwise, including if either date string is null or cannot be parsed.
+     * @param dateStr1 The first date string to compare. Can be in any supported date format.
+     * @param dateStr2 The second date string to compare. Can be in any supported date format.
+     * @return {@code true} if both date strings represent the same date or both are null;
+     * {@code false} otherwise,
+     * including if either date string is null and the other is non-null or cannot be parsed.
      * @since 1.0
      *
      * <p>Positive example usage:
      * <pre>
      * {@code
      * DateTimeUtils utils = new DateTimeUtils();
-     * boolean isSameDate = utils.compareDate("2024-12-20", "2024-12-20T14:30:00+05:30");
+     * boolean isSameDate = utils.isDateEqualTo("2024-12-20", "2024-12-20T14:30:00+05:30");
      * System.out.println(isSameDate); // Output: true
      * }
      * </pre>
@@ -527,34 +586,35 @@ public class DateTimeUtils {
      * <pre>
      * {@code
      * DateTimeUtils utils = new DateTimeUtils();
-     * boolean isSameDate = utils.compareDate("2024-12-20", "2024-12-21T14:30:00+05:30");
+     * boolean isSameDate = utils.isDateEqualTo("2024-12-20", "2024-12-21T14:30:00+05:30");
      * System.out.println(isSameDate); // Output: false
      * }
      * </pre>
      */
-    public boolean compareDate(String dateStr1, String dateStr2) {
-        String date1 = this.formatTo(dateStr1, DateTimeFormat.FORMAT_ISO_LOCAL_DATE);
-        String date2 = this.formatTo(dateStr2, DateTimeFormat.FORMAT_ISO_LOCAL_DATE);
-        return date1.equals(date2);
+    public boolean isDateEqualTo(String dateStr1, String dateStr2) {
+        String dateTime1 = this.formatTo(dateStr1, DateTimeFormat.FORMAT_ISO_LOCAL_DATE);
+        String dateTime2 = this.formatTo(dateStr2, DateTimeFormat.FORMAT_ISO_LOCAL_DATE);
+        return Objects.equals(dateTime1, dateTime2);
     }
 
     /**
-     * Compares two date-time strings given in any different format to check if they represent the same date and time.
+     * Compares two date-time strings to check if they represent the same date and time.
      * <p>
      * This method formats both date-time strings to the ISO local date-time format ("yyyy-MM-dd'T'HH:mm:ss")
      * and then compares them for equality.
      *
-     * @param dateStr1 The first date-time string to compare.
-     * @param dateStr2 The second date-time string to compare.
-     * @return {@code true} if both date-time strings represent the same date and time;
-     * {@code false} otherwise, including if either date-time string is null or cannot be parsed.
+     * @param dateStr1 The first date-time string to compare. Can be in any supported date-time format.
+     * @param dateStr2 The second date-time string to compare. Can be in any supported date-time format.
+     * @return {@code true} if both date-time strings represent the same date and time or both are null;
+     * {@code false} otherwise,
+     * including if either date-time string is null and the other is non-null or cannot be parsed.
      * @since 1.0
      *
      * <p>Positive example usage:
      * <pre>
      * {@code
      * DateTimeUtils utils = new DateTimeUtils();
-     * boolean isSameDateTime = utils.compareDateTime("2024-12-20T14:30:00", "12/20/2024 02:30:00 PM");
+     * boolean isSameDateTime = utils.idDateTimeEqualTo("2024-12-20T14:30:00", "12/20/2024 02:30:00 PM");
      * System.out.println(isSameDateTime); // Output: true
      * }
      * </pre>
@@ -563,21 +623,21 @@ public class DateTimeUtils {
      * <pre>
      * {@code
      * DateTimeUtils utils = new DateTimeUtils();
-     * boolean isSameDateTime = utils.compareDateTime("2024-12-20T14:30:00", "12/20/2024 02:31:00 PM");
+     * boolean isSameDateTime = utils.idDateTimeEqualTo("2024-12-20T14:30:00", "12/20/2024 02:31:00 PM");
      * System.out.println(isSameDateTime); // Output: false
      * }
      * </pre>
      */
-    public boolean compareDateTime(String dateStr1, String dateStr2) {
+    public boolean idDateTimeEqualTo(String dateStr1, String dateStr2) {
         String dateTime1 = this.formatTo(dateStr1, DateTimeFormat.FORMAT_ISO_LOCAL_DATE_TIME);
         String dateTime2 = this.formatTo(dateStr2, DateTimeFormat.FORMAT_ISO_LOCAL_DATE_TIME);
-        return dateTime1.equals(dateTime2);
+        return Objects.equals(dateTime1, dateTime2);
     }
 
     /**
      * Compares two date-time strings given in any different format to check if they represent the same date and time, using specific format options.
      * <p>
-     * This method formats both date-time strings to the ISO local date-time format ("yyyy-MM-dd'T'HH:mm:ss")
+     * This method formats both date-time strings to the specified format ("yyyy-MM-dd'T'HH:mm:ss.SSSSXXX")
      * and then compares them for equality, considering the provided `options`.
      *
      * @param dateStr1 The first date-time string to compare.
@@ -615,13 +675,291 @@ public class DateTimeUtils {
      * }
      * </pre>
      */
-    public boolean compareDateTime(String dateStr1, String dateStr2, FormatOptions options) {
+    public boolean idDateTimeEqualTo(String dateStr1, String dateStr2, FormatOptions options) {
         String dateTime1 = this.formatTo(dateStr1, DateTimeFormat.FORMAT_YYYY_MM_DD_T_HH_MM_SS_SSSS_XXX, options);
         String dateTime2 = this.formatTo(dateStr2, DateTimeFormat.FORMAT_YYYY_MM_DD_T_HH_MM_SS_SSSS_XXX, options);
-        return dateTime1.equals(dateTime2);
+        return Objects.equals(dateTime1, dateTime2);
     }
 
-    private DateTimeFormatter getFormatter(String format, Locale locale) {
+    /**
+     * Calculates the number of days between two date strings.
+     *
+     * @param dateStr1 The start date string.
+     * @param dateStr2 The end date string.
+     * @return The number of days between the two dates.
+     * @example <pre>
+     * {@code
+     * DateTimeUtils utils = new DateTimeUtils();
+     * long days = utils.calculateDaysBetween("2024-12-20", "2024-12-25");
+     * System.out.println(days); // Output: 5
+     * }
+     * </pre>
+     */
+    public long calculateDaysBetween(String dateStr1, String dateStr2) {
+        if (isInvalid(dateStr1) || isInvalid(dateStr2)) {
+            return 0;
+        }
+        LocalDate ld1 = this.toLocalDate(dateStr1);
+        LocalDate ld2 = this.toLocalDate(dateStr2);
+        if (ld1 == null || ld2 == null) {
+            return 0;
+        }
+        return ChronoUnit.DAYS.between(ld1, ld2);
+    }
+
+    /**
+     * Calculates the number of days between two LocalDateTime objects.
+     *
+     * @param ldt1 The start LocalDateTime.
+     * @param ldt2 The end LocalDateTime.
+     * @return The number of days between the two LocalDateTime objects.
+     * @example <pre>
+     * {@code
+     * DateTimeUtils utils = new DateTimeUtils();
+     * long days = utils.calculateDaysBetween(LocalDateTime.of(2024, 12, 20, 0, 0), LocalDateTime.of(2024, 12, 25, 0, 0));
+     * System.out.println(days); // Output: 5
+     * }
+     * </pre>
+     */
+    public long calculateDaysBetween(LocalDateTime ldt1, LocalDateTime ldt2) {
+        return (ldt1 == null || ldt2 == null) ? 0 : Duration.between(ldt1, ldt2).toDays();
+    }
+
+    /**
+     * Calculates the number of days between two LocalDate objects.
+     *
+     * @param ld1 The start LocalDate.
+     * @param ld2 The end LocalDate.
+     * @return The number of days between the two LocalDate objects.
+     * @example <pre>
+     * {@code
+     * DateTimeUtils utils = new DateTimeUtils();
+     * long days = utils.calculateDaysBetween(LocalDate.of(2024, 12, 20), LocalDate.of(2024, 12, 25));
+     * System.out.println(days); // Output: 5
+     * }
+     * </pre>
+     */
+    public long calculateDaysBetween(LocalDate ld1, LocalDate ld2) {
+        return (ld1 == null || ld2 == null) ? 0 : ChronoUnit.DAYS.between(ld1, ld2);
+    }
+
+    /**
+     * Calculates the number of hours between two LocalTime objects.
+     *
+     * @param lt1 The start LocalTime.
+     * @param lt2 The end LocalTime.
+     * @return The number of hours between the two LocalTime objects.
+     * @example <pre>
+     * {@code
+     * DateTimeUtils utils = new DateTimeUtils();
+     * long hours = utils.calculateHoursBetween(LocalTime.of(14, 30), LocalTime.of(18, 30));
+     * System.out.println(hours); // Output: 4
+     * }
+     * </pre>
+     */
+    public long calculateHoursBetween(LocalTime lt1, LocalTime lt2) {
+        return (lt1 == null || lt2 == null) ? 0 : Duration.between(lt1, lt2).toHours();
+    }
+
+    /**
+     * Calculates the number of days between two date strings, inclusive of the start and end dates.
+     *
+     * @param dateStr1 The start date string.
+     * @param dateStr2 The end date string.
+     * @return The number of days between the two dates, inclusive.
+     * @example <pre>
+     * {@code
+     * DateTimeUtils utils = new DateTimeUtils();
+     * long days = utils.calculateDaysBetweenInclusive("2024-12-20", "2024-12-25");
+     * System.out.println(days); // Output: 6
+     * }
+     * </pre>
+     */
+    public long calculateDaysBetweenInclusive(String dateStr1, String dateStr2) {
+        return this.calculateDaysBetween(dateStr1, dateStr2) + 1;
+    }
+
+    /**
+     * Calculates the number of days between two LocalDateTime objects, inclusive of the start and end dates.
+     *
+     * @param ldt1 The start LocalDateTime.
+     * @param ldt2 The end LocalDateTime.
+     * @return The number of days between the two LocalDateTime objects, inclusive.
+     * @example <pre>
+     * {@code
+     * DateTimeUtils utils = new DateTimeUtils();
+     * long days = utils.calculateDaysBetweenInclusive(LocalDateTime.of(2024, 12, 20, 0, 0), LocalDateTime.of(2024, 12, 25, 0, 0));
+     * System.out.println(days); // Output: 6
+     * }
+     * </pre>
+     */
+    public long calculateDaysBetweenInclusive(LocalDateTime ldt1, LocalDateTime ldt2) {
+        return this.calculateDaysBetween(ldt1, ldt2) + 1;
+    }
+
+    /**
+     * Calculates the number of days between two LocalDate objects, inclusive of the start and end dates.
+     *
+     * @param ld1 The start LocalDate.
+     * @param ld2 The end LocalDate.
+     * @return The number of days between the two LocalDate objects, inclusive.
+     * @example <pre>
+     * {@code
+     * DateTimeUtils utils = new DateTimeUtils();
+     * long days = utils.calculateDaysBetweenInclusive(LocalDate.of(2024, 12, 20), LocalDate.of(2024, 12, 25));
+     * System.out.println(days); // Output: 6
+     * }
+     * </pre>
+     */
+    public long calculateDaysBetweenInclusive(LocalDate ld1, LocalDate ld2) {
+        return this.calculateDaysBetween(ld1, ld2) + 1;
+    }
+
+    /**
+     * Calculates the duration between two date-time strings.
+     *
+     * @param dateStr1 The start date-time string.
+     * @param dateStr2 The end date-time string.
+     * @return The duration between the two date-time strings.
+     * @example <pre>
+     * {@code
+     * DateTimeUtils utils = new DateTimeUtils();
+     * Duration duration = utils.calculateDurationBetween("2024-12-20T14:30:00", "2024-12-21T14:30:00");
+     * System.out.println(duration.toHours()); // Output: 24
+     * }
+     * </pre>
+     */
+    public Duration calculateDurationBetween(String dateStr1, String dateStr2) {
+        if (isInvalid(dateStr1) || isInvalid(dateStr2)) return Duration.ZERO;
+        LocalDateTime ldt1 = this.toLocalDateTime(dateStr1);
+        LocalDateTime ldt2 = this.toLocalDateTime(dateStr2);
+        return (ldt1 == null || ldt2 == null) ? Duration.ZERO : Duration.between(ldt1, ldt2);
+    }
+
+    /**
+     * Calculates the duration between two LocalDateTime objects.
+     *
+     * @param ldt1 The start LocalDateTime.
+     * @param ldt2 The end LocalDateTime.
+     * @return The duration between the two LocalDateTime objects.
+     * @example <pre>
+     * {@code
+     * DateTimeUtils utils = new DateTimeUtils();
+     * Duration duration = utils.calculateDurationBetween(LocalDateTime.of(2024, 12, 20, 14, 30), LocalDateTime.of(2024, 12, 21, 14, 30));
+     * System.out.println(duration.toHours()); // Output: 24
+     * }
+     * </pre>
+     */
+    public Duration calculateDurationBetween(LocalDateTime ldt1, LocalDateTime ldt2) {
+        return (ldt1 == null || ldt2 == null) ? Duration.ZERO : Duration.between(ldt1, ldt2);
+    }
+
+    /**
+     * Calculates the duration between two LocalDate objects.
+     *
+     * @param ld1 The start LocalDate.
+     * @param ld2 The end LocalDate.
+     * @return The duration between the two LocalDate objects.
+     * @example <pre>
+     * {@code
+     * DateTimeUtils utils = new DateTimeUtils();
+     * Duration duration = utils.calculateDurationBetween(LocalDate.of(2024, 12, 20), LocalDate.of(2024, 12, 25));
+     * System.out.println(duration.toDays()); // Output: 5
+     * }
+     * </pre>
+     */
+    public Duration calculateDurationBetween(LocalDate ld1, LocalDate ld2) {
+        return (ld1 == null || ld2 == null) ? Duration.ZERO : Duration.between(ld1.atStartOfDay(), ld2.atStartOfDay());
+    }
+
+    /**
+     * Calculates the duration between two LocalTime objects.
+     *
+     * @param lt1 The start LocalTime.
+     * @param lt2 The end LocalTime.
+     * @return The duration between the two LocalTime objects.
+     * @example <pre>
+     * {@code
+     * DateTimeUtils utils = new DateTimeUtils();
+     * Duration duration = utils.calculateDurationBetween(LocalTime.of(14, 30), LocalTime.of(18, 30));
+     * System.out.println(duration.toHours()); // Output: 4
+     * }
+     * </pre>
+     */
+    public Duration calculateDurationBetween(LocalTime lt1, LocalTime lt2) {
+        return (lt1 == null || lt2 == null) ? Duration.ZERO : Duration.between(lt1.atDate(LocalDate.now()), lt2.atDate(LocalDate.now()));
+    }
+
+    /**
+     * Calculates the number of workdays between two date strings, excluding weekends.
+     * By default, weekends are considered to be Saturday and Sunday.
+     *
+     * @param dateStr1 The start date string.
+     * @param dateStr2 The end date string.
+     * @return The number of workdays between the two dates.
+     * @example <pre>
+     * {@code
+     * DateTimeUtils utils = new DateTimeUtils();
+     * long workdays = utils.calculateWorkdaysBetween("2024-12-20", "2024-12-25");
+     * System.out.println(workdays); // Output: 3
+     * }
+     * </pre>
+     */
+    public long calculateWorkdaysBetween(String dateStr1, String dateStr2) {
+        return calculateWorkdaysBetween(dateStr1, dateStr2, DEFAULT_WEEKENDS);
+    }
+
+    /**
+     * Calculates the number of workdays between two date strings, excluding weekends.
+     * By default, weekends are considered to be Saturday and Sunday.
+     *
+     * @param dateStr1    The start date string.
+     * @param dateStr2    The end date string.
+     * @param weekEndDays The set of days to consider as weekends.
+     * @return The number of workdays between the two dates.
+     * @example <pre>
+     * {@code
+     * DateTimeUtils utils = new DateTimeUtils();
+     * Set<DayOfWeek> weekends = new HashSet<>() {
+     *     {
+     *         add(DayOfWeek.SATURDAY);
+     *         add(DayOfWeek.SUNDAY);
+     *     }
+     * };
+     * long workdays = utils.calculateWorkdaysBetween("2024-12-20", "2024-12-25", weekends);
+     * System.out.println(workdays); // Output: 3
+     * }
+     * </pre>
+     */
+    public long calculateWorkdaysBetween(String dateStr1, String dateStr2, Set<DayOfWeek> weekEndDays) {
+        if (isInvalid(dateStr1) || isInvalid(dateStr2)) {
+            return 0;
+        }
+        LocalDateTime ldt1 = this.toLocalDateTime(dateStr1);
+        LocalDateTime ldt2 = this.toLocalDateTime(dateStr2);
+        if (ldt1 == null || ldt2 == null) {
+            return 0;
+        }
+        return calculateWorkdays(ldt1, ldt2, weekEndDays);
+    }
+
+    private boolean isInvalid(String dateStr) {
+        return dateStr == null || dateStr.isBlank();
+    }
+
+    private long calculateWorkdays(LocalDateTime start, LocalDateTime end, Set<DayOfWeek> weekEndDays) {
+        long workdays = 0;
+        while (!start.isAfter(end)) {
+            if (!weekEndDays.contains(start.getDayOfWeek())) {
+                workdays++;
+            }
+            start = start.plusDays(1);
+        }
+        return workdays;
+    }
+
+
+    public DateTimeFormatter getFormatter(String format, Locale locale) {
         return new DateTimeFormatterBuilder()
                 .parseCaseInsensitive()  // Enable case-insensitive parsing
                 .appendPattern(format)
@@ -689,13 +1027,10 @@ public class DateTimeUtils {
         return Optional.empty();
     }
 
-    public static void main(String[] args) {
-//        DateTimeUtils util = new DateTimeUtils();
-//        test_formatTo(util);
 
-        DateTimeUtils utils = new DateTimeUtils();
-        boolean isSameDateTime = utils.compareDateTime("2024-12-20T14:30:00", "12/20/2024 02:30:00 PM");
-        System.out.println(isSameDateTime);
+    public static void main(String[] args) {
+        DateTimeUtils util = new DateTimeUtils();
+        test_formatTo(util);
     }
 
     private static void test_isValid(DateTimeUtils util) {
