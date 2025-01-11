@@ -966,7 +966,7 @@ public class DateTimeUtils {
                 .toFormatter(locale);
     }
 
-    private DateTimeFormatter getFormatter(DateTimeFormat format, Locale locale) {
+    public DateTimeFormatter getFormatter(DateTimeFormat format, Locale locale) {
         return this.getFormatter(format.getFormat(), locale);
     }
 

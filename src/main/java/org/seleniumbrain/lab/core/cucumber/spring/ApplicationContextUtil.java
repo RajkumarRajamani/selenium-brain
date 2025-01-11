@@ -5,6 +5,18 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.stereotype.Component;
 
+/**
+ * Utility class to provide access to the Spring ApplicationContext.
+ * This class implements {@link ApplicationContextAware} to automatically
+ * set the ApplicationContext when the Spring context is initialized.
+ *
+ * <p>This class provides a static method to retrieve beans from the
+ * ApplicationContext.</p>
+ *
+ * @author Rajkumar Rajamani
+ * @version 1.0
+ * @since 2024-03-01
+ */
 @Component
 public class ApplicationContextUtil implements ApplicationContextAware {
 

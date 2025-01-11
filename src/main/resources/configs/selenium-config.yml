@@ -16,7 +16,7 @@ wait:
 
 lab:
   localLab:
-    browserName: firefox
+    browserName: chrome
     chrome:
       browserLogFileName: chrome-driver-log.log
       browserVersion: stable #Acceptable values are - <version number>, stable, beta, dev, canary

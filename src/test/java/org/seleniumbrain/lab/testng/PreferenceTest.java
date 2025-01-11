@@ -1,13 +1,12 @@
 package org.seleniumbrain.lab.testng;
 
 import org.seleniumbrain.lab.core.selenium.validator.Validator;
-import org.seleniumbrain.lab.utility.date.DateFormats;
+import org.seleniumbrain.lab.utils.date.DateTimeFormat;
 
 import java.text.NumberFormat;
 import java.text.ParseException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.Currency;
 import java.util.Locale;
 import java.util.prefs.BackingStoreException;
 import java.util.prefs.Preferences;
@@ -66,7 +65,7 @@ public class PreferenceTest {
     decimalDigits(34.000000);
 
 
-    System.out.println(DateTimeFormatter.ofPattern(DateFormats.DD_MM_YYYY_SLASH.getFormat()).format(LocalDateTime.now().plusDays(30)));
+    System.out.println(DateTimeFormatter.ofPattern(DateTimeFormat.FORMAT_DD_MM_YYYY.getFormat()).format(LocalDateTime.now().plusDays(30)));
     System.out.println(Double.parseDouble("0"));
 
     String input = "USD 10,000.78";

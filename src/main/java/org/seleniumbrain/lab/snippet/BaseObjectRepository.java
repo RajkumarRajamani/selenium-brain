@@ -20,6 +20,7 @@ import org.seleniumbrain.lab.snippet.pagerepositories.AmazonHomePage;
 import org.seleniumbrain.lab.snippet.pagerepositories.demo.SwagLabHomePageOR;
 import org.seleniumbrain.lab.snippet.pagerepositories.demo.SwagLabLoginPageOR;
 import org.seleniumbrain.lab.utility.PathBuilder;
+import org.seleniumbrain.lab.utility.TestBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 

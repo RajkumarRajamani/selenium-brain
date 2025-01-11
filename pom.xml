@@ -380,6 +380,12 @@
             <scope>test</scope>
         </dependency>
 
+        <!-- https://mvnrepository.com/artifact/com.applitools/eyes-selenium-java5 -->
+        <dependency>
+            <groupId>com.applitools</groupId>
+            <artifactId>eyes-selenium-java5</artifactId>
+            <version>5.75.0</version>
+        </dependency>
 
     </dependencies>
 

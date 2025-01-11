@@ -5,7 +5,7 @@ import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
 
-public class InterviewSessions {
+public class HCL_InterviewSessions {
 
     public static void main(String[] args) {
         List<Integer> list = Arrays.asList(10, 2, 4, 7, 5, 14, 11, 10, 1, 3);

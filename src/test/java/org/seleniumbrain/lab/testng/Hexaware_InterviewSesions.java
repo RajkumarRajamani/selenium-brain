@@ -1,13 +1,6 @@
 package org.seleniumbrain.lab.testng;
 
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.chrome.ChromeDriver;
-import org.openqa.selenium.chrome.ChromeOptions;
-
-import javax.print.DocFlavor;
-import java.lang.reflect.Array;
 import java.util.LinkedHashMap;
-import java.util.List;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;

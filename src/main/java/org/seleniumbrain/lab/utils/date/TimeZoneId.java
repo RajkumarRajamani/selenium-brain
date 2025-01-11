@@ -1,4 +1,4 @@
-package org.seleniumbrain.lab.utility.date;
+package org.seleniumbrain.lab.utils.date;
 
 import java.time.ZoneId;
 import java.util.Collections;
